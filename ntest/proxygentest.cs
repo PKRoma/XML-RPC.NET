@@ -92,7 +92,9 @@ namespace ntest
       ITest2 proxy = (ITest2)XmlRpcProxyGen.Create(typeof(ITest2));
       X509CertificateCollection certs = proxy.ClientCertificates;
       string groupName = proxy.ConnectionGroupName;
+#if (!FX1_0)
       bool expect100 = proxy.Expect100Continue;
+#endif
       WebHeaderCollection header = proxy.Headers;
       int indentation = proxy.Indentation;
       bool keepAlive = proxy.KeepAlive;
