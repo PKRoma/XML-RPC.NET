@@ -49,7 +49,7 @@ namespace CookComputing.XmlRpc
     [Browsable(false)]
     ICredentials Credentials { get; set; }
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !FX1_0)
     bool Expect100Continue { get; set; }
 #endif
 

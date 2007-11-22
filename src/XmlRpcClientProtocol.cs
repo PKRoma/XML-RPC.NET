@@ -40,6 +40,8 @@ namespace CookComputing.XmlRpc
     #region Instance Variables
 #if (!COMPACT_FRAMEWORK)
     private string _connectionGroupName = null;
+#endif
+#if (!COMPACT_FRAMEWORK && !FX1_0)
     private bool _expect100Continue = false;
 #endif
     private ICredentials _credentials = null;
@@ -236,13 +238,15 @@ namespace CookComputing.XmlRpc
       get { return _headers; }
     }
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !FX1_0)
     public bool Expect100Continue
     {
       get { return _expect100Continue; }
       set { _expect100Continue = value; }
     }
+#endif
 
+#if (!COMPACT_FRAMEWORK)
     public CookieContainer CookieContainer
     {
       get { return _cookies; }
@@ -347,6 +351,8 @@ namespace CookComputing.XmlRpc
       httpReq.KeepAlive = _keepAlive;
 #if (!COMPACT_FRAMEWORK)
       httpReq.CookieContainer = _cookies;
+#endif
+#if (!COMPACT_FRAMEWORK && !FX1_0)
       httpReq.ServicePoint.Expect100Continue = _expect100Continue;
 #endif
       webReq.Timeout = Timeout;
