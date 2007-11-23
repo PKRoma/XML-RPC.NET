@@ -350,8 +350,8 @@ namespace CookComputing.XmlRpc
           if (mi.MemberType == MemberTypes.Field)
           {
             FieldInfo fi = (FieldInfo)mi;
-            if (fi.FieldType != typeof(Object) 
-              && GetXmlRpcType(fi.FieldType) == XmlRpcType.tInvalid)
+            if ((fi.FieldType == t) || (fi.FieldType != typeof(Object)
+              && GetXmlRpcType(fi.FieldType) == XmlRpcType.tInvalid))
             {
               return XmlRpcType.tInvalid;
             }
@@ -359,8 +359,8 @@ namespace CookComputing.XmlRpc
           else if (mi.MemberType == MemberTypes.Property)
           {
             PropertyInfo pi = (PropertyInfo)mi;
-            if (pi.PropertyType != typeof(Object)
-              && GetXmlRpcType(pi.PropertyType) == XmlRpcType.tInvalid)
+            if ((pi.PropertyType == t) || (pi.PropertyType != typeof(Object)
+              && GetXmlRpcType(pi.PropertyType) == XmlRpcType.tInvalid))
             {
               return XmlRpcType.tInvalid;
             }

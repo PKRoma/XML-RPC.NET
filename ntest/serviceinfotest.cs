@@ -243,6 +243,16 @@ namespace ntest
       
     }
 
+    [Test]
+    public void DBNull()
+    {
+      DBNull value = System.DBNull.Value;
+      Type type = value.GetType();
+      XmlRpcType rpcType = XmlRpcServiceInfo.GetXmlRpcType(type);
+      Assert.AreEqual(XmlRpcType.tInvalid, rpcType,
+        "GetXmlRpcType return DBNull as tInvalid");
+    }
+
 #if !FX1_0
     [Test]
     public void NullableInt()
