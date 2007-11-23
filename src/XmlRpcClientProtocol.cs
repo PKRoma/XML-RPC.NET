@@ -158,7 +158,8 @@ namespace CookComputing.XmlRpc
         }
         finally
         {
-          reqStream.Close();
+          if (reqStream != null)
+            reqStream.Close();
         }
         WebResponse webResp = GetWebResponse(webReq);
         Stream respStm = null;
@@ -597,7 +598,8 @@ namespace CookComputing.XmlRpc
         }
         finally
         {
-          reqStream.Close();
+          if (reqStream != null)
+            reqStream.Close();
         }
         clientResult.Request.BeginGetResponse(
           new AsyncCallback(GetResponseCallback), clientResult);
