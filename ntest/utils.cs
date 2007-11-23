@@ -117,7 +117,7 @@ namespace ntest
       object obj = serializer.ParseValue(node, valueType, parseStack, action,
         out parsedType, out parsedArrayType);
       return obj;
-    }	
+    }
 
     public static string[] GetLocales()
     {
@@ -142,8 +142,8 @@ namespace ntest
         "ar-AE",
         "ar-YE",
         "hy-AM",
-        "az-AZ-Cyrl",
-        "az-AZ-Latn",
+        "az-Cyrl-AZ",
+        "az-Latn-AZ",
         "eu-ES",
         "be-BY",
         "bg-BG",
@@ -156,13 +156,13 @@ namespace ntest
         "hr-HR",
         "cs-CZ",
         "da-DK",
-        "div-MV",
+        "dv-MV",
         "nl-BE",
         "nl-NL",
         "en-AU",
         "en-BZ",
         "en-CA",
-        "en-CB",
+        "en-029",
         "en-IE",
         "en-JM",
         "en-NZ",
@@ -219,8 +219,8 @@ namespace ntest
         "ro-RO",
         "ru-RU",
         "sa-IN",
-        "sr-SP-Cyrl",
-        "sr-SP-Latn",
+        "sr-Cyrl-CS",
+        "sr-Latn-CS",
         "sk-SK",
         "sl-SI",
         "es-AR",
@@ -253,8 +253,8 @@ namespace ntest
         "tr-TR",
         "uk-UA",
         "ur-PK",
-        "uz-UZ-Cyrl",
-        "uz-UZ-Latn",
+        "uz-Cyrl-UZ",
+        "uz-Latn-UZ",
         "vi-VN"
       };
     }
