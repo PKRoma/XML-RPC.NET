@@ -161,6 +161,9 @@
     <Compile Include="XmlRpcInt.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcListenerRequest.cs" />
+    <Compile Include="XmlRpcListenerResponse.cs" />
+    <Compile Include="XmlRpcListenerService.cs" />
     <Compile Include="XmlRpcLogger.cs">
       <SubType>Code</SubType>
     </Compile>

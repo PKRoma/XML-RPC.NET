@@ -105,8 +105,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="invoketest.cs">
-      <SubType>Code</SubType>
+      <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Listener.cs" />
+    <Compile Include="listenertest.cs" />
     <Compile Include="optionaldeserializetest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -134,6 +136,7 @@
     <Compile Include="serviceinfotest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StateNameListener.cs" />
     <Compile Include="StateNameService.cs" />
     <Compile Include="utils.cs">
       <SubType>Code</SubType>
