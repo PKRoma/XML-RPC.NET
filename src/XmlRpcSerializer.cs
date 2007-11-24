@@ -238,7 +238,7 @@ namespace CookComputing.XmlRpc
           "Request XML not valid XML-RPC - empty methodName.");
       }
       request.mi = null;
-      ParameterInfo[] pis = new ParameterInfo[1];
+      ParameterInfo[] pis = new ParameterInfo[0];
       if (svcType != null)
       {
         // retrieve info for the method which handles this XML-RPC method
@@ -285,11 +285,13 @@ namespace CookComputing.XmlRpc
           return request;
         }
       }
-      XmlNodeList paramNodes = paramsNode.ChildNodes; 
-      int paramsPos = -1;
-      if (svcType != null && paramNodes.Count != pis.Length)
+      XmlNodeList paramNodes = paramsNode.ChildNodes;
+      int paramsPos = GetParamsPos(pis);
+      if (paramNodes.Count < paramsPos)
       {
-        paramsPos = CheckParameterCount(paramNodes, pis);
+        throw new XmlRpcInvalidParametersException(
+          "Method takes parameters and there is incorrect number of param "
+            + "elements.");
       }
       ParseStack parseStack = new ParseStack("request");
       // TODO: use global action setting
@@ -323,8 +325,6 @@ namespace CookComputing.XmlRpc
       if (paramsPos != -1)
       {
         Type paramsType = pis[paramsPos].ParameterType.GetElementType();
-
-
         Object[] args = new Object[1]; 
         args[0] = paramNodes.Count - paramsPos;
         Array varargs = (Array)CreateArrayInstance(pis[paramsPos].ParameterType, 
@@ -345,26 +345,16 @@ namespace CookComputing.XmlRpc
       return request;
     }
 
-    int CheckParameterCount(XmlNodeList paramNodes, ParameterInfo[] pis)
+    int GetParamsPos(ParameterInfo[] pis)
     {
-      // returns position of params parameter or -1
-      int nodeCount = paramNodes.Count;
-      if (nodeCount == 0 && pis.Length == 0)
+      if (pis.Length == 0)
         return -1;
       if (Attribute.IsDefined(pis[pis.Length - 1], typeof(ParamArrayAttribute)))
       {
-        // note that params array parameter might have zero items
-        if (nodeCount >= (pis.Length - 1))
-          return pis.Length - 1;
+        return pis.Length - 1;
       }
       else
-      {
-        if (nodeCount == pis.Length)
-          return -1;
-      }
-      throw new XmlRpcInvalidParametersException(
-        "Method takes parameters and there is incorrect number of param "
-          + "elements.");
+        return -1;
     }
 
     public void SerializeResponse(Stream stm, XmlRpcResponse response)
