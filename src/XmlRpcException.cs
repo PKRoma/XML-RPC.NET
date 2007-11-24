@@ -214,4 +214,11 @@ namespace CookComputing.XmlRpc
       : base(msg) { }
   }
 
+  public class XmlRpcDupXmlRpcMethodNames : XmlRpcException
+  {
+    public XmlRpcDupXmlRpcMethodNames() { }
+
+    public XmlRpcDupXmlRpcMethodNames(string msg)
+      : base(msg) { }
+  }
 }

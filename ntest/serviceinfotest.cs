@@ -319,5 +319,55 @@ namespace ntest
         "TestStruct? doesn't map to 'struct'");
     }
 #endif
+
+    [Test]
+    public void DerivedInterfaces()
+    {
+      XmlRpcServiceInfo svcinfo =  XmlRpcServiceInfo.CreateServiceInfo(
+        typeof(FooBar));
+      Assert.AreEqual(2, svcinfo.Methods.Length);
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcDupXmlRpcMethodNames))]
+    public void DupXmlRpcNames()
+    {
+      XmlRpcServiceInfo svcinfo = XmlRpcServiceInfo.CreateServiceInfo(
+        typeof(IDupXmlRpcNames));
+    }
   }
+
+  interface IFoo
+  {
+    [XmlRpcMethod("IFoo.Foo", Description = "IFoo")]
+    int Foo(int x);
+  }
+
+  interface IBar
+  {
+    [XmlRpcMethod("IBar.Foo", Description = "IFooBar")]
+    int Foo(int x);
+  }
+
+  class FooBar : IFoo, IBar
+  {
+    int IFoo.Foo(int x)
+    {
+      throw new Exception("The method or operation is not implemented.");
+    }
+
+    int IBar.Foo(int x)
+    {
+      throw new Exception("The method or operation is not implemented.");
+    }
+  }
+
+  interface IDupXmlRpcNames
+  {
+    [XmlRpcMethod("bad.Foo")]
+    int Foo1(int x);
+    [XmlRpcMethod("bad.Foo")]
+    int Foo2(int x);
+  }
+
 }
