@@ -472,6 +472,22 @@ namespace ntest
     }
 
     [Test]
+    [ExpectedException(typeof(XmlRpcInvalidParametersException))]
+    public void DeserializeObjectParamsInsufficientParams()
+    {
+      string xml =
+        @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Foo1</methodName>
+  <params>
+  </params>
+</methodCall>";
+      StringReader sr = new StringReader(xml);
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+    }
+
+    [Test]
     public void SerializeMassimo()
     {
       object[] param1 = new object[] { "test/Gain1", "Gain", 1, 1, 
