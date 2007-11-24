@@ -640,6 +640,91 @@ namespace ntest
       Assert.Less(reqstr.IndexOf(">mdt</"), reqstr.IndexOf(">mb64</"));
       Assert.Less(reqstr.IndexOf(">mb64</"), reqstr.IndexOf(">ma</"));
     }
+
+    [Test]
+    public void StringNoStringTag()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { "string no string tag" };
+      req.method = "Foo";
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.UseStringTag = false;
+      ser.Indentation = 4;
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+    <methodName>Foo</methodName>
+    <params>
+        <param>
+            <value>string no string tag</value>
+        </param>
+    </params>
+</methodCall>", reqstr);
+    }
+
+    [Test]
+    public void StringStringTag()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { "string string tag" };
+      req.method = "Foo";
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.UseStringTag = true;
+      ser.Indentation = 4;
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+    <methodName>Foo</methodName>
+    <params>
+        <param>
+            <value>
+                <string>string string tag</string>
+            </value>
+        </param>
+    </params>
+</methodCall>", reqstr);
+    }
+
+    [Test]
+    public void StringDefaultTag()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { "string default tag" };
+      req.method = "Foo";
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.Indentation = 4;
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+    <methodName>Foo</methodName>
+    <params>
+        <param>
+            <value>
+                <string>string default tag</string>
+            </value>
+        </param>
+    </params>
+</methodCall>", reqstr);
+    }
+
   }
 }
 

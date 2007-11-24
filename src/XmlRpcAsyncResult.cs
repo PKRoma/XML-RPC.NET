@@ -89,6 +89,11 @@ namespace CookComputing.XmlRpc
       get { return _useIntTag; }
     }
 
+    public bool UseStringTag
+    {
+      get { return _useStringTag; }
+    }
+
     // public members
     public void Abort()
     {
@@ -114,6 +119,7 @@ namespace CookComputing.XmlRpc
       bool useIndentation,
       int indentation,
       bool UseIntTag,
+      bool UseStringTag,
       WebRequest Request, 
       AsyncCallback UserCallback, 
       object UserAsyncState, 
@@ -129,6 +135,7 @@ namespace CookComputing.XmlRpc
       _useIndentation = useIndentation;
       _indentation = indentation;
       _useIntTag = UseIntTag;
+      _useStringTag = UseStringTag;
     }
   
     internal void Complete(
@@ -241,5 +248,6 @@ namespace CookComputing.XmlRpc
     bool _useIndentation;
     int _indentation;
     bool _useIntTag;
+    bool _useStringTag;
   }
 }

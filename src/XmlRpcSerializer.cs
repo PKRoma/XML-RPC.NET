@@ -75,6 +75,13 @@ namespace CookComputing.XmlRpc
     }
     bool m_useIntTag;
 
+    public bool UseStringTag
+    {
+      get { return m_useStringTag; }
+      set { m_useStringTag = value; }
+    }
+    bool m_useStringTag = true;
+
     public Encoding XmlEncoding
     {
       get { return m_encoding; }
@@ -630,8 +637,10 @@ namespace CookComputing.XmlRpc
         }
         else if (xType == XmlRpcType.tString)
         {
-          xtw.WriteElementString("string", (string)o);
-        }
+          if (UseStringTag)
+            xtw.WriteElementString("string", (string)o);
+          else
+            xtw.WriteString((string)o);        }
         else if (xType == XmlRpcType.tStruct)
         {
           MappingAction structAction 

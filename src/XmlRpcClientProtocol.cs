@@ -57,6 +57,7 @@ namespace CookComputing.XmlRpc
     private string _userAgent = "XML-RPC.NET";
     private bool _useIndentation = true;
     private bool _useIntTag = false;
+    private bool _useStringTag = true;
     private Encoding _xmlEncoding = null;
     private string _xmlRpcMethod = null;
 
@@ -327,6 +328,12 @@ namespace CookComputing.XmlRpc
       set { _userAgent = value; }
     }
 
+    public bool UseStringTag
+    {
+      get { return _useStringTag; }
+      set { _useStringTag = value; }
+    }
+
     [Browsable(false)]
     public Encoding XmlEncoding
     {
@@ -549,8 +556,8 @@ namespace CookComputing.XmlRpc
       if (_xmlEncoding != null)
         useEncoding = _xmlEncoding;
       XmlRpcAsyncResult asr = new XmlRpcAsyncResult(this, xmlRpcReq,
-        useEncoding, _useIndentation, _indentation, _useIntTag, webReq, callback,
-        outerAsyncState, 0);
+        useEncoding, _useIndentation, _indentation, _useIntTag, _useStringTag,
+        webReq, callback, outerAsyncState, 0);
       webReq.BeginGetRequestStream(new AsyncCallback(GetRequestStreamCallback),
         asr);
       if (!asr.IsCompleted)
@@ -584,6 +591,7 @@ namespace CookComputing.XmlRpc
           serializer.UseIndentation = clientResult.UseIndentation;
           serializer.Indentation = clientResult.Indentation;
           serializer.UseIntTag = clientResult.UseIntTag;
+          serializer.UseStringTag = clientResult.UseStringTag;
           serializer.SerializeRequest(serStream, req);
           if (logging)
           {
