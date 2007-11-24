@@ -455,6 +455,23 @@ namespace ntest
     }
 
     [Test]
+    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
+    public void DeserializeLinisgreEmptyParam()
+    {
+      string xml =
+@"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Linisgre</methodName>
+  <params>
+    <param/>
+  </params>
+</methodCall>";
+      StringReader sr = new StringReader(xml);
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+    }
+
+    [Test]
     public void SerializeMassimo()
     {
       object[] param1 = new object[] { "test/Gain1", "Gain", 1, 1, 

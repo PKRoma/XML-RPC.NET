@@ -304,6 +304,8 @@ namespace CookComputing.XmlRpc
       {
         XmlNode paramNode = paramNodes[i];
         XmlNode valueNode = paramNode.FirstChild;
+        if (valueNode == null)
+          throw new XmlRpcInvalidXmlRpcException("Missing value element.");
         XmlNode node = valueNode.FirstChild;
         if (svcType != null)
         {
@@ -333,6 +335,8 @@ namespace CookComputing.XmlRpc
         {
           XmlNode paramNode = paramNodes[i + paramsPos];
           XmlNode valueNode = paramNode.FirstChild;
+          if (valueNode == null)
+            throw new XmlRpcInvalidXmlRpcException("Missing value element.");
           XmlNode node = valueNode.FirstChild;
           parseStack.Push(String.Format("parameter {0}", i + 1 + paramsPos));
           varargs.SetValue(ParseValue(node, paramsType, parseStack, 
