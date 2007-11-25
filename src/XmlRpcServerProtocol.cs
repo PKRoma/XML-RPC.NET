@@ -29,6 +29,7 @@ namespace CookComputing.XmlRpc
   using System.Collections;
   using System.IO;
   using System.Reflection;
+  using System.Text;
   using System.Text.RegularExpressions;
 
   public class XmlRpcServerProtocol
@@ -38,6 +39,19 @@ namespace CookComputing.XmlRpc
       try
       {
         XmlRpcSerializer serializer = new XmlRpcSerializer();
+        Type type = this.GetType();
+        XmlRpcServiceAttribute serviceAttr = (XmlRpcServiceAttribute)
+          Attribute.GetCustomAttribute(this.GetType(),
+          typeof(XmlRpcServiceAttribute));
+        if (serviceAttr != null)
+        {
+          if (serviceAttr.XmlEncoding != null)
+            serializer.XmlEncoding = Encoding.GetEncoding(serviceAttr.XmlEncoding);
+          serializer.UseIntTag = serviceAttr.UseIntTag;
+          serializer.UseStringTag = serviceAttr.UseStringTag;
+          serializer.UseIndentation = serviceAttr.UseIndentation;
+          serializer.Indentation = serviceAttr.Indentation;
+        }
         XmlRpcRequest xmlRpcReq 
           = serializer.DeserializeRequest(requestStream, this.GetType());
         XmlRpcResponse xmlRpcResp = Invoke(xmlRpcReq);

@@ -51,8 +51,14 @@ namespace CookComputing.XmlRpc
       get { return description; }
       set { description = value; }
     }
-    
-    public bool Introspection 
+
+    public int Indentation 
+    {
+      get { return indentation; }
+      set { indentation = value; }
+    }
+
+    public bool Introspection
     {
       get { return introspection; }
       set { introspection = value; }
@@ -63,7 +69,31 @@ namespace CookComputing.XmlRpc
       get { return name; }
       set { name = value; }
     }
-    
+
+    public bool UseIndentation
+    {
+      get { return useIndentation; }
+      set { useIndentation = value; }
+    }
+
+    public bool UseIntTag
+    {
+      get { return useIntTag; }
+      set { useIntTag = value; }
+    }
+
+    public bool UseStringTag
+    {
+      get { return useStringTag; }
+      set { useStringTag = value; }
+    }
+
+    public string XmlEncoding
+    {
+      get { return xmlEncoding; }
+      set { xmlEncoding = value; }
+    }
+
     public override string ToString()
     {
       string value = "Description : " + description;
@@ -71,9 +101,14 @@ namespace CookComputing.XmlRpc
     }
  
     private string description = "";
+    private string xmlEncoding = null;
+    private int indentation = 2;
     private bool introspection = false;
     private bool autoDocumentation = true;
     private bool autoDocVersion = true;
     private string name = "";
+    private bool useStringTag = true;
+    private bool useIndentation = true;
+    private bool useIntTag = false;
   }
 }
