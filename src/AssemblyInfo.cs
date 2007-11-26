@@ -37,7 +37,7 @@ using System.Security;
 
 #if (FX1_0)
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("c:\\Cook Computing\\CookComputing.key")]
+[assembly: AssemblyKeyFile("..\\..\\CookComputing.key")]
 [assembly: AssemblyKeyName("")]
 #endif 
 
