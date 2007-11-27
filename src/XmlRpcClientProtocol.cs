@@ -145,6 +145,7 @@ namespace CookComputing.XmlRpc
           serializer.UseIndentation = _useIndentation;
           serializer.Indentation = _indentation;
           serializer.NonStandard = _nonStandard;
+          serializer.UseStringTag = _useStringTag;
           serializer.SerializeRequest(serStream, req);
           if (logging)
           {
