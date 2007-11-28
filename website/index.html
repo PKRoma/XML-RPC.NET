@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<title>XML-RPC.Net</title>
+<meta name="keywords" content="Charles Cook, XML-RPC, xmlrpc, .Net, C#, Cook Computing" />
+<link href="./css/styles.css" rel="stylesheet" type="text/css"/>
+<!--[if IE]>
+<link href="./css/styles_ie.css" rel="stylesheet" type="text/css">			
+<![endif]-->
+</head>
+
+<body>
+
+<div id="googlead">
+<script type="text/javascript"><!--
+google_ad_client = "pub-3136777794181980";
+google_alternate_color = "E6E6E6";
+google_ad_width = 120;
+google_ad_height = 600;
+google_ad_format = "120x600_as";
+google_ad_type = "text_image";
+google_ad_channel ="";
+google_color_border = "336699";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "008000";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+<div id="googlink" >
+<script type="text/javascript"><!--
+google_ad_client = "pub-3136777794181980";
+google_alternate_color = "E6E6E6";
+google_ad_width = 120;
+google_ad_height = 90;
+google_ad_format = "120x90_0ads_al_s";
+google_ad_channel ="";
+google_color_border = "336699";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "008000";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+</div>
+
+<div id="content">
+<div id="headermenu" >
+    <a href="faq/xmlrpcnetfaq.html">Documentation</a>
+    &nbsp;
+    <a href="http://www.cookcomputing.com">Cook Computing</a>
+</div>
+
+<h1>XML-RPC.NET</h1>
+
+<h2>Latest News</h2>
+<h3>21st March 2007</h3>
+<p>Version 2.1.1 has been released:
+<a href="http://www.xml-rpc.net/release/xml-rpc.net.2.1.1.zip">xml-rpc.net.2.1.1.zip</a> </p>
+
+<p>New features and changes:</p>
+
+<ul>
+
+<li>
+Add support for using System.Net.HttpListener to implement an XML-RPC server. 
+(<a href="./faq/xmlrpcnetfaq.html#3.12">more</a>). 
+</li>
+
+<li>
+Allow client to configure that &lt;string&gt; tag is not used for 
+string values. 
+(<a href="./faq/xmlrpcnetfaq.html#2.30">more</a>). 
+</li>
+
+<li>
+Changes:
+<ul>
+<li>
+Fixed null exception if acquiring request stream fails while logging.
+</li>
+<li>
+Fixed stack overflow in GetXmlRpcType if invalid types such as DBNull passed in.
+</li>
+<li>
+Throw XmlRpcDupXmlRpcMethodNames if same XML-RPC name applied to two methods.
+</li>
+<li>
+Fixed handling of params method parameter if it is first parameter of method.
+</li>
+<li>
+Improved error reporting when processing params parameters.
+</li>
+</ul>
+</li>
+
+</ul>  
+
+
+<h2>Overview</h2>
+<p>
+XML-RPC.NET is a library for implementing <a href="http://www.xmlrpc.com">XML-RPC</a> 
+  Services and clients in the .NET environment, supporting versions 1.0, 1.1, 
+  and 2.0 of the .NET runtime. The library has been in development 
+  since March 2001 and is used in many open-source and business applications. 
+  Its features include:
+</p>
+<ul>
+  <li>interface based definition of XML-RPC servers and clients</li>
+  <li>code generation of type-safe client proxies</li>
+  <li>support for .NET Remoting on both client and server</li>
+  <li>ASP.NET Web Services which support both XML-RPC and SOAP</li>
+  <li>client support for asynchronous calls</li>
+  <li>client support for various XML encodings and XML indentation styles
+  (some other XML-RPC server implementations incorrectly only accept 
+  certain indentation styles)</li>
+  <li>built-in support for XML-RPC Introspection API on server</li>
+  <li>dynamic generation of documentation page at URL of XML-RPC end-point</li>
+  <li>support for mapping XML-RPC method and struct member names to .NET-compatible 
+  names</li>
+  <li>support for Unicode XML-RPC strings in both client and server</li>
+  <li>support for optional struct members when mapping between .NET and XML-RPC 
+  types</li>
+</ul>
+
+<p>
+The XML-RPC.NET library is CLS-compliant and so can be called from any CLS-compliant 
+language, the main examples being C# and VB.NET.
+</p>
+
+<p>
+The <a href="faq/xmlrpcnetfaq.html">FAQ</a> provides 
+more information and the mailing list - the <a href="http://groups.yahoo.com/group/XMLRPCNET/">XMLRPCNET</a> 
+Yahoo group - contains discussion, peer support, code example, and announcements 
+relating to XML-RPC.NET.
+</p>
+  
+<p>
+A couple of sample XML-RPC services implemented using XML-RPC.NET are available:
+</p>
+<ul>
+<li><a href="http://www.cookcomputing.com/xmlrpcsamples/math.rem">Test Math Service</a></li>
+<li><a href="http://www.cookcomputing.com/xmlrpcsamples/RPC2.ashx">StateName</a></li>
+</ul>
+
+<h3>XML-RPC Clients</h3>
+
+<p>
+It is easy to create client code which makes calls to XML-RPC servers. All 
+you need to do is define an interface representing the XML-RPC end-point and 
+then use the XmlRpcProxyGen class to automatically generate the code for the 
+proxy. 
+</p>
+
+<pre>[XmlRpcUrl(&quot;http://betty.userland.com/RPC2&quot;)]
+public interface IStateName : IXmlRpcProxy
+{
+    [XmlRpcMethod(&quot;examples.getStateName&quot;)]
+    string GetStateName(int stateNumber); 
+}</pre>
+
+<p>
+The proxy instance is generated using static method Create of the XmlRpcProxyGen 
+class:
+</p>
+
+<pre>IStateName proxy = XmlRpcProxyGen.Create&lt;IStateName&gt;();</pre>
+
+<p>
+The method on the proxy can then be called to make the XML-RPC request to the 
+server:
+</p>
+
+<pre>string stateName = proxy.GetStateName(41);</pre>
+
+<h3>XML-RPC Services </h3>
+
+<p>
+XML-RPC.NET implements XML-RPC services as Services running in the Microsoft 
+IIS web server environment. The model for XML-RPC Services are SOAP-based Web 
+Services implemented as part of ASP.Net. An XML-RPC Service is implemented (in 
+any CLS-compliant language, e.g. C#, VB.Net, etc) by creating a class which 
+derives from the XmlRpcService base class and decorating the methods to be exposed 
+via XML-RPC with the XmlRpcMethod attribute. For example:
+</p>
+
+<pre>public class StateNameService : XmlRpcService 
+{
+  [XmlRpcMethod(&quot;examples.getStateName&quot;,
+    Description="Return name of state given its number")] 
+  public string getStateName(int stateNum)
+  {
+    if (stateNum == 41)
+      return &quot;South Dakota&quot;;
+    else
+      return &quot;Don't know&quot;;
+  }
+}</pre>
+
+<p>
+As well as specifying an XML-RPC method the XmlRpcMethod attribute is here 
+used to specify that the method is to be called using the XML-RPC protocol as 
+&quot;examples.getStateName&quot;, not the name of the method used in the Service 
+class.The string assigned to Description is used for automatic documentation 
+generation as described below when a Service is invoked via a HTTP GET request.
+</p>
+
+<p>
+Alternatively the service class may also derive from an interface which defines 
+the XML-RPC methods. The interface can then be also used to generate a proxy 
+class as described above. For example:
+</p>
+
+<pre>
+public interface IStateName
+{
+    [XmlRpcMethod(&quot;examples.getStateName&quot;)]
+    string GetStateName(int stateNumber); 
+}
+
+public interface IStateNameProxy : IStateName, IXmlRpcProxy
+{
+}
+
+public class StateNameService : XmlRpcService, IStateName
+{
+  public string getStateName(int stateNum)
+  {
+    if (stateNum == 41)
+        return &quot;South Dakota&quot;;
+    else
+      return &quot;Don't know&quot;;
+  }
+}</pre>
+
+<p>
+A class may implement many XML-RPC methods, not just a single method as in 
+these examples.
+</p>
+
+<p>
+The resulting assembly DLL placed in the <i>bin</i> directory of an IIS virtual 
+directory and a <i>web.config</i> file is used to dispatch HTTP requests to 
+the custom handler implemented by class XmlRpcService. For example, if cookcomputing.com 
+has a virtual directory called <i>xmlrpc</i> and the following config file is 
+placed in the root directory of <i>xmlrpc</i>:
+</p>
+
+<pre>&lt;configuration&gt;
+  &lt;system.web&gt;
+    &lt;httpHandlers&gt;
+      &lt;add verb=&quot;*&quot; path=&quot;statename.rem&quot; 
+        type=&quot;CookComputing.StateNameService, StateNameService&quot; /&gt;
+    &lt;/httpHandlers&gt;
+  &lt;/system.web&gt; 
+&lt;/configuration&gt;</pre>
+
+<p>
+The Service can be invoked via the XML-RPC protocol at this URL:
+</p>
+
+<pre>http://localhost/xmlrpc/statename.rem</pre>
+
+<p>
+Note that the type is assembly qualified: the name of the class is <i>CookComputing.StateNameService</i> 
+in the assembly <i>StateNameService</i> (i.e. <i>StateNameService.dll</i>).
+</p>
+
+<p>
+If, instead of making an XML-RPC request via a HTTP POST request, the caller 
+makes a HTTP GET request to the same URL, the Service returns an automatically 
+generated page describing itself. For the example service above, 
+this <a href="http://www.dev1.eraserver.net/cookcomputing/math.aspx">page</a> 
+is returned.
+</p>
+
+<p>
+Alternatively the Service can implemented via XML-RPC.NET's support for .NET 
+Remoting.This has the advantage that the same Service can then be accessed by 
+either the XML-RPC or SOAP protocols.
+</p>
+  
+<h2>Further Information</h2>
+<p>
+<a href="./faq/xmlrpcnetfaq.html">FAQ</a> - this 
+provides the documentation for XML-RPC.NET. 
+</p>
+
+<p>
+<a href="./status.html">Status</a> - outstanding bugs and feature requests. 
+</p>
+
+<p>
+Samples - several samples are available - see distribution.
+</p>
+
+<h2>Release History</h2>
+<p>
+Release history is available <a href="history.html">here</a>.
+</p>
+
+<h2>Developers</h2>
+<p>
+Lead Developer - Charles Cook.
+</p>
+
+<h2>License</h2>
+<p>
+XML-RPC.NET is released under the terms of the 
+<a href="http://www.opensource.org/licenses/mit-license.html">MIT X11</a> 
+license (<a href="./faq/xmlrpcnetfaq.html#6.12">more</a>). 
+</p>
+
+<h2>Contact</h2>
+<p>
+Please contact <script language="JavaScript" type="text/javascript">
+<!--
+document.write('<a href="mailto:' + '&#99;&#104;&#97;&#115;' +'&#99;&#111;&#111;&#107;' 
++ '&#64;' 
++ '&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;' + '" title="Charles Cook">' + 'Charles Cook' + '</a>');
+// -->
+</script> 
+  with any feedback or suggestions for XML-RPC.NET. 
+</p>
+
+<p>&nbsp;</p>
+<p style="font-size: x-small;">
+Charles Cook, 2001-2007 All Rights Reserved. 21st March 2007
+</p>
+
+</div>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-444146-2";
+urchinTracker();
+</script>
+
+</body>
+
+</html>
