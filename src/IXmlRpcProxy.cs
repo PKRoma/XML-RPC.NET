@@ -49,6 +49,8 @@ namespace CookComputing.XmlRpc
     [Browsable(false)]
     ICredentials Credentials { get; set; }
 
+    bool EnableCompression { get; set;}
+
 #if (!COMPACT_FRAMEWORK && !FX1_0)
     bool Expect100Continue { get; set; }
 #endif

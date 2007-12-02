@@ -45,6 +45,7 @@ namespace CookComputing.XmlRpc
     private bool _expect100Continue = false;
 #endif
     private ICredentials _credentials = null;
+    private bool _enableCompression = false;
     private WebHeaderCollection _headers = new WebHeaderCollection();
     private int _indentation = 2;
     private bool _keepAlive = true;
@@ -181,6 +182,8 @@ namespace CookComputing.XmlRpc
             deserStream.Flush();
             deserStream.Position = 0;
           }
+          deserStream = MaybeDecompressStream((HttpWebResponse)webResp, 
+            deserStream);          
           try
           {
             XmlRpcResponse resp = ReadResponse(req, webResp, deserStream, null);
@@ -233,6 +236,12 @@ namespace CookComputing.XmlRpc
     {
       get { return _credentials; }
       set { _credentials = value; }
+    }
+
+    public bool EnableCompression
+    {
+      get { return _enableCompression; }
+      set { _enableCompression = value; }
     }
 
     [Browsable(false)]
@@ -372,6 +381,8 @@ namespace CookComputing.XmlRpc
       webReq.PreAuthenticate = PreAuthenticate;
       // Compact Framework sets this to false by default
       (webReq as HttpWebRequest).AllowWriteStreamBuffering = true;
+      if (_enableCompression)
+        webReq.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
     }
 
     private void SetRequestHeaders(
@@ -774,6 +785,8 @@ namespace CookComputing.XmlRpc
             responseStream));
           responseStream.Position = 0;
         }
+        responseStream = MaybeDecompressStream((HttpWebResponse)webResp, 
+          responseStream);
         XmlRpcResponse resp = ReadResponse(clientResult.XmlRpcRequest,
           webResp, responseStream, returnType);
         reto = resp.retVal;
@@ -912,6 +925,28 @@ namespace CookComputing.XmlRpc
         ret = ex.Response;
       }
       return ret;
+    }
+
+    // support for gzip and deflate
+    protected Stream MaybeDecompressStream(HttpWebResponse httpWebResp, 
+      Stream respStream)
+    {
+      Stream decodedStream;
+      string contentEncoding = httpWebResp.ContentEncoding.ToLower();
+      string coen = httpWebResp.Headers["Content-Encoding"];
+      if (contentEncoding.Contains("gzip"))
+      {
+        decodedStream = new System.IO.Compression.GZipStream(respStream,
+          System.IO.Compression.CompressionMode.Decompress);
+      }
+      else if (contentEncoding.Contains("deflate"))
+      {
+        decodedStream = new System.IO.Compression.DeflateStream(respStream,
+          System.IO.Compression.CompressionMode.Decompress);
+      }
+      else
+        decodedStream = respStream;
+      return decodedStream;
     }
 
     protected virtual WebResponse GetWebResponse(WebRequest request,
