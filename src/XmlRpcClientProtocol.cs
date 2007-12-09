@@ -43,9 +43,9 @@ namespace CookComputing.XmlRpc
 #endif
 #if (!COMPACT_FRAMEWORK && !FX1_0)
     private bool _expect100Continue = false;
+    private bool _enableCompression = false;
 #endif
     private ICredentials _credentials = null;
-    private bool _enableCompression = false;
     private WebHeaderCollection _headers = new WebHeaderCollection();
     private int _indentation = 2;
     private bool _keepAlive = true;
@@ -182,8 +182,10 @@ namespace CookComputing.XmlRpc
             deserStream.Flush();
             deserStream.Position = 0;
           }
+#if (!COMPACT_FRAMEWORK && !FX1_0)
           deserStream = MaybeDecompressStream((HttpWebResponse)webResp, 
             deserStream);          
+#endif
           try
           {
             XmlRpcResponse resp = ReadResponse(req, webResp, deserStream, null);
@@ -238,11 +240,13 @@ namespace CookComputing.XmlRpc
       set { _credentials = value; }
     }
 
+#if (!COMPACT_FRAMEWORK && !FX1_0)
     public bool EnableCompression
     {
       get { return _enableCompression; }
       set { _enableCompression = value; }
     }
+#endif
 
     [Browsable(false)]
     public WebHeaderCollection Headers
@@ -381,8 +385,10 @@ namespace CookComputing.XmlRpc
       webReq.PreAuthenticate = PreAuthenticate;
       // Compact Framework sets this to false by default
       (webReq as HttpWebRequest).AllowWriteStreamBuffering = true;
+#if (!COMPACT_FRAMEWORK && !FX1_0)
       if (_enableCompression)
         webReq.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
+#endif
     }
 
     private void SetRequestHeaders(
@@ -785,8 +791,10 @@ namespace CookComputing.XmlRpc
             responseStream));
           responseStream.Position = 0;
         }
+#if (!COMPACT_FRAMEWORK && !FX1_0)
         responseStream = MaybeDecompressStream((HttpWebResponse)webResp, 
           responseStream);
+#endif
         XmlRpcResponse resp = ReadResponse(clientResult.XmlRpcRequest,
           webResp, responseStream, returnType);
         reto = resp.retVal;
@@ -927,6 +935,7 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
+#if (!COMPACT_FRAMEWORK && !FX1_0)
     // support for gzip and deflate
     protected Stream MaybeDecompressStream(HttpWebResponse httpWebResp, 
       Stream respStream)
@@ -948,6 +957,7 @@ namespace CookComputing.XmlRpc
         decodedStream = respStream;
       return decodedStream;
     }
+#endif
 
     protected virtual WebResponse GetWebResponse(WebRequest request,
       IAsyncResult result)
