@@ -1,5 +1,5 @@
 XML-RPC.NET - XML-RPC for .NET 
-v2.2.0.0 development snapshot build
+v2.2.0
 Copyright (C) 2001-2007 Charles Cook (chascook@gmail.com)
 
 xmlrpcgen 
