@@ -4,6 +4,7 @@
   <PropertyGroup>
     <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\tools\CommunityTasks\</MSBuildCommunityTasksPath>
     <NUnitToolPath>$(MSBuildProjectDirectory)\tools\NUnit\</NUnitToolPath>
+    <KeyFile>CookComputing.key</KeyFile>
   </PropertyGroup>
 
   <Import Project="tools\CommunityTasks\MSBuild.Community.Tasks.Targets"/>
@@ -24,7 +25,7 @@
     <Major>2</Major>
     <Minor>2</Minor>
     <Build>0</Build>
-    <Revision>0</Revision>
+    <Revision>1</Revision>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -42,6 +43,8 @@
   </Target>
 
   <Target Name="Version1_0">
+    <Error Text="Please supply your own key file CookComputing.key in build directory"  
+           Condition = "!Exists('$(KeyFile)')"/>
     <AssemblyInfo CodeLanguage="CS" 
       OutputFile="src\AssemblyBuildNumber.cs"
       AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
@@ -49,7 +52,8 @@
   </Target>
 
   <Target Name="Version2_0">
-
+    <Error Text="Please supply your own key file CookComputing.key in build directory"  
+           Condition = "!Exists('$(KeyFile)')"/>
     <AssemblyInfo CodeLanguage="CS" 
       OutputFile="src\AssemblyBuildNumber.cs"
       AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
@@ -57,6 +61,8 @@
   </Target>
 
   <Target Name="VersionCF1_0">
+    <Error Text="Please supply your own key file CookComputing.key in build directory"  
+           Condition = "!Exists('$(KeyFile)')"/>
     <AssemblyInfo CodeLanguage="CS" 
       OutputFile="src\AssemblyBuildNumber.cs"
       AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
@@ -64,7 +70,6 @@
   </Target>
 
   <Target Name="BuildXmlRpc1_0" DependsOnTargets="Version1_0">
-    <Error Text="Please supply your own key file"  Condition = "!Exists('../../CookComputing.key')"/>
     <MakeDir Directories = "$(BuildDir)" Condition = "!Exists('$($(BuildDir))')" />
     <MakeDir Directories = "$(BuildDir1_0)" Condition = "!Exists('$($(BuildDir1_0))')" />
     <MSBuild Projects="src\xmlrpc.csproj" Targets="Rebuild"

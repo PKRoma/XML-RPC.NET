@@ -11,7 +11,7 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>CookComputing.XmlRpcV2</AssemblyName>
-    <AssemblyOriginatorKeyFile Condition="'$(BuildingInsideVisualStudio)' == ''">..\..\..\CookComputing.key</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile Condition="'$(BuildingInsideVisualStudio)' == ''">$(KeyFile)</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
