@@ -20,7 +20,7 @@ namespace ntest
     public void Setup()
     {
       _lstner = new HttpListener();
-      _lstner.Prefixes.Add("http://127.0.0.1:11000/");
+      _lstner.Prefixes.Add("http://127.0.0.1:11002/");
       Thread thrd = new Thread(new ThreadStart(Run));
       _running = true;
       _lstner.Start();
@@ -92,7 +92,7 @@ namespace ntest
     {
       encoding = "gzip";
       IStateName proxy = XmlRpcProxyGen.Create < IStateName>();
-      proxy.Url = "http://127.0.0.1:11001/";
+      proxy.Url = "http://127.0.0.1:11002/";
       proxy.EnableCompression = true;
       string name = proxy.GetStateName(1);
     }
@@ -102,7 +102,7 @@ namespace ntest
     {
       encoding = "deflate";
       IStateName proxy = XmlRpcProxyGen.Create<IStateName>();
-      proxy.Url = "http://127.0.0.1:11001/";
+      proxy.Url = "http://127.0.0.1:11002/";
       proxy.EnableCompression = true;
       string name = proxy.GetStateName(1);
     }
