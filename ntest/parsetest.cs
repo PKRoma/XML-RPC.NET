@@ -283,6 +283,96 @@ namespace ntest
     }
 
     [Test]
+    public void DateTime_WordPress()
+    {
+      // yyyyMMddThh:mm:ssZ
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20020706T11:25:37Z</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
+    public void DateTime_TypePad()
+    {
+      // yyyy-MM-ddThh:mm:ssZ
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>2002-07-06T11:25:37Z</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
+    public void DateTime_TZPlus00()
+    {
+      // yyyyMMddThh:mm:ssZ+00
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20020706T11:25:37+00</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
+    public void DateTime_TZPlus0000()
+    {
+      // yyyyMMddThh:mm:ssZ+00
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20020706T11:25:37+0000</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
+    public void DateTime_TZMinus00()
+    {
+      // yyyyMMddThh:mm:ssZ+00
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20020706T11:25:37-00</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
+    public void DateTime_TZMinus0000()
+    {
+      // yyyyMMddThh:mm:ssZ+00
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20020706T11:25:37-0000</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
     public void DateTime_allZeros1()
     {
       Type parsedType, parsedArrayType;
