@@ -1570,6 +1570,11 @@ namespace CookComputing.XmlRpc
                 // WordPress yyyyMMddThh:mm:ssZ
                 dateTimeFormat = "yyyyMMdd'T'HH':'mm':'ss'Z'";
               }
+              else if (s.EndsWith("-00") || s.EndsWith("-0000")
+                || s.EndsWith("+00") || s.EndsWith("+0000"))
+              {
+                s = s.Substring(0, 17);
+              }
             }
             else
             {
