@@ -61,16 +61,17 @@ google_color_url = "008000";
 <h1>XML-RPC.NET</h1>
 
 <h2>Latest News</h2>
-<h3>21st March 2007</h3>
-<p>Version 2.1.1 has been released:
-<a href="http://www.xml-rpc.net/release/xml-rpc.net.2.1.1.zip">xml-rpc.net.2.1.1.zip</a> </p>
+<h3>9th March 2008</h3>
+<p>Version 2.2.0 has been released:
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.2.0.zip">xml-rpc.net.2.2.0.zip</a> 
+</p>
 
 <p>New features and changes:</p>
 
 <ul>
 
 <li>
-Add support for using System.Net.HttpListener to implement an XML-RPC server. 
+Support for using System.Net.HttpListener to implement an XML-RPC server. 
 (<a href="./faq/xmlrpcnetfaq.html#3.12">more</a>). 
 </li>
 
@@ -78,6 +79,16 @@ Add support for using System.Net.HttpListener to implement an XML-RPC server.
 Allow client to configure that &lt;string&gt; tag is not used for 
 string values. 
 (<a href="./faq/xmlrpcnetfaq.html#2.30">more</a>). 
+</li>
+
+<li>
+Server configuration using XmlRpcServiceAttribute. 
+(<a href="./faq/xmlrpcnetfaq.html#3.13">more</a>). 
+</li>
+
+<li>
+Client support for Accept-Encoding - gzip and deflate. 
+(<a href="./faq/xmlrpcnetfaq.html#2.31">more</a>). 
 </li>
 
 <li>
@@ -90,19 +101,31 @@ Fixed null exception if acquiring request stream fails while logging.
 Fixed stack overflow in GetXmlRpcType if invalid types such as DBNull passed in.
 </li>
 <li>
-Throw XmlRpcDupXmlRpcMethodNames if same XML-RPC name applied to two methods.
-</li>
-<li>
 Fixed handling of params method parameter if it is first parameter of method.
 </li>
 <li>
 Improved error reporting when processing params parameters.
 </li>
+<li>
+Throw XmlRpcDupXmlRpcMethodNames if same XML-RPC name applied to two methods.
+</li>
+<li>
+Handle zero offset timezones when AllowNonStandardDateTime flag set.
+</li>
+
 </ul>
 </li>
 
 </ul>  
 
+<h3>4th December 2007</h3>
+
+<p>
+Note: if you use the built-in compressed folders feature of Windows 
+Explorer in Windows XP to extract file from the distribution, 
+you may find that the contents of the bin directories are not visible. 
+Use a utility such as WinZip instead.
+</p>
 
 <h2>Overview</h2>
 <p>
@@ -293,9 +316,22 @@ either the XML-RPC or SOAP protocols.
 provides the documentation for XML-RPC.NET. 
 </p>
 
+<h3>Google Code Project</h3>
 <p>
-<a href="./status.html">Status</a> - outstanding bugs and feature requests. 
+As of version 2.2.0, XML-RPC.NET is hosted at Google Code:
 </p>
+
+<ul>
+<li><a href="http://code.google.com/p/xmlrpcnet/downloads/list">Downloads</a> 
+    - featured release and development snapshots.
+</li>
+<li><a href="http://code.google.com/p/xmlrpcnet/issues/list?can=2&q=&colspec=ID+Type+Status+Priority+Milestone+Owner+Summary&cells=tiles">Open Issues</a> - Issues waiting to be fixed.  
+</li>
+<li><a href="http://code.google.com/p/xmlrpcnet/issues/list?can=2&q=label%3Aenhancement&colspec=ID+Type+Status+Priority+Milestone+Owner+Summary&cells=tiles">Requested Features</a> - the current wishlist of new features. 
+</li>
+<li><a href="http://code.google.com/p/xmlrpcnet/source/checkout">Source</a> - browse source code repository online or via Subversion client.
+</li>
+</ul>
 
 <p>
 Samples - several samples are available - see distribution.
@@ -305,6 +341,7 @@ Samples - several samples are available - see distribution.
 <p>
 Release history is available <a href="history.html">here</a>.
 </p>
+
 
 <h2>Developers</h2>
 <p>
@@ -332,7 +369,7 @@ document.write('<a href="mailto:' + '&#99;&#104;&#97;&#115;' +'&#99;&#111;&#111;
 
 <p>&nbsp;</p>
 <p style="font-size: x-small;">
-Charles Cook, 2001-2007 All Rights Reserved. 21st March 2007
+Charles Cook, 2001-2008 All Rights Reserved. 9th March 2008
 </p>
 
 </div>

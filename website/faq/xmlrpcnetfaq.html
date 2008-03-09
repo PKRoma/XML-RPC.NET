@@ -121,6 +121,7 @@ if the XML-RPC method name is not valid in my programming language?<br/>
 2.28 <a href="#2.28">Can a proxy interface contain overloaded methods?</a>  <br />
 2.29 <a href="#2.29">How do I implement a client in Boo?</a> <br />
 2.30 <a href="#2.30">Can I configure the client to not use the &lt;string&gt; tag?</a><br />
+2.31 <a href="#2.31">How do I configure client support for Accept-Encoding?</a><br />
 
 </p>
 
@@ -140,7 +141,8 @@ if the XML-RPC method name is not valid in my programming language?<br/>
 3.9 <a href="#3.9">Can I run XML RPC.NET services with other web servers</a>?<br/>
 3.10 <a href="#3.10">Can I implement services in other languages?</a>?<br/>
 3.11 <a href="#3.11">Can I implement a service in an ASHX file?</a>?<br/>
-3.12 <a href="#3.11">How do I implement an XML-RPC server using HttpListener?</a>?
+3.12 <a href="#3.12">How do I implement an XML-RPC server using HttpListener?</a>?<br/>
+3.13 <a href="#3.13">Can I customise the XML returned by a service?</a>?
 </p>
 
 <p>4. Error Handling</p>
@@ -1589,7 +1591,21 @@ proxy.UseStringTag = false;
 </pre>
 
 
+<h3><a id="2.31"></a>2.31 How do I configure client support for Accept-Encoding?</h3>
+<p>
+Some servers may support compression of XML-RPC responses. The client indicates 
+that it can accept a compressed response by setting the 
+<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3">
+HTTP Accept-Encoding</a> header:
+</p>
 
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
+proxy..EnableCompression = true;
+</pre>
+
+<p>
+The content-codings <b>compress</b> and <b>gzip</b> are supported.
+</p>
 
 <h2>3. Servers</h2>
 
@@ -2069,6 +2085,61 @@ class _
 Note that the HttpListener class can also be used asynchronously.
 </p>
 
+
+<h3><a id="3.13"></a>3.13 Can I customise the XML returned by a service?</h3>
+<p>The format of the XML returned by a service can be customised by setting 
+the following atttributes on the service class:
+</p>
+<ol>
+<li>
+Indentation - uses to define the number of spaces worth of indentation for
+ response elements; the default is 2.
+</li>
+<li>
+UseIndentation - if set to true responses are formatted across multiple lines;
+if set to false a response is formatted as a single line; the default is true.
+</li>
+<li>
+UseIntTag - if set to true integer values in responses are formatted as
+&lt;int&gt; if set to false they are formatted as &lt;i4&gt;; 
+the default is false.
+</li>
+<li>
+UseStringTag - if set to true string values in responses are formatted as
+&lt;string&gt;; if set to false they are formatted as simply the text contained
+by the &lt;value&gt; element; the default is true.
+</li>
+<li>
+XmlEncoding - this is used to specify the text encoding of responses. By default
+UTF-8 is used.
+</li>
+</ol>
+<p>
+For example:
+</p>
+
+<pre>using System; 
+using CookComputing.XmlRpc; 
+
+struct SumAndDiffValue 
+{ 
+  public int sum; 
+  public int difference; 
+}
+
+[XmlRpcService(XmlEncoding="ISO-8859-1", Indentation=1, 
+    UseStringTag=false, UseIntTag=true, UseIndentation=true)] 
+class SumAndDiffService : XmlRpcService
+{ 
+  [XmlRpcMethod(&quot;sample.sumAndDifference&quot;)] 
+  public SumAndDiffValue SumAndDifference(int x, int y) 
+  { 
+    SumAndDiffValue ret; 
+    ret.sum = x + y; 
+    ret.difference = x – y; 
+    return ret; 
+  } 
+} </pre>
 
 <h2>4. Error Handling</h2>
 
