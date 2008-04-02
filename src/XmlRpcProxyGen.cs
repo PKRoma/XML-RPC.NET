@@ -187,6 +187,7 @@ namespace CookComputing.XmlRpc
         = typeof(XmlRpcClientProtocol).GetMethod("Invoke", invokeTypes);
       ilgen.Emit(OpCodes.Ldarg_0);
       ilgen.Emit(OpCodes.Call, typeof(MethodBase).GetMethod("GetCurrentMethod"));
+      ilgen.Emit(OpCodes.Castclass, typeof(System.Reflection.MethodInfo));
       ilgen.Emit(OpCodes.Ldloc, argValues);
       ilgen.Emit(OpCodes.Call, invokeMethod);
       //  if non-void return prepare return value, otherwise pop to discard 
@@ -297,6 +298,7 @@ namespace CookComputing.XmlRpc
           = typeof(XmlRpcClientProtocol).GetMethod("BeginInvoke", invokeTypes);
         ilgen.Emit(OpCodes.Ldarg_0);
         ilgen.Emit(OpCodes.Call, typeof(MethodBase).GetMethod("GetCurrentMethod"));
+        ilgen.Emit(OpCodes.Castclass, typeof(System.Reflection.MethodInfo));
         ilgen.Emit(OpCodes.Ldloc, argValues);
         ilgen.Emit(OpCodes.Ldarg_0);
         ilgen.Emit(OpCodes.Ldloc, acbValue);
