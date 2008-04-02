@@ -44,6 +44,12 @@ namespace CookComputing.XmlRpc
 
     Stream IHttpResponse.OutputStream { get { return m_resp.OutputStream; } }
 
+    bool IHttpResponse.SendChunked
+    {
+      get { throw new NotImplementedException(); }
+      set { throw new NotImplementedException(); }
+    }
+
     int IHttpResponse.StatusCode 
     { 
       get { return m_resp.StatusCode; } 
@@ -54,6 +60,12 @@ namespace CookComputing.XmlRpc
     { 
       get { return m_resp.StatusDescription; } 
       set { m_resp.StatusDescription = value; } 
+    }
+
+    Int64 IHttpResponse.ContentLength
+    {
+      get { throw new NotImplementedException(); }
+      set { throw new NotImplementedException(); }
     }
 
     private System.Web.HttpResponse m_resp;

@@ -36,6 +36,13 @@ namespace CookComputing.XmlRpc
     public XmlRpcListenerResponse(HttpListenerResponse response)
     {
       this.response = response;
+      response.SendChunked = false;
+    }
+
+    Int64 IHttpResponse.ContentLength
+    {
+      get { return response.ContentLength64; }
+      set { response.ContentLength64 = value; }
     }
 
     string IHttpResponse.ContentType
@@ -52,6 +59,12 @@ namespace CookComputing.XmlRpc
     Stream IHttpResponse.OutputStream
     {
       get { return response.OutputStream; }
+    }
+
+    bool IHttpResponse.SendChunked
+    {
+      get { return response.SendChunked; }
+      set { response.SendChunked = value; }
     }
 
     int IHttpResponse.StatusCode

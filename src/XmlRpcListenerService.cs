@@ -33,12 +33,15 @@ namespace CookComputing.XmlRpc
 
   public abstract class XmlRpcListenerService : XmlRpcHttpServerProtocol
   {
+    bool _sendChunked = false;
+
     public virtual void ProcessRequest(HttpListenerContext RequestContext)
     {
       try
       {
         IHttpRequest req = new XmlRpcListenerRequest(RequestContext.Request);
         IHttpResponse resp = new XmlRpcListenerResponse(RequestContext.Response);
+        resp.SendChunked = _sendChunked;
         HandleHttpRequest(req, resp);
         RequestContext.Response.OutputStream.Close();
       }
@@ -48,6 +51,12 @@ namespace CookComputing.XmlRpc
         RequestContext.Response.StatusCode = 500;
         RequestContext.Response.StatusDescription = ex.Message;
       }
+    }
+
+    public bool SendChunked
+    {
+      get { return _sendChunked; }
+      set { _sendChunked = value; }
     }
   }
 }
