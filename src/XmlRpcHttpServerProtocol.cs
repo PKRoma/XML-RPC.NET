@@ -67,10 +67,10 @@ namespace CookComputing.XmlRpc
       //Context.Response.AppendHeader("Server", "XML-RPC.NET");
       // process the request
       Stream responseStream = Invoke(httpReq.InputStream);
+      httpResp.ContentType = "text/xml";
       Stream respStm = httpResp.OutputStream;
       Util.CopyStream(responseStream, respStm);
       respStm.Flush();
-      httpResp.ContentType = "text/xml";
     }
 
     protected void HandleGET(
