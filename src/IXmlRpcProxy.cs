@@ -78,6 +78,8 @@ namespace CookComputing.XmlRpc
 
     string Url { get; set; }
 
+    bool UseEmptyParamsTag { get; set; }
+
     bool UseIndentation { get; set; }
 
     bool UseIntTag { get; set; }

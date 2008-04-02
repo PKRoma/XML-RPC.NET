@@ -60,7 +60,7 @@ google_color_url = "008000";
 
 <h1>XML-RPC.NET FAQ</h1>
 
-<p>19th July 2007. &copy; Charles Cook, 2002-2007.</p>
+<p>2nd April 2008. &copy; Charles Cook, 2002-2008.</p>
 <p>Please send feedback, corrections, etc, to xmlrpcfaq@gmail.com.</p>
 <h2>Contents</h2>
 <p>1. Introduction</p>
@@ -122,6 +122,7 @@ if the XML-RPC method name is not valid in my programming language?<br/>
 2.29 <a href="#2.29">How do I implement a client in Boo?</a> <br />
 2.30 <a href="#2.30">Can I configure the client to not use the &lt;string&gt; tag?</a><br />
 2.31 <a href="#2.31">How do I configure client support for Accept-Encoding?</a><br />
+2.32 <a href="#2.32">How do I prevent an empty params element in a request?</a><br />
 
 </p>
 
@@ -1600,12 +1601,48 @@ HTTP Accept-Encoding</a> header:
 </p>
 
 <pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
-proxy..EnableCompression = true;
+proxy.EnableCompression = true;
 </pre>
 
 <p>
 The content-codings <b>compress</b> and <b>gzip</b> are supported.
 </p>
+
+<h3><a id="2.32"></a>2.32 How do I prevent an empty params element in a request?</h3>
+<p>
+The XML-RPC spec is unclear about what should be sent in a request if the 
+method call does not take any parameters. By default XML-RPC.NET sends an empty
+params element:
+</p>
+
+<pre>&lt;?xml version=""1.0""?&gt;
+&lt;methodCall&gt;
+  &lt;methodName&gt;Foo&lt;/methodName&gt;
+  &lt;params /&gt;
+&lt;/methodCall&gt;
+</pre>
+
+<p>
+However, some servers expect the params element not to be sent if there are no
+parameters:
+</p>
+
+<pre>&lt;?xml version=""1.0""?&gt;
+&lt;methodCall&gt;
+  &lt;methodName&gt;Foo&lt;/methodName&gt;
+&lt;/methodCall&gt;
+</pre>
+
+<p>
+To support these servers, set the UseEmptyParamsTag property of IXmlRpcProxy 
+to false (the default is true):
+</p>
+
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
+proxy.UseEmptyParamsTag = false;
+</pre>
+
+
 
 <h2>3. Servers</h2>
 

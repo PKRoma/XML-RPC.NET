@@ -74,6 +74,11 @@ namespace CookComputing.XmlRpc
       get { return isCompleted; } 
     }
 
+    public bool UseEmptyParamsTag
+    {
+      get { return _useEmptyParamsTag; }
+    }
+
     public bool UseIndentation 
     {
       get { return _useIndentation; } 
@@ -116,6 +121,7 @@ namespace CookComputing.XmlRpc
       XmlRpcClientProtocol ClientProtocol, 
       XmlRpcRequest XmlRpcReq, 
       Encoding XmlEncoding,
+      bool useEmptyParamsTag,
       bool useIndentation,
       int indentation,
       bool UseIntTag,
@@ -132,6 +138,7 @@ namespace CookComputing.XmlRpc
       userCallback = UserCallback;
       completedSynchronously = true;
       xmlEncoding = XmlEncoding;
+      _useEmptyParamsTag = useEmptyParamsTag;
       _useIndentation = useIndentation;
       _indentation = indentation;
       _useIntTag = UseIntTag;
@@ -245,6 +252,7 @@ namespace CookComputing.XmlRpc
     byte[] buffer;
     XmlRpcRequest xmlRpcRequest;
     Encoding xmlEncoding;
+    bool _useEmptyParamsTag;
     bool _useIndentation;
     int _indentation;
     bool _useIntTag;

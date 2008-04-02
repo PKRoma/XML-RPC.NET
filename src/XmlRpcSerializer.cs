@@ -61,6 +61,13 @@ namespace CookComputing.XmlRpc
     }
     XmlRpcNonStandard m_nonStandard = XmlRpcNonStandard.None;
 
+    public bool UseEmptyParamsTag
+    {
+      get { return m_bUseEmptyParamsTag; }
+      set { m_bUseEmptyParamsTag = value; }
+    }
+    bool m_bUseEmptyParamsTag = true;
+
     public bool UseIndentation
     {
       get { return m_bUseIndentation; }
@@ -138,49 +145,52 @@ namespace CookComputing.XmlRpc
         xtw.WriteElementString("methodName", request.method);
       else
         xtw.WriteElementString("methodName", request.xmlRpcMethod);
-      xtw.WriteStartElement("", "params", "");
-      try
+      if (request.args.Length > 0 || UseEmptyParamsTag)
       {
-        for (int i=0; i < request.args.Length; i++)
-        { 
-          if (pis != null)
+        xtw.WriteStartElement("", "params", "");
+        try
+        {
+          for (int i = 0; i < request.args.Length; i++)
           {
-            if (i >= pis.Length)
-              throw new XmlRpcInvalidParametersException("Number of request "
-                + "parameters greater than number of proxy method parameters.");
-            if (Attribute.IsDefined(pis[i], typeof(ParamArrayAttribute)))
+            if (pis != null)
             {
-              Array ary = (Array)request.args[i];
-              foreach (object o in ary)
+              if (i >= pis.Length)
+                throw new XmlRpcInvalidParametersException("Number of request "
+                  + "parameters greater than number of proxy method parameters.");
+              if (Attribute.IsDefined(pis[i], typeof(ParamArrayAttribute)))
               {
-                if (o == null)
-                  throw new XmlRpcNullParameterException(
-                    "Null parameter in params array");
-                xtw.WriteStartElement("", "param", "");
-                Serialize(xtw, o, mappingAction);
-                xtw.WriteEndElement();
+                Array ary = (Array)request.args[i];
+                foreach (object o in ary)
+                {
+                  if (o == null)
+                    throw new XmlRpcNullParameterException(
+                      "Null parameter in params array");
+                  xtw.WriteStartElement("", "param", "");
+                  Serialize(xtw, o, mappingAction);
+                  xtw.WriteEndElement();
+                }
+                break;
               }
-              break;
             }
+            if (request.args[i] == null)
+            {
+              throw new XmlRpcNullParameterException(String.Format(
+                "Null method parameter #{0}", i + 1));
+            }
+            xtw.WriteStartElement("", "param", "");
+            Serialize(xtw, request.args[i], mappingAction);
+            xtw.WriteEndElement();
           }
-          if (request.args[i] == null)
-          {
-            throw new XmlRpcNullParameterException(String.Format(
-              "Null method parameter #{0}", i+1));
-          }
-          xtw.WriteStartElement("", "param", "");
-          Serialize(xtw, request.args[i], mappingAction);
-          xtw.WriteEndElement();
         }
+        catch (XmlRpcUnsupportedTypeException ex)
+        {
+          throw new XmlRpcUnsupportedTypeException(ex.UnsupportedType,
+            String.Format("A parameter is of, or contains an instance of, "
+            + "type {0} which cannot be mapped to an XML-RPC type",
+            ex.UnsupportedType));
+        }
+        xtw.WriteEndElement();
       }
-      catch (XmlRpcUnsupportedTypeException ex)
-      {
-        throw new XmlRpcUnsupportedTypeException(ex.UnsupportedType,
-          String.Format("A parameter is of, or contains an instance of, "
-          + "type {0} which cannot be mapped to an XML-RPC type", 
-          ex.UnsupportedType));
-      }        
-      xtw.WriteEndElement();
     }
       xtw.WriteEndElement();
       xtw.Flush();
