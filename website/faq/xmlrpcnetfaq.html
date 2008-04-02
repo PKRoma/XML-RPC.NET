@@ -2111,7 +2111,7 @@ class _
     while (true)
     {
       HttpListenerContext context = listener.GetContext();
-      ListenerService svc = new StateNameService();
+      XmlRpcListenerService svc = new StateNameService();
       svc.ProcessRequest(context);
     }
   }
