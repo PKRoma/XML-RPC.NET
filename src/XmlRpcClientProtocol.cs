@@ -123,8 +123,10 @@ namespace CookComputing.XmlRpc
       MethodInfo mi,
       params object[] parameters)
     {
+#if (!COMPACT_FRAMEWORK)
       _responseHeaders = null;
       _responseCookies = null;
+#endif
       WebRequest webReq = null;
       object reto = null;
       try
@@ -172,8 +174,10 @@ namespace CookComputing.XmlRpc
             reqStream.Close();
         }
         HttpWebResponse webResp = GetWebResponse(webReq) as HttpWebResponse;
+#if (!COMPACT_FRAMEWORK)
         _responseCookies = webResp.Cookies;
         _responseHeaders = webResp.Headers;
+#endif
         Stream respStm = null;
         Stream deserStream;
         logging = (ResponseEvent != null);

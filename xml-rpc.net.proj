@@ -23,9 +23,9 @@
     <!-- Major number is the major number of the most recent version of .NET 
          the build is targetted at -->
     <Major>2</Major>
-    <Minor>2</Minor>
+    <Minor>3</Minor>
     <Build>0</Build>
-    <Revision>4</Revision>
+    <Revision>1</Revision>
   </PropertyGroup>
 
   <PropertyGroup>

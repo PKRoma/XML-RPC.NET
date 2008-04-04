@@ -60,6 +60,68 @@ google_color_url = "008000";
 
 <h1>XML-RPC.NET - History</h1>
 
+<h2>2.2.0</h2>
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.2.0.zip">xml-rpc.net.2.2.0.zip</a> 
+</p>
+
+<p>New features and changes:</p>
+
+<ul>
+
+<li>
+Support for using System.Net.HttpListener to implement an XML-RPC server. 
+(<a href="./faq/xmlrpcnetfaq.html#3.12">more</a>). 
+</li>
+
+<li>
+Allow client to configure that &lt;string&gt; tag is not used for 
+string values. 
+(<a href="./faq/xmlrpcnetfaq.html#2.30">more</a>). 
+</li>
+
+<li>
+Server configuration using XmlRpcServiceAttribute. 
+(<a href="./faq/xmlrpcnetfaq.html#3.13">more</a>). 
+</li>
+
+<li>
+Client support for Accept-Encoding - gzip and deflate. 
+(<a href="./faq/xmlrpcnetfaq.html#2.31">more</a>). 
+</li>
+
+<li>
+Changes:
+<ul>
+<li>
+Fixed null exception if acquiring request stream fails while logging.
+</li>
+<li>
+Fixed stack overflow in GetXmlRpcType if invalid types such as DBNull passed in.
+</li>
+<li>
+Fixed handling of params method parameter if it is first parameter of method.
+</li>
+<li>
+Improved error reporting when processing params parameters.
+</li>
+<li>
+Throw XmlRpcDupXmlRpcMethodNames if same XML-RPC name applied to two methods.
+</li>
+<li>
+Handle zero offset timezones when AllowNonStandardDateTime flag set.
+</li>
+
+</ul>
+</li>
+
+</ul>  
+
+
+
+
+
+
+
 <h2>2.1.0</h2>
 
 <a href="http://www.xml-rpc.net/release/xml-rpc.net.2.1.0.zip">xml-rpc.net.2.1.0.zip</a> </p>
@@ -445,7 +507,7 @@ document.write('<a href="mailto:' + '&#99;&#104;&#97;&#115;' +'&#99;&#111;&#111;
   with any feedback or suggestions for XML-RPC.NET. </p>
 <p>&nbsp;</p>
 <p style="font-size: x-small;">
-Charles Cook, 2001-2007 All Rights Reserved. 9th March 2008
+Charles Cook, 2001-2008 All Rights Reserved. 4th April 2008
 </p>
 
 </div>
