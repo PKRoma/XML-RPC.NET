@@ -41,8 +41,9 @@ namespace ntest
         while (_running)
         {
           HttpListenerContext context = _lstner.GetContext();
+          context.Response.Headers.Add("BarHeader", "BarValue");
+          context.Response.Cookies.Add(new Cookie("FooCookie", "FooValue"));
           _svc.ProcessRequest(context);
-
         }
       }
       catch (HttpListenerException ex)

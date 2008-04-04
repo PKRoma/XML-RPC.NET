@@ -74,6 +74,14 @@ namespace CookComputing.XmlRpc
     [Browsable(false)]
     IWebProxy Proxy { get; set; }
 
+#if (!COMPACT_FRAMEWORK)
+    [Browsable(false)]
+    CookieCollection ResponseCookies { get; }
+
+    [Browsable(false)]
+    WebHeaderCollection ResponseHeaders { get; }
+#endif
+
     int Timeout { get; set; }
 
     string Url { get; set; }

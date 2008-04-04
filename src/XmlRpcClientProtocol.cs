@@ -53,6 +53,10 @@ namespace CookComputing.XmlRpc
     private bool _preAuthenticate = false;
     private Version _protocolVersion = HttpVersion.Version11;
     private IWebProxy _proxy = null;
+#if (!COMPACT_FRAMEWORK)
+    private CookieCollection _responseCookies;
+    private WebHeaderCollection _responseHeaders;
+#endif
     private int _timeout = 100000;
     private string _url = null;
     private string _userAgent = "XML-RPC.NET";
@@ -119,6 +123,8 @@ namespace CookComputing.XmlRpc
       MethodInfo mi,
       params object[] parameters)
     {
+      _responseHeaders = null;
+      _responseCookies = null;
       WebRequest webReq = null;
       object reto = null;
       try
@@ -165,7 +171,9 @@ namespace CookComputing.XmlRpc
           if (reqStream != null)
             reqStream.Close();
         }
-        WebResponse webResp = GetWebResponse(webReq);
+        HttpWebResponse webResp = GetWebResponse(webReq) as HttpWebResponse;
+        _responseCookies = webResp.Cookies;
+        _responseHeaders = webResp.Headers;
         Stream respStm = null;
         Stream deserStream;
         logging = (ResponseEvent != null);
@@ -312,6 +320,20 @@ namespace CookComputing.XmlRpc
       get { return _proxy; }
       set { _proxy = value; }
     }
+
+#if (!COMPACT_FRAMEWORK)
+    public CookieCollection ResponseCookies
+    {
+      get { return _responseCookies; }
+    }
+#endif
+
+#if (!COMPACT_FRAMEWORK)
+    public WebHeaderCollection ResponseHeaders
+    {
+      get { return _responseHeaders; }
+    }
+#endif
 
     public int Timeout
     {
@@ -779,7 +801,6 @@ namespace CookComputing.XmlRpc
       Type returnType)
     {
       object reto = null;
-      WebResponse webResp = null;
       Stream responseStream = null;
       try
       {
@@ -789,7 +810,11 @@ namespace CookComputing.XmlRpc
         if (clientResult.EndSendCalled)
           throw new Exception("dup call to EndSend");
         clientResult.EndSendCalled = true;
-        webResp = clientResult.WaitForResponse();
+        HttpWebResponse webResp = (HttpWebResponse)clientResult.WaitForResponse();
+#if (!COMPACT_FRAMEWORK)
+        clientResult._responseCookies = webResp.Cookies;
+        clientResult._responseHeaders = webResp.Headers;
+#endif
         responseStream = clientResult.ResponseBufferedStream;
         if (ResponseEvent != null)
         {
@@ -811,8 +836,6 @@ namespace CookComputing.XmlRpc
       {
         if (responseStream != null)
           responseStream.Close();
-        if (webResp != null)
-          webResp = null;
       }
       return reto;
     }

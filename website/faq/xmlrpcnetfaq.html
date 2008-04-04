@@ -60,7 +60,7 @@ google_color_url = "008000";
 
 <h1>XML-RPC.NET FAQ</h1>
 
-<p>2nd April 2008. &copy; Charles Cook, 2002-2008.</p>
+<p>3rd April 2008. &copy; Charles Cook, 2002-2008.</p>
 <p>Please send feedback, corrections, etc, to xmlrpcfaq@gmail.com.</p>
 <h2>Contents</h2>
 <p>1. Introduction</p>
@@ -123,6 +123,7 @@ if the XML-RPC method name is not valid in my programming language?<br/>
 2.30 <a href="#2.30">Can I configure the client to not use the &lt;string&gt; tag?</a><br />
 2.31 <a href="#2.31">How do I configure client support for Accept-Encoding?</a><br />
 2.32 <a href="#2.32">How do I prevent an empty params element in a request?</a><br />
+2.33 <a href="#2.33">Can I retrieve the HTML response headers and cookies?</a><br />
 
 </p>
 
@@ -1144,7 +1145,7 @@ being the interface on an instance of the System.Net.WebProxy class. For example
 
 <pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
 proxy.Proxy = new WebProxy(&quot;http://proxyserver:8000&quot;);    
-SumAndDiffValue ret = xmlRpcProxy.SumAndDifference(2, 3); </pre>
+SumAndDiffValue ret = proxy.SumAndDifference(2, 3); </pre>
 
 <p>The second method is to set a global default proxy for all requests by using 
 the System.Net.GlobalProxySelection class:
@@ -1640,6 +1641,31 @@ to false (the default is true):
 
 <pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
 proxy.UseEmptyParamsTag = false;
+</pre>
+
+
+<h3><a id="2.33"></a>2.33 Can I retrieve the HTML response headers and cookies?</h3>
+<p>
+To retrieve the HTML response headers and cookies, use the ResponseHeaders and 
+ResponseCookies properties of IXmlRpcProxy. For example, assuming the proxy 
+interface ISumAndDiff is derived from IXmlRpcProxy (which is recommended):
+</p>
+
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
+SumAndDiffValue ret = proxy.SumAndDifference(2, 3);
+WebHeaderCollection headers = proxy.ResponseHeaders;
+CookieCollection cookies = proxy.ResponseCookies; 
+</pre>
+
+<p>
+The response headers and cookies retrieved are those associated with the last 
+call made by the proxy. When making an asynchronous call the headers and 
+cookies can be retrieved as follows:
+</p>
+
+<pre>Result ret = theProxy.EndSumAndDifference(asr); 
+WebHeaderCollection headers = ((XmlRpcAsyncResult)iasr).ResponseHeaders;
+CookieCollection cookies = ((XmlRpcAsyncResult)iasr).ResponseCookies;
 </pre>
 
 
