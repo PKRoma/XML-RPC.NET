@@ -41,7 +41,6 @@ namespace CookComputing.XmlRpc
 
     Int64 IHttpResponse.ContentLength
     {
-      get { return response.ContentLength64; }
       set { response.ContentLength64 = value; }
     }
 

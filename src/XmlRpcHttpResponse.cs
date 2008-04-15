@@ -46,7 +46,7 @@ namespace CookComputing.XmlRpc
 
     bool IHttpResponse.SendChunked
     {
-      get { throw new NotImplementedException(); }
+      get { return true; }
       set { throw new NotImplementedException(); }
     }
 
@@ -64,7 +64,6 @@ namespace CookComputing.XmlRpc
 
     Int64 IHttpResponse.ContentLength
     {
-      get { throw new NotImplementedException(); }
       set { throw new NotImplementedException(); }
     }
 

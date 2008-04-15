@@ -30,7 +30,7 @@ namespace CookComputing.XmlRpc
 {
   public interface IHttpResponse
   {
-    Int64 ContentLength { get; set; }
+    Int64 ContentLength { set; }
     string ContentType { get; set; }
     TextWriter Output { get; }
     Stream OutputStream { get; }
