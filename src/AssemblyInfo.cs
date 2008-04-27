@@ -35,11 +35,9 @@ using System.Security;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-#if (FX1_0)
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("..\\CookComputing.key")]
 [assembly: AssemblyKeyName("")]
-#endif 
 
 #if (!COMPACT_FRAMEWORK)
 [assembly: AllowPartiallyTrustedCallers]
