@@ -1329,5 +1329,73 @@ This should be ignored.
       Donhrobjartz ret = (Donhrobjartz)response.retVal;
     }
 
+    public struct Category
+    {
+      public string Title;
+      public int id;
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcTypeMismatchException))]
+    public void StructContainingArrayError()
+    {
+      string xml = @"<?xml version=""1.0"" encoding=""iso-8859-1""?>
+ <methodResponse>
+ <params>
+ <param>
+ <value>
+ <struct>
+ <member>
+ <name>Categories</name>
+ <value>
+ <array>
+ <data>
+ <value>
+ <struct>
+ <member>
+ <name>id</name>
+ <value>
+ <int>0</int>
+ </value>
+ </member>
+ <member>
+ <name>Title</name>
+ <value>
+ <string>Other</string>
+ </value>
+ </member>
+ </struct>
+ </value>
+ <value>
+ <struct>
+ <member>
+ <name>id</name>
+ <value>
+ <int>41</int>
+ </value>
+ </member>
+ <member>
+ <name>Title</name>
+ <value>
+ <string>Airplanes</string>
+ </value>
+ </member>
+ </struct>
+ </value>
+ </data>
+ </array>
+ </value>
+ </member>
+ </struct>
+ </value>
+ </param>
+ </params>
+ </methodResponse>";
+      StringReader sr1 = new StringReader(xml);
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
+      XmlRpcResponse response = serializer.DeserializeResponse(sr1,
+        typeof(Category[]));
+    }
   }
 }

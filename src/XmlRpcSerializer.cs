@@ -1061,12 +1061,13 @@ namespace CookComputing.XmlRpc
       ParseStack parseStack,
       MappingAction mappingAction) 
     {
-      if (valueType.IsPrimitive)
+      if (valueType.IsPrimitive || valueType.IsArray)
       {
-        throw new XmlRpcTypeMismatchException(parseStack.ParseType 
-          + " contains struct value where " 
-          + XmlRpcServiceInfo.GetXmlRpcTypeString(valueType) 
-          + " expected " + StackDump(parseStack));
+        throw new XmlRpcTypeMismatchException(parseStack.ParseType
+          + " contains struct value where "
+          + XmlRpcServiceInfo.GetXmlRpcTypeString(valueType)
+          + " expected (as type " + valueType.Name + ") "
+          + StackDump(parseStack));
       }
 #if !FX1_0
       if (valueType.IsGenericType 
@@ -1075,6 +1076,20 @@ namespace CookComputing.XmlRpc
         valueType = valueType.GetGenericArguments()[0];
       }
 #endif
+      object retObj;
+      try
+      {
+        retObj = Activator.CreateInstance(valueType);
+      }
+      catch (Exception ex)
+      {
+        throw new XmlRpcTypeMismatchException(parseStack.ParseType
+          + " contains struct value where "
+          + XmlRpcServiceInfo.GetXmlRpcTypeString(valueType)
+          + " expected (unable to create instance of " + valueType.Name 
+          + ", possibly no default constructor) " 
+          + StackDump(parseStack));
+      }
       // Note: mapping action on a struct is only applied locally - it 
       // does not override the global mapping action when members of the 
       // struct are parsed
@@ -1101,7 +1116,6 @@ namespace CookComputing.XmlRpc
         names.Add(pi.Name, pi.Name);
       }
       XmlNodeList members = node.ChildNodes;
-      Object retObj = Activator.CreateInstance(valueType);
       int fieldCount = 0;
       foreach (XmlNode member in members)
       {
