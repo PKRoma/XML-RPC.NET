@@ -399,7 +399,9 @@ namespace ntest
   <methodName>TestInt</methodName> 
   <params>
     <param>
-      <value><int>666</int></value>
+      <value>
+        <int>666</int>
+      </value>
     </param>
   </params>
 </methodCall>";
@@ -1091,6 +1093,104 @@ AQIDBAUGBwg=</base64>
 
     }
 
+    [XmlRpcMethod("rtx.EchoString")]
+    public string EchoString(string str)
+    {
+      return str;
+    }
+
+    [Test]
+    public void SingleSpaceString()
+    {
+      string xml = @"<?xml version=""1.0""?>
+<methodCall><methodName>rtx.EchoString</methodName>
+<params>
+<param><value> </value></param>
+</params></methodCall>";
+
+      StringReader sr = new StringReader(xml);
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+
+      Assert.AreEqual(request.args[0].GetType(), typeof(string),
+        "argument is string");
+      Assert.AreEqual(" ", request.args[0],
+        "argument is string containing single space");
+    }
+
+    [Test]
+    public void TwoSpaceString()
+    {
+      string xml = @"<?xml version=""1.0""?>
+<methodCall><methodName>rtx.EchoString</methodName>
+<params>
+<param><value>  </value></param>
+</params></methodCall>";
+
+      StringReader sr = new StringReader(xml);
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+
+      Assert.AreEqual(request.args[0].GetType(), typeof(string),
+        "argument is string");
+      Assert.AreEqual("  ", request.args[0],
+        "argument is string containing two spaces");
+    }
+
+    [Test]
+    public void LeadingSpace()
+    {
+      string xml = @"<?xml version=""1.0""?>
+<methodCall><methodName>rtx.EchoString</methodName>
+<params>
+<param><value> ddd</value></param>
+</params></methodCall>";
+
+      StringReader sr = new StringReader(xml);
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+
+      Assert.AreEqual(request.args[0].GetType(), typeof(string),
+        "argument is string");
+      Assert.AreEqual(" ddd", request.args[0]);
+    }
+
+    [Test]
+    public void TwoLeadingSpace()
+    {
+      string xml = @"<?xml version=""1.0""?>
+<methodCall><methodName>rtx.EchoString</methodName>
+<params>
+<param><value>  ddd</value></param>
+</params></methodCall>";
+
+      StringReader sr = new StringReader(xml);
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+
+      Assert.AreEqual(request.args[0].GetType(), typeof(string),
+        "argument is string");
+      Assert.AreEqual("  ddd", request.args[0]);
+    }
+
+    [Test]
+    public void EmptyLines()
+    {
+      string xml = @"<?xml version=""1.0""?>
+<methodCall><methodName>rtx.EchoString</methodName>
+<params>
+<param><value>
+</value></param>
+</params></methodCall>";
+
+      StringReader sr = new StringReader(xml);
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+
+      Assert.AreEqual(request.args[0].GetType(), typeof(string),
+        "argument is string");
+      Assert.AreEqual("\r\n", request.args[0]);
+    }
   }
 }
 
