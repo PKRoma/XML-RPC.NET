@@ -238,13 +238,13 @@ namespace CookComputing.XmlRpc
     public XmlRpcRequest DeserializeRequest(XmlDocument xdoc, Type svcType)
     {        
       XmlRpcRequest request = new XmlRpcRequest();
-      XmlNode callNode = xdoc.SelectSingleNode("methodCall");
+      XmlNode callNode = SelectSingleNode(xdoc, "methodCall");
       if (callNode == null)
       {
         throw new XmlRpcInvalidXmlRpcException(
           "Request XML not valid XML-RPC - missing methodCall element.");
       }
-      XmlNode methodNode = callNode.SelectSingleNode("methodName");
+      XmlNode methodNode = SelectSingleNode(callNode, "methodName");
       if (methodNode == null)
       {
         throw new XmlRpcInvalidXmlRpcException(
@@ -282,7 +282,7 @@ namespace CookComputing.XmlRpc
         }
         pis = request.mi.GetParameters();
       }
-      XmlNode paramsNode = callNode.SelectSingleNode("params");
+      XmlNode paramsNode = SelectSingleNode(callNode, "params");
       if (paramsNode == null)
       {
         if (svcType != null)
@@ -304,9 +304,9 @@ namespace CookComputing.XmlRpc
           return request;
         }
       }
-      XmlNodeList paramNodes = paramsNode.SelectNodes("param");
+      XmlNode[] paramNodes = SelectNodes(paramsNode, "param");
       int paramsPos = GetParamsPos(pis);
-      if (paramNodes.Count < paramsPos)
+      if (paramNodes.Length < paramsPos)
       {
         throw new XmlRpcInvalidParametersException(
           "Method takes parameters and there is incorrect number of param "
@@ -315,14 +315,14 @@ namespace CookComputing.XmlRpc
       ParseStack parseStack = new ParseStack("request");
       // TODO: use global action setting
       MappingAction mappingAction = MappingAction.Error;
-      int paramObjCount = (paramsPos == -1 ?paramNodes.Count : paramsPos + 1);
+      int paramObjCount = (paramsPos == -1 ? paramNodes.Length : paramsPos + 1);
       Object[] paramObjs = new Object[paramObjCount];
       // parse ordinary parameters
-      int ordinaryParams = (paramsPos == -1 ?paramNodes.Count :paramsPos);
+      int ordinaryParams = (paramsPos == -1 ? paramNodes.Length : paramsPos);
       for (int i = 0; i < ordinaryParams; i++) 
       {
         XmlNode paramNode = paramNodes[i];
-        XmlNode valueNode = paramNode.SelectSingleNode("value");
+        XmlNode valueNode = SelectSingleNode(paramNode, "value");
         if (valueNode == null)
           throw new XmlRpcInvalidXmlRpcException("Missing value element.");
         XmlNode node = SelectValueNode(valueNode);
@@ -346,14 +346,14 @@ namespace CookComputing.XmlRpc
       if (paramsPos != -1)
       {
         Type paramsType = pis[paramsPos].ParameterType.GetElementType();
-        Object[] args = new Object[1]; 
-        args[0] = paramNodes.Count - paramsPos;
+        Object[] args = new Object[1];
+        args[0] = paramNodes.Length - paramsPos;
         Array varargs = (Array)CreateArrayInstance(pis[paramsPos].ParameterType, 
           args);
         for (int i = 0; i < varargs.Length; i++)
         {
           XmlNode paramNode = paramNodes[i + paramsPos];
-          XmlNode valueNode = paramNode.SelectSingleNode("value");
+          XmlNode valueNode = SelectSingleNode(paramNode, "value");
           if (valueNode == null)
             throw new XmlRpcInvalidXmlRpcException("Missing value element.");
           XmlNode node = SelectValueNode(valueNode);
@@ -481,14 +481,14 @@ namespace CookComputing.XmlRpc
     {
       XmlRpcResponse response = new XmlRpcResponse();
       Object retObj = null;
-      XmlNode methodResponseNode = xdoc.SelectSingleNode("methodResponse");
+      XmlNode methodResponseNode = SelectSingleNode(xdoc, "methodResponse");
       if (methodResponseNode == null)
       {
         throw new XmlRpcInvalidXmlRpcException(
           "Response XML not valid XML-RPC - missing methodResponse element.");
       }
       // check for fault response
-      XmlNode faultNode = methodResponseNode.SelectSingleNode("fault");
+      XmlNode faultNode = SelectSingleNode(methodResponseNode, "fault");
       if (faultNode != null)
       {
         ParseStack parseStack = new ParseStack("fault response");
@@ -498,7 +498,7 @@ namespace CookComputing.XmlRpc
           mappingAction);
         throw faultEx;
       }
-      XmlNode paramsNode = methodResponseNode.SelectSingleNode("params");
+      XmlNode paramsNode = SelectSingleNode(methodResponseNode, "params");
       if (paramsNode == null && returnType != null)
       {
         if (returnType == typeof(void))
@@ -507,7 +507,7 @@ namespace CookComputing.XmlRpc
           throw new XmlRpcInvalidXmlRpcException(
             "Response XML not valid XML-RPC - missing params element.");
       }
-      XmlNode paramNode = paramsNode.SelectSingleNode("param");
+      XmlNode paramNode = SelectSingleNode(paramsNode, "param");
       if (paramNode == null && returnType != null)
       {
         if (returnType == typeof(void))
@@ -516,7 +516,7 @@ namespace CookComputing.XmlRpc
           throw new XmlRpcInvalidXmlRpcException(
             "Response XML not valid XML-RPC - missing params element.");
       }
-      XmlNode valueNode = paramNode.SelectSingleNode("value");
+      XmlNode valueNode = SelectSingleNode(paramNode, "value");
       if (valueNode == null)
       {
         throw new XmlRpcInvalidXmlRpcException(
@@ -902,9 +902,9 @@ namespace CookComputing.XmlRpc
       }
       else
         parseStack.Push("array");
-      XmlNode dataNode = node.SelectSingleNode("data");
-      XmlNodeList childNodes = dataNode.SelectNodes("value");
-      int nodeCount = childNodes.Count; 
+      XmlNode dataNode = SelectSingleNode(node, "data");
+      XmlNode[] childNodes = SelectNodes(dataNode, "value");
+      int nodeCount = childNodes.Length; 
       Object[] elements = new Object[nodeCount];
       // determine type of array elements
       Type elemType = null;
@@ -1031,9 +1031,9 @@ namespace CookComputing.XmlRpc
         throw new XmlRpcTypeMismatchException(
           "param element does not contain array element.");
       }
-      XmlNode dataNode = node.SelectSingleNode("data");
-      XmlNodeList childNodes = dataNode.SelectNodes("value");
-      int nodeCount = childNodes.Count;
+      XmlNode dataNode = SelectSingleNode(node, "data");
+      XmlNode[] childNodes = SelectNodes(dataNode, "value");
+      int nodeCount = childNodes.Length;
       //!! check that multi dim array is not jagged
       if (dimLengths[CurRank] != 0 && nodeCount != dimLengths[CurRank])
       {
@@ -1045,7 +1045,7 @@ namespace CookComputing.XmlRpc
       {
         foreach (XmlNode vNode in childNodes)
         {
-          XmlNode arrayNode = vNode.SelectSingleNode("array");
+          XmlNode arrayNode = SelectSingleNode(vNode, "array");
           ParseMultiDimElements(arrayNode, Rank, CurRank+1, elemType, 
             elements, dimLengths, parseStack, mappingAction);
         }
@@ -1119,7 +1119,7 @@ namespace CookComputing.XmlRpc
       {
         names.Add(pi.Name, pi.Name);
       }
-      XmlNodeList members = node.SelectNodes("member");
+      XmlNode[] members = SelectNodes(node, "member");
       int fieldCount = 0;
       foreach (XmlNode member in members)
       {
@@ -1328,7 +1328,7 @@ namespace CookComputing.XmlRpc
       parseStack.Push("struct mapped to XmlRpcStruct");
       try
       {
-        XmlNodeList members = node.SelectNodes("member");
+        XmlNode[] members = SelectNodes(node, "member");
         foreach (XmlNode member in members)
         {
           if (member.Name != "member")
@@ -1693,8 +1693,8 @@ namespace CookComputing.XmlRpc
       ParseStack parseStack,
       MappingAction mappingAction)
     {
-      XmlNode valueNode = faultNode.SelectSingleNode("value");
-      XmlNode structNode = valueNode.SelectSingleNode("struct");
+      XmlNode valueNode = SelectSingleNode(faultNode, "value");
+      XmlNode structNode = SelectSingleNode(valueNode, "struct");
       if (structNode == null)
       {
         throw new XmlRpcInvalidXmlRpcException(
@@ -1790,11 +1790,38 @@ namespace CookComputing.XmlRpc
       return sb.ToString();
     }
 
+    XmlNode SelectSingleNode(XmlNode node, string name)
+    {
+#if (COMPACT_FRAMEWORK)
+      XmlNodeList nodes = node.ChildNodes;
+      for (int i = 0; i < nodes.Count; i++)
+      {
+        if (nodes[i].Name == name)
+          return nodes[i];
+      }
+      return null;
+#else
+      return node.SelectSingleNode(name);
+#endif
+    }
+
+    XmlNode[] SelectNodes(XmlNode node, string name)
+    {
+      ArrayList list = new ArrayList();
+      XmlNodeList nodes = node.ChildNodes;
+      for (int i = 0; i < nodes.Count; i++)
+      {
+        if (nodes[i].Name == name)
+          list.Add(nodes[i]);
+      }
+      return (XmlNode[])list.ToArray(typeof(XmlNode));
+    }
+
     XmlNode SelectValueNode(XmlNode valueNode)
     {
       // an XML-RPC value is either held as the child node of a <value> element
       // or is just the text of the value node as an implicit string value
-      XmlNode vvNode = valueNode.SelectSingleNode("*");
+      XmlNode vvNode = SelectSingleNode(valueNode, "*");
       if (vvNode == null)
         vvNode = valueNode.FirstChild;
       return vvNode;
