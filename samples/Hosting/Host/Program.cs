@@ -29,6 +29,7 @@ class Program
     IStateName proxy = XmlRpcProxyGen.Create<IStateName>();
     (proxy as XmlRpcClientProtocol).Url = "http://127.0.0.1:8081/statename.rem";
     string name = proxy.GetStateName(1);
+    Console.WriteLine("State 1 is {0}", name);
     _controller.Stop();
   }
 }
