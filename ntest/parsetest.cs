@@ -805,6 +805,23 @@ namespace ntest
       Assert.AreEqual(xstruct2["mi"], 28);
     }
 
-
+    //---------------------- struct ------------------------------------------// 
+    [Test]
+    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
+    public void NameEmptyString()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name/>
+      <value><i4>18</i4></value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, null, MappingAction.Error,
+        out parsedType, out parsedArrayType);
+    }
   }
 }

@@ -1131,9 +1131,9 @@ namespace CookComputing.XmlRpc
         bool dupValue;
         SelectTwoNodes(member, "name", out nameNode, out dupName, "value",
           out valueNode, out dupValue);
-        if (nameNode == null)
+        if (nameNode == null || nameNode.FirstChild == null)
           throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
-            + " contains a member with missing name element"
+            + " contains a member with missing name"
             + " " + StackDump(parseStack));
         if (dupName)
           throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
@@ -1339,9 +1339,9 @@ namespace CookComputing.XmlRpc
           bool dupValue;
           SelectTwoNodes(member, "name", out nameNode, out dupName, "value", 
             out valueNode, out dupValue);
-          if (nameNode == null)
+          if (nameNode == null || nameNode.FirstChild == null)
             throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
-              + " contains a member with missing name element"
+              + " contains a member with missing name"
               + " " + StackDump(parseStack));
           if (dupName)
             throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType

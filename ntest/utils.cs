@@ -35,6 +35,7 @@ namespace ntest
       }            
       stm.Position = 0;    
       XmlDocument xdoc = new XmlDocument();
+      xdoc.PreserveWhitespace = true;
       xdoc.Load(stm);
       return xdoc;
     }
@@ -67,6 +68,7 @@ namespace ntest
     {
       StringReader sr = new StringReader(xml);
       XmlDocument xdoc = new XmlDocument();
+      xdoc.PreserveWhitespace = true;
       xdoc.Load(sr);        
       return Parse(xdoc, valueType, action, 
         out parsedType, out parsedArrayType);
@@ -79,7 +81,7 @@ namespace ntest
       out Type parsedType,
       out Type parsedArrayType)
     {
-      XmlNode node = xdoc.SelectSingleNode("value").FirstChild;               
+      XmlNode node = SelectValueNode(xdoc.SelectSingleNode("value"));               
       XmlRpcSerializer.ParseStack parseStack 
         = new XmlRpcSerializer.ParseStack("request");
       XmlRpcSerializer ser = new XmlRpcSerializer();
@@ -98,6 +100,7 @@ namespace ntest
     {
       StringReader sr = new StringReader(xml);
       XmlDocument xdoc = new XmlDocument();
+      xdoc.PreserveWhitespace = true;
       xdoc.Load(sr);
       return Parse(xdoc, valueType, action, serializer,
         out parsedType, out parsedArrayType);
@@ -111,12 +114,22 @@ namespace ntest
       out Type parsedType,
       out Type parsedArrayType)
     {
-      XmlNode node = xdoc.SelectSingleNode("value").FirstChild;
+      XmlNode node = SelectValueNode(xdoc.SelectSingleNode("value"));
       XmlRpcSerializer.ParseStack parseStack
         = new XmlRpcSerializer.ParseStack("request");
       object obj = serializer.ParseValue(node, valueType, parseStack, action,
         out parsedType, out parsedArrayType);
       return obj;
+    }
+
+    static XmlNode SelectValueNode(XmlNode valueNode)
+    {
+      // an XML-RPC value is either held as the child node of a <value> element
+      // or is just the text of the value node as an implicit string value
+      XmlNode vvNode = valueNode.SelectSingleNode("*");
+      if (vvNode == null)
+        vvNode = valueNode.FirstChild;
+      return vvNode;
     }
 
     public static string[] GetLocales()
