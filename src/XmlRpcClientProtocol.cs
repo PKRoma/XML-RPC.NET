@@ -157,6 +157,7 @@ namespace CookComputing.XmlRpc
           serializer.NonStandard = _nonStandard;
           serializer.UseStringTag = _useStringTag;
           serializer.UseIntTag = _useIntTag;
+          serializer.UseEmptyParamsTag = _useEmptyParamsTag;
           serializer.SerializeRequest(serStream, req);
           if (logging)
           {
