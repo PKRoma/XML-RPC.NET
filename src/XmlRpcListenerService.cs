@@ -43,13 +43,16 @@ namespace CookComputing.XmlRpc
         IHttpResponse resp = new XmlRpcListenerResponse(RequestContext.Response);
         resp.SendChunked = _sendChunked;
         HandleHttpRequest(req, resp);
-        RequestContext.Response.OutputStream.Close();
       }
       catch (Exception ex)
       {
         // "Internal server error"
         RequestContext.Response.StatusCode = 500;
         RequestContext.Response.StatusDescription = ex.Message;
+      }
+      finally
+      {
+        RequestContext.Response.OutputStream.Close();
       }
     }
 
