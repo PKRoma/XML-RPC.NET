@@ -725,6 +725,34 @@ namespace ntest
 </methodCall>", reqstr);
     }
 
+    [Test]
+    public void UseInt()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { 1234 };
+      req.method = "Foo";
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.Indentation = 4;
+      ser.UseIntTag = true;
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+    <methodName>Foo</methodName>
+    <params>
+        <param>
+            <value>
+                <int>1234</int>
+            </value>
+        </param>
+    </params>
+</methodCall>", reqstr);
+    }
   }
 }
 
