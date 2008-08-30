@@ -502,7 +502,7 @@ namespace CookComputing.XmlRpc
       if (paramsNode == null && returnType != null)
       {
         if (returnType == typeof(void))
-          return null;
+          return new XmlRpcResponse(null);
         else
           throw new XmlRpcInvalidXmlRpcException(
             "Response XML not valid XML-RPC - missing params element.");
@@ -511,7 +511,7 @@ namespace CookComputing.XmlRpc
       if (paramNode == null && returnType != null)
       {
         if (returnType == typeof(void))
-          return null;
+          return new XmlRpcResponse(null);
         else
           throw new XmlRpcInvalidXmlRpcException(
             "Response XML not valid XML-RPC - missing params element.");
