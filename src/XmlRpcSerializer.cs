@@ -1275,6 +1275,18 @@ namespace CookComputing.XmlRpc
           return ret;
         }
       }
+      foreach (PropertyInfo pi in ValueType.GetProperties())
+      {
+        Attribute attr = Attribute.GetCustomAttribute(pi,
+          typeof(XmlRpcMemberAttribute));
+        if (attr != null
+          && attr is XmlRpcMemberAttribute
+          && ((XmlRpcMemberAttribute)attr).Member == XmlRpcName)
+        {
+          string ret = pi.Name;
+          return ret;
+        }
+      }
       return null;
     }
 

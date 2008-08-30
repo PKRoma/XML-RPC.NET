@@ -823,5 +823,36 @@ namespace ntest
       object obj = Utils.Parse(xml, null, MappingAction.Error,
         out parsedType, out parsedArrayType);
     }
+
+    //------------------------------------------------------------------------// 
+    struct Struct3
+    {
+      [XmlRpcMember("IntField")]
+      public int intOne;
+      [XmlRpcMember("IntProperty")]
+      public int intTwo { get { return _intTwo; } set { _intTwo = value; } }
+      private int _intTwo;
+    }
+
+    [Test]
+    public void PropertyXmlRpcName()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>IntField</name>
+      <value><i4>18</i4></value>
+    </member>
+    <member>
+      <name>IntProperty</name>
+      <value><i4>18</i4></value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(Struct3), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+    }
   }
 }
