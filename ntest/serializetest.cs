@@ -281,8 +281,6 @@ namespace ntest
 }
 
 
-
-
     struct Struct3
     {
       int _member1;
@@ -400,6 +398,82 @@ namespace ntest
   </params>
 </methodCall>", reqstr);
     }
+
+
+    struct Struct4
+    {
+      [NonSerialized]
+      public int x;
+      public int y;
+    }
+
+
+    [Test]
+    public void NonSerializable()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { new Struct4() };
+      req.method = "Foo";
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+      Assert.AreEqual(
+@"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Foo</methodName>
+  <params>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>y</name>
+            <value>
+              <i4>0</i4>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
+    [Test]
+    public void ConstMember()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { new Struct4() };
+      req.method = "Foo";
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+      Assert.AreEqual(
+@"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Foo</methodName>
+  <params>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>y</name>
+            <value>
+              <i4>0</i4>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
 
     //---------------------- XmlRpcStruct ------------------------------------// 
     [Test]
