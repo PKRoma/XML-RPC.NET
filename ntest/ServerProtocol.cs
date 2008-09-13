@@ -150,6 +150,122 @@ namespace ntest
       Assert.AreEqual(respXml, response);
     }
 
+    [Test]
+    public void SystemListMethods()
+    {
+      string reqXml = @"<?xml version=""1.0"" ?> 
+<methodCall>
+  <methodName>system.listMethods</methodName> 
+  <params>
+  </params>
+</methodCall>";
+      Stream reqStm = new MemoryStream(ASCIIEncoding.Default.GetBytes(reqXml));
+      XmlRpcServerProtocol svrProt = new DefaultService();
+      Stream respStm = svrProt.Invoke(reqStm);
+      StreamReader rdr = new StreamReader(respStm);
+      string response = rdr.ReadToEnd();
+      string respXml = @"<?xml version=""1.0""?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value>
+              <string>Bar</string>
+            </value>
+            <value>
+              <string>Foo</string>
+            </value>
+          </data>
+        </array>
+      </value>
+    </param>
+  </params>
+</methodResponse>";
+      Assert.AreEqual(respXml, response);
+    }
+
+    [Test]
+    public void SystemMethodSignature()
+    {
+      string reqXml = @"<?xml version=""1.0"" ?> 
+<methodCall>
+  <methodName>system.methodSignature</methodName> 
+  <params>
+    <param>
+      <value>
+        <string>Foo</string>
+      </value>    
+    </param>
+  </params>
+</methodCall>";
+      Stream reqStm = new MemoryStream(ASCIIEncoding.Default.GetBytes(reqXml));
+      XmlRpcServerProtocol svrProt = new DefaultService();
+      Stream respStm = svrProt.Invoke(reqStm);
+      StreamReader rdr = new StreamReader(respStm);
+      string response = rdr.ReadToEnd();
+      string respXml = @"<?xml version=""1.0""?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>string</string>
+                  </value>
+                  <value>
+                    <string>string</string>
+                  </value>
+                </data>
+              </array>
+            </value>
+          </data>
+        </array>
+      </value>
+    </param>
+  </params>
+</methodResponse>";
+      Assert.AreEqual(respXml, response);
+    }
+
+    [Test]
+    public void SystemMethodHelp()
+    {
+      string reqXml = @"<?xml version=""1.0"" ?> 
+<methodCall>
+  <methodName>system.methodHelp</methodName> 
+  <params>
+    <param>
+      <value>
+        <string>Foo</string>
+      </value>    
+    </param>
+  </params>
+</methodCall>";
+      Stream reqStm = new MemoryStream(ASCIIEncoding.Default.GetBytes(reqXml));
+      XmlRpcServerProtocol svrProt = new DefaultService();
+      Stream respStm = svrProt.Invoke(reqStm);
+      StreamReader rdr = new StreamReader(respStm);
+      string response = rdr.ReadToEnd();
+      string respXml = @"<?xml version=""1.0""?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <string>Method Foo</string>
+      </value>
+    </param>
+  </params>
+</methodResponse>";
+      Assert.AreEqual(respXml, response);
+    }
+
+
     [XmlRpcService(XmlEncoding="ISO-8859-1", Indentation=1, UseStringTag=false,
       UseIntTag=true)]
     public class ISO8859Service : XmlRpcServerProtocol
@@ -169,7 +285,7 @@ namespace ntest
 
     public class DefaultService : XmlRpcServerProtocol
     {
-      [XmlRpcMethod]
+      [XmlRpcMethod(Description="Method Foo")]
       public string Foo(string x)
       {
         return x;

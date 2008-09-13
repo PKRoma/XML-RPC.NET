@@ -109,6 +109,7 @@
     </Compile>
     <Compile Include="IXmlRpcProxy.cs" />
     <Compile Include="RequestResponseLogger.cs" />
+    <Compile Include="SystemMethodsBase.cs" />
     <Compile Include="Tracer.cs" />
     <Compile Include="util.cs">
       <SubType>Code</SubType>

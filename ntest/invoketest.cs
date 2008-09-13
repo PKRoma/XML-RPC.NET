@@ -123,6 +123,17 @@ namespace ntest
       Assert.AreEqual("Alabama", ret4);
     }
 
+    [Test]
+    public void MakeSystemListMethodsCall()
+    {
+      StateName proxy = new StateName();
+      string[] ret = proxy.SystemListMethods();
+      Assert.AreEqual(3, ret.Length);
+      Assert.AreEqual(ret[0], "examples.getStateName");
+      Assert.AreEqual(ret[1], "examples.getStateNameFromString");
+      Assert.AreEqual(ret[2], "examples.getStateStruct");
+    }
+
     class CBInfo
     {
       public ManualResetEvent _evt;
