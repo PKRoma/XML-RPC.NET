@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using CookComputing.XmlRpc;
 using NUnit.Framework;
@@ -34,6 +35,16 @@ namespace ntest
     }
 
     [Test]
+    public void MakeSystemListMethodsCall()
+    {
+      IStateName proxy = XmlRpcProxyGen.Create<IStateName>();
+      proxy.Url = "http://127.0.0.1:11000/";
+      string[] ret = proxy.SystemListMethods();
+      Assert.AreEqual(1, ret.Length);
+      Assert.AreEqual(ret[0], "examples.getStateName");
+    }
+
+    [Test]
     public void GetCookie()
     {
       IStateName proxy = XmlRpcProxyGen.Create<IStateName>();
@@ -54,6 +65,18 @@ namespace ntest
       string value = headers["BarHeader"];
       Assert.AreEqual("BarValue", value);
     }
+
+    [Test]
+    public void GetAutoDocumentation()
+    {
+      WebRequest req = WebRequest.Create("http://127.0.0.1:11000/");
+      Stream stm = req.GetResponse().GetResponseStream();
+      string doc = new StreamReader(stm).ReadToEnd();
+      Assert.IsNotNull(doc);
+      Assert.IsTrue(doc.StartsWith("<html>"));
+    }
+
+
   }
 }
 
