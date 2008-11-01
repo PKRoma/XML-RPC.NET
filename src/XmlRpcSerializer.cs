@@ -157,7 +157,8 @@ namespace CookComputing.XmlRpc
               if (i >= pis.Length)
                 throw new XmlRpcInvalidParametersException("Number of request "
                   + "parameters greater than number of proxy method parameters.");
-              if (Attribute.IsDefined(pis[i], typeof(ParamArrayAttribute)))
+              if (i == pis.Length - 1 
+                && Attribute.IsDefined(pis[i], typeof(ParamArrayAttribute)))
               {
                 Array ary = (Array)request.args[i];
                 foreach (object o in ary)
