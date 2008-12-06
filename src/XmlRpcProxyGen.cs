@@ -116,12 +116,16 @@ namespace CookComputing.XmlRpc
       {
         MethodInfo mi = mthdData.mi;
         Type[] argTypes = new Type[mi.GetParameters().Length];
+        string[] paramNames = new string[mi.GetParameters().Length];
         for (int i = 0; i < mi.GetParameters().Length; i++)
         {
           argTypes[i] = mi.GetParameters()[i].ParameterType;
+          paramNames[i] = mi.GetParameters()[i].Name;
         }
-        BuildMethod(tb, mi.Name, mthdData.xmlRpcName, argTypes,
-          mthdData.paramsMethod, mi.ReturnType);
+        XmlRpcMethodAttribute mattr = (XmlRpcMethodAttribute)
+          Attribute.GetCustomAttribute(mi, typeof(XmlRpcMethodAttribute));
+        BuildMethod(tb, mi.Name, mthdData.xmlRpcName, paramNames, argTypes,
+          mthdData.paramsMethod, mi.ReturnType, mattr.StructParams);
       }
     }
 
@@ -129,9 +133,11 @@ namespace CookComputing.XmlRpc
       TypeBuilder tb,
       string methodName,
       string rpcMethodName,
+      string[] paramNames,
       Type[] argTypes,
       bool paramsMethod,
-      Type returnType)
+      Type returnType,
+      bool structParams)
     {
       MethodBuilder mthdBldr = tb.DefineMethod(
         methodName,
@@ -141,19 +147,26 @@ namespace CookComputing.XmlRpc
       Type[] oneString = new Type[1] { typeof(string) };
       Type methodAttr = typeof(XmlRpcMethodAttribute);
       ConstructorInfo ci = methodAttr.GetConstructor(oneString);
+      PropertyInfo[] pis 
+        = new PropertyInfo[] { methodAttr.GetProperty("StructParams") };
+      object[] structParam = new object[] { structParams };
       CustomAttributeBuilder cab =
-        new CustomAttributeBuilder(ci, new object[] { rpcMethodName });
+        new CustomAttributeBuilder(ci, new object[] { rpcMethodName },
+          pis, structParam);
       mthdBldr.SetCustomAttribute(cab);
-      // possibly add ParamArrayAttribute to final parameter
-      if (paramsMethod)
+      for (int i = 0; i < paramNames.Length; i++)
       {
-        ParameterBuilder paramBldr = mthdBldr.DefineParameter(argTypes.Length,
-          ParameterAttributes.In, "args");
-        ConstructorInfo ctorInfo = typeof(ParamArrayAttribute).GetConstructor(
-          new Type[0]);
-        CustomAttributeBuilder attrBldr =
-          new CustomAttributeBuilder(ctorInfo, new object[0]);
-        paramBldr.SetCustomAttribute(attrBldr);
+        ParameterBuilder paramBldr = mthdBldr.DefineParameter(i + 1, 
+          ParameterAttributes.In, paramNames[i]);
+        // possibly add ParamArrayAttribute to final parameter
+        if (i == paramNames.Length - 1 && paramsMethod)
+        {
+          ConstructorInfo ctorInfo = typeof(ParamArrayAttribute).GetConstructor(
+            new Type[0]);
+          CustomAttributeBuilder attrBldr =
+            new CustomAttributeBuilder(ctorInfo, new object[0]);
+          paramBldr.SetCustomAttribute(attrBldr);
+        }
       }
       // generate IL
       ILGenerator ilgen = mthdBldr.GetILGenerator();
