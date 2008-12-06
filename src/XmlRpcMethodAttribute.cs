@@ -51,6 +51,12 @@ namespace CookComputing.XmlRpc
       set { introspectionMethod = value; }
     }
 
+    public bool StructParams
+    {
+      get { return structParams; }
+      set { structParams = value; }
+    }
+
     public override string ToString()
     {
       string value = "Method : " + method;
@@ -61,5 +67,6 @@ namespace CookComputing.XmlRpc
     public bool Hidden = false;
     private string method = "";
     private bool introspectionMethod = false;
+    private bool structParams = false;
   }
 }

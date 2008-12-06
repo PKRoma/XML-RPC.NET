@@ -827,16 +827,98 @@ namespace ntest
     </params>
 </methodCall>", reqstr);
     }
+
+    //---------------------- struct params -----------------------------------// 
+    [XmlRpcMethod(StructParams=true)]
+    public int Foo(int x, string y, double z)
+    {
+      return 1;
+    }
+
+    [Test]
+    public void StructParams()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { 1234, "test", 10.1 };
+      req.method = "Foo";
+      req.mi = this.GetType().GetMethod("Foo");
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.Indentation = 2;
+      ser.UseIntTag = true;
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Foo</methodName>
+  <params>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>x</name>
+            <value>
+              <int>1234</int>
+            </value>
+          </member>
+          <member>
+            <name>y</name>
+            <value>
+              <string>test</string>
+            </value>
+          </member>
+          <member>
+            <name>z</name>
+            <value>
+              <double>10.1</double>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
+    [XmlRpcMethod(StructParams = true)]
+    public int FooWithParams(int x, string y, params double[] z)
+    {
+      return 1;
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcInvalidParametersException))]
+    public void StructParamsWithParams()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { 1234, "test", new double[] { 10.1 } };
+      req.method = "FooWithParams";
+      req.mi = this.GetType().GetMethod("FooWithParams");
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.Indentation = 2;
+      ser.UseIntTag = true;
+      ser.SerializeRequest(stm, req);
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcInvalidParametersException))]
+    public void StructParamsTooManyParams()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { 1234, "test", 10.1, "lopol" };
+      req.method = "Foo";
+      req.mi = this.GetType().GetMethod("Foo");
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.Indentation = 2;
+      ser.UseIntTag = true;
+      ser.SerializeRequest(stm, req);
+    }
   }
 }
 
-/*
-"<?xml version=\"1.0\"?>\r\n<methodCall>\r\n  <methodName>Foo</methodName>\r\n  <params>\r\n    <param>\r\n      <value>\r\n        <struct>\r\n          
- * <member>\r\n            <name>mi</name>\r\n            <value>\r\n              <i4>34567</i4>\r\n            </value>\r\n          </member>\r\n          
- * <member>\r\n            <name>ms</name>\r\n            <value>\r\n              <string>another test string</string>\r\n            </value>\r\n          </member>\r\n          
- * <member>\r\n            <name>mb</name>\r\n            <value>\r\n              <boolean>1</boolean>\r\n            </value>\r\n          </member>\r\n          
- * <member>\r\n            <name>md</name>\r\n            <value>\r\n              <double>8765.123</double>\r\n            </value>\r\n          </member>\r\n          
- * <member>\r\n            <name>mdt</name>\r\n            <value>\r\n              <dateTime.iso8601>20020706T11:25:37</dateTime.iso8601>\r\n            </value>\r\n          </member>\r\n          
- * <member>\r\n            <name>mb64</name>\r\n            <value>\r\n              <base64>eW91IGNhbid0IHJlYWQgdGhpcyE=</base64>\r\n            </value>\r\n          </member>\r\n          
- * <member>\r\n            <name>ma</name>\r\n            <value>\r\n              <array>\r\n                <data>\r\n                  <value>\r\n                    <i4>1</i4>\r\n                  </value>\r\n                  <value>\r\n                    <i4>2</i4>\r\n                  </value>\r\n                  <value>\r\n                    <i4>3</i4>\r\n                  </value>\r\n                  <value>\r\n                    <i4>4</i4>\r\n                  </value>\r\n                  <value>\r\n                    <i4>5</i4>\r\n                  </value>\r\n                </data>\r\n              </array>\r\n            </value>\r\n          </member>\r\n        </struct>\r\n      </value>\r\n    </param>\r\n  </params>\r\n</methodCall>"
-*/
