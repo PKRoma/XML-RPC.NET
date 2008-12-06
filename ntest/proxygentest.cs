@@ -274,6 +274,22 @@ namespace ntest
         Assert.AreEqual("Invalid state number", fex.FaultString);
       }
     }
+
+    [XmlRpcUrl("http://localhost:5678/statename.rem")]
+    public interface IStateName2 : IXmlRpcProxy
+    {
+      [XmlRpcMethod("examples.getStateStruct", StructParams = true)]
+      string GetStateNames(int state1, int state2, int state3);
+    }
+
+    [Test]
+    public void MakeStructParamsCall()
+    {
+      IStateName2 proxy = (IStateName2)XmlRpcProxyGen.Create(typeof(IStateName2));
+      string ret = proxy.GetStateNames(1, 2, 3);
+      Assert.AreEqual("Alabama Alaska Arizona", ret);
+    }
   }
 }
+
 
