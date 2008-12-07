@@ -919,6 +919,56 @@ namespace ntest
       ser.UseIntTag = true;
       ser.SerializeRequest(stm, req);
     }
+
+
+    [XmlRpcMethod("artist.getInfo", StructParams = true)]
+    public string getInfo(string artist, string api_key)
+    {
+      return "";
+    }
+
+    [Test]
+    public void StructParamsGetInfo()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { "Bob Dylan", "abcd1234" };
+      req.method = "artist.getInfo";
+      req.mi = this.GetType().GetMethod("getInfo");
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.Indentation = 2;
+      ser.UseIntTag = true;
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>artist.getInfo</methodName>
+  <params>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>artist</name>
+            <value>
+              <string>Bob Dylan</string>
+            </value>
+          </member>
+          <member>
+            <name>api_key</name>
+            <value>
+              <string>abcd1234</string>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
   }
 }
 

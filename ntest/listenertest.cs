@@ -11,18 +11,23 @@ namespace ntest
   [TestFixture]
   public class ListenerTest
   {
-    Listener _listener = new Listener(new StateNameListnerService());
+    Listener _listener = new Listener(new StateNameListnerService(),
+      "http://127.0.0.1:11000/");
+    Listener _listenerDerived = new Listener(new StateNameListnerDerivedService(),
+      "http://127.0.0.1:11001/");
 
     [TestFixtureSetUp]
     public void Setup()
     {
       _listener.Start();
+      _listenerDerived.Start();
     }
 
     [TestFixtureTearDown]
     public void TearDown()
     {
       _listener.Stop();
+      _listenerDerived.Stop();
     }
 
 
@@ -76,7 +81,15 @@ namespace ntest
       Assert.IsTrue(doc.StartsWith("<html>"));
     }
 
-
+    [Test]
+    public void GetAutoDocumentationDerived()
+    {
+      WebRequest req = WebRequest.Create("http://127.0.0.1:11001/");
+      Stream stm = req.GetResponse().GetResponseStream();
+      string doc = new StreamReader(stm).ReadToEnd();
+      Assert.IsNotNull(doc);
+      Assert.IsTrue(doc.StartsWith("<html>"));
+    }
   }
 }
 

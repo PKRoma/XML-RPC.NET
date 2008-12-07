@@ -14,10 +14,10 @@ namespace ntest
     bool _running = false;
     HttpListener _lstner = new HttpListener();
 
-    public Listener(XmlRpcListenerService svc)
+    public Listener(XmlRpcListenerService svc, string uri)
     {
       _svc = svc;
-      _lstner.Prefixes.Add("http://127.0.0.1:11000/");
+      _lstner.Prefixes.Add(uri);
     }
 
     public void Start()
