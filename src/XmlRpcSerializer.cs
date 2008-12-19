@@ -1864,6 +1864,9 @@ namespace CookComputing.XmlRpc
       XmlNodeList nodes = node.ChildNodes;
       for (int i = 0; i < nodes.Count; i++)
       {
+        // For "*" element else return null
+        if ((name == "*") && !(nodes[i].Name.StartsWith("#")))
+            return nodes[i];
         if (nodes[i].Name == name)
           return nodes[i];
       }

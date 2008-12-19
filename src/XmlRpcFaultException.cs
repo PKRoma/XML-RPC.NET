@@ -26,7 +26,9 @@ DEALINGS IN THE SOFTWARE.
 namespace CookComputing.XmlRpc
 {
   using System;
+#if (!COMPACT_FRAMEWORK)
   using System.Runtime.Serialization;
+#endif
 
   // used to return server-side errors to client code - also can be 
   // thrown by Service implmentation code to return custom Fault Responses
