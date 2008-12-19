@@ -67,6 +67,13 @@ use a struct to provide named parameters to a method call.
 (<a href="./faq/xmlrpcnetfaq.html#2.34">more</a>).
 </li>
 
+<li>
+NonSerialized attribute can be applied to struct members to prevent 
+them being serialized and deserialized.
+(<a href="./faq/xmlrpcnetfaq.html#2.35">more</a>).
+</li>
+
+
 <li> Fixed issues:
 
 <ul>
@@ -103,6 +110,11 @@ The system.* methods do not work with remoting object.
 
 <li>
 Issue 35: UseEmptyParamsTag property on the proxy doesn’t work unless you are making asynchronous calls.
+</li>
+
+<li>
+Issue 36: Fixed SelectSingleNode and using statement in 
+XmlRpcFaultException for Compact Framework version.
 </li>
 
 <li>

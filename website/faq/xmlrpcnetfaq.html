@@ -114,6 +114,7 @@ if the XML-RPC method name is not valid in my programming language?<br/>
 2.32 <a href="#2.32">How do I prevent an empty params element in a request?</a><br />
 2.33 <a href="#2.33">Can I retrieve the HTML response headers and cookies?</a><br />
 2.34 <a href="#2.34">How do I call an XML-RPC method which requires named parameters in a struct?</a><br />
+2.35 <a href="#2.35">Can I use the NonSerialized attribute on struct members?</a><br />
 
 </p>
 
@@ -370,7 +371,7 @@ set of members created at runtime.
 
 <p>
 For cases where the members of the struct are fixed, the XML-RPC struct can 
-be mapped onto a .NET struct, for example:
+be mapped onto a .NET struct or class, for example:
 </p>
 
 <pre>&lt;struct&gt;
@@ -394,14 +395,25 @@ could map onto this C# struct:<br/>
 }</pre>
 
 <p>
-When mapping from an XML-RPC struct to a .NET struct, XML-RPC.NET ignores any 
+or this C# class:
+</p>
+
+<pre>class errClass<br/>{
+  public int code;
+  public string description;
+}</pre>
+
+<p>
+When mapping from an XML-RPC struct to a .NET struct or class, XML-RPC.NET ignores any 
 members which are only in the XML-RPC struct, but throws an exception if a member 
-is defined in the .NET struct but is not in the XML-RPC struct.
+is defined in the .NET type but is not in the XML-RPC struct (although it is possible
+to specify that members are optional, see question <a href="#1.15">1.15</a>)
 </p>
 
 <p>
-When mapping from a .NET struct to an XML-RPC struct, XML-RPC.NET simply maps 
-every member of the .NET struct to the XML-RPC struct.
+When mapping from a .NET struct or class to an XML-RPC struct, XML-RPC.NET simply maps 
+every member of the .NET type to the XML-RPC struct (except where the NonSerializable 
+attribute is used, see question <a href="#2.35">2.35</a>).
 </p>
 
 <p>In cases where the usage of the struct in the XML-RPC call is too flexible 
@@ -496,7 +508,7 @@ To take the C# case, the correct version of the struct would be:
 <h3><a id="1.15"></a>1.15 Can I specify struct members as optional?</h3>
 
 <p>
-By default when XML-RPC.NET deserializes XML-RPC structs to .NET structs it 
+By default when XML-RPC.NET deserializes XML-RPC structs to .NET structs or classes it 
 assumes that former will contain members for all the public members defined in 
 the latter (deserialization occurs when the server processes a request and when
 the client processes a response).
@@ -1714,6 +1726,23 @@ public interface ILastFM : IXmlRpcProxy
     // ...
 }
 </pre>
+
+
+<h3><a id="2.35"></a>2.35 Can I use the NonSerialized attribute on struct members?</h3>
+<p>
+Yes, the System.NonSerialized attribute can be used to prevent a struct member 
+being serialized or deserialized. For example instances of the following struct will
+only have the member "x" serialized into the XML-RPC struct:
+</p>
+
+<pre>struct MyStruct
+{
+  public int x;
+  [NonSerialized]
+  public int y;
+}    
+</pre>
+
 
 
 <h2>3. Servers</h2>
