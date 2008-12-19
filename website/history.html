@@ -49,6 +49,89 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h1>XML-RPC.NET - History</h1>
 
+
+<h3>2.3.2</h3>
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.3.2.zip">xml-rpc.net.2.3.2.zip</a> 
+</p>
+
+<p>Changes:</p>
+
+<ul>
+
+<li>
+Issue 22: XmlRpcTypeMismatchException thrown if an XML-RPC array is mistakenly 
+mapped onto a .Net struct (was throwing MissingMethodException).
+</li>
+
+<li>
+Issue 23: Fixes problem where XML-RPC string values containing just one or 
+more spaces were deserialized as an empty .Net string value.
+</li>
+
+<li>
+Issue 24: XmlRpcV2 assembly is now built with a strong name.
+</li>
+
+</ul>
+
+<h3>2.3.1</h3>
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.3.1.zip">xml-rpc.net.2.3.1.zip</a> 
+</p>
+
+<p>Changes:</p>
+
+<ul>
+
+<li>
+Issue 20: Fixes problem where XML-RPC service implemented as HttpHandler
+returns 500 server error. 
+</li>
+
+<li>
+Issue 21: Fixes problem with StateNameServer sample which returns fault response 
+because of duplicate XML-RPC method names.
+</li>
+
+</ul>
+
+<h3>2.3.0</h3>
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.3.0.zip">xml-rpc.net.2.3.0.zip</a> 
+</p>
+
+<p>New features and changes:</p>
+
+<ul>
+
+<li>
+Issue 15: Support for accessing response headers and cookies. 
+(<a href="./faq/xmlrpcnetfaq.html#2.33">more</a>). 
+</li>
+
+<li>
+Issue 17: Support for not sending a params element if no method parameters. 
+(<a href="./faq/xmlrpcnetfaq.html#2.32">more</a>). 
+</li>
+
+<li>
+Changes:
+<ul>
+<li>
+Issue 16: Content type set before writing to response stream (fixes Mono issue).
+</li>
+<li>
+Issue 18: Modified proxy code generation so that it verifies - prevents 
+“Operation could destabilize the runtime" problem.
+</li>
+<li>
+Issue 19: XmlRpcListenerService now sets Content Length header and does not
+use chunked content by default.
+</li>
+
+</ul>
+</li>
+
+</ul>  
+
 <h2>2.2.0</h2>
 <a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.2.0.zip">xml-rpc.net.2.2.0.zip</a> 
 </p>
@@ -496,7 +579,7 @@ document.write('<a href="mailto:' + '&#99;&#104;&#97;&#115;' +'&#99;&#111;&#111;
   with any feedback or suggestions for XML-RPC.NET. </p>
 <p>&nbsp;</p>
 <p style="font-size: x-small;">
-Charles Cook, 2001-2008 All Rights Reserved. 4th April 2008
+Charles Cook, 2001-2008 All Rights Reserved. 19th December 2008
 </p>
 
 </div>

@@ -49,7 +49,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h1>XML-RPC.NET FAQ</h1>
 
-<p>3rd April 2008. &copy; Charles Cook, 2002-2008.</p>
+<p>19th December 2008. &copy; Charles Cook, 2002-2008.</p>
 <p>Please send feedback, corrections, etc, to xmlrpcfaq@gmail.com.</p>
 <h2>Contents</h2>
 <p>1. Introduction</p>
@@ -113,6 +113,7 @@ if the XML-RPC method name is not valid in my programming language?<br/>
 2.31 <a href="#2.31">How do I configure client support for Accept-Encoding?</a><br />
 2.32 <a href="#2.32">How do I prevent an empty params element in a request?</a><br />
 2.33 <a href="#2.33">Can I retrieve the HTML response headers and cookies?</a><br />
+2.34 <a href="#2.34">How do I call an XML-RPC method which requires named parameters in a struct?</a><br />
 
 </p>
 
@@ -1657,6 +1658,62 @@ WebHeaderCollection headers = ((XmlRpcAsyncResult)iasr).ResponseHeaders;
 CookieCollection cookies = ((XmlRpcAsyncResult)iasr).ResponseCookies;
 </pre>
 
+
+<h3><a id="2.34"></a>2.34 How do I call an XML-RPC method which requires named parameters in a struct?</h3>
+<p>
+Some XML-RPC APIs use a struct as a single parameter to methods, so that the 
+members of the struct acts as named parameters to the method. For example,
+the <a href="http://www.last.fm/api">Last.fm API</a> has a method called
+"artist.getInfo" which has two named parameters, "artist" and "api_key". 
+The XML-RPC request XML for this method looks like this example:
+</p>
+<pre>&lt;?xml version=""1.0""?&gt;
+&lt;methodCall&gt;
+  &lt;methodName&gt;artist.getInfo&lt;/methodName&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;value&gt;
+        &lt;struct&gt;
+          &lt;member&gt;
+            &lt;name&gt;artist&lt;/name&gt;
+            &lt;value&gt;
+              &lt;string&gt;Bob Dylan&lt;/string&gt;
+            &lt;/value&gt;
+          &lt;/member&gt;
+          &lt;member&gt;
+            &lt;name&gt;api_key&lt;/name&gt;
+            &lt;value&gt;
+              &lt;string&gt;abcd1234&lt;/string&gt;
+            &lt;/value&gt;
+          &lt;/member&gt;
+        &lt;/struct&gt;
+      &lt;/value&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodCall&gt;
+</pre>
+
+<p>
+This could be implemented in XML-RPC.NET by using a struct 
+parameter but the StructParams attribute allows the method to 
+be defined using multiple parameters which are automatically
+mapped to an XML-RPC struct at runtime, the names of the method
+parameters in the interface definition being used as the
+names of the members in the XML-RPC struct. For example, 
+"artist.getInfo" could be defined like this: 
+</p>
+
+<pre>
+public interface ILastFM : IXmlRpcProxy
+{ 
+    // ...
+
+    [XmlRpcMethod("artist.getInfo", StructParams = true)]
+    public string getInfo(string artist, string api_key);
+
+    // ...
+}
+</pre>
 
 
 <h2>3. Servers</h2>
