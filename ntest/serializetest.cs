@@ -407,9 +407,16 @@ namespace ntest
       public int y;
     }
 
+    class Class4
+    {
+      [NonSerialized]
+      public int x;
+      public int y;
+    }
+
 
     [Test]
-    public void NonSerializable()
+    public void NonSerialized()
     {
       Stream stm = new MemoryStream();
       XmlRpcRequest req = new XmlRpcRequest();
@@ -442,11 +449,11 @@ namespace ntest
     }
 
     [Test]
-    public void ConstMember()
+    public void NonSerializedClass()
     {
       Stream stm = new MemoryStream();
       XmlRpcRequest req = new XmlRpcRequest();
-      req.args = new Object[] { new Struct4() };
+      req.args = new Object[] { new Class4() };
       req.method = "Foo";
       XmlRpcSerializer ser = new XmlRpcSerializer();
       ser.SerializeRequest(stm, req);

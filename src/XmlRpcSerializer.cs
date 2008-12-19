@@ -707,6 +707,8 @@ namespace CookComputing.XmlRpc
           MemberInfo[] mis = o.GetType().GetMembers();
           foreach (MemberInfo mi in mis)
           {
+            if (Attribute.IsDefined(mi, typeof(NonSerializedAttribute)))
+              continue;
             if (mi.MemberType == MemberTypes.Field)
             {
               FieldInfo fi = (FieldInfo)mi;
@@ -1157,10 +1159,14 @@ namespace CookComputing.XmlRpc
       Hashtable names = new Hashtable();
       foreach (FieldInfo fi in valueType.GetFields())
       {
+        if (Attribute.IsDefined(fi, typeof(NonSerializedAttribute)))
+          continue;
         names.Add(fi.Name, fi.Name);
       }
       foreach (PropertyInfo pi in valueType.GetProperties())
       {
+        if (Attribute.IsDefined(pi, typeof(NonSerializedAttribute)))
+          continue;
         names.Add(pi.Name, pi.Name);
       }
       XmlNode[] members = SelectNodes(node, "member");
@@ -1195,12 +1201,23 @@ namespace CookComputing.XmlRpc
         string structName = GetStructName(valueType, name);
         if (structName != null)
           name = structName;
+        MemberInfo mi = valueType.GetField(name);
+        if (mi == null)
+          mi = valueType.GetProperty(name);
+        if (mi == null)
+          continue;
         if (names.Contains(name))
           names.Remove(name);
         else
         {
-          if (!IgnoreDuplicateMembers
-          && (valueType.GetField(name) != null || valueType.GetProperty(name) != null))
+          if (Attribute.IsDefined(mi, typeof(NonSerializedAttribute)))
+          {
+            parseStack.Push(String.Format("member {0}", name));
+            throw new XmlRpcNonSerializedMember("Cannot map XML-RPC struct "
+              + "member onto member marked as [NonSerialized]: "
+              + " " + StackDump(parseStack));
+          }
+          if (!IgnoreDuplicateMembers)
             throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
               + " contains struct value with duplicate member "
               + nameNode.FirstChild.Value
@@ -1208,16 +1225,11 @@ namespace CookComputing.XmlRpc
           else
             continue;   // ignore duplicate member
         }
-        MemberInfo[] mis = valueType.GetMember(name);
-        if (mis.Length == 0)
-        {
-          continue;   // allow unexpected members
-        }
         Object valObj = null;
-        switch (mis[0].MemberType)
+        switch (mi.MemberType)
         {
           case MemberTypes.Field:
-            FieldInfo fi = (FieldInfo)mis[0];
+            FieldInfo fi = (FieldInfo)mi;
             if (valueType == null)
               parseStack.Push(String.Format("member {0}", name));
             else
@@ -1246,7 +1258,7 @@ namespace CookComputing.XmlRpc
             fi.SetValue(retObj, valObj);
             break;
           case MemberTypes.Property:
-            PropertyInfo pi = (PropertyInfo)mis[0];
+            PropertyInfo pi = (PropertyInfo)mi;
             if (valueType == null)
               parseStack.Push(String.Format("member {0}", name));
             else

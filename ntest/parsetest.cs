@@ -854,5 +854,82 @@ namespace ntest
       object obj = Utils.Parse(xml, typeof(Struct3), MappingAction.Error,
         out parsedType, out parsedArrayType);
     }
+
+
+    struct Struct4
+    {
+      [NonSerialized]
+      public int x;
+      public int y;
+    }
+
+    [Test]
+    public void IgnoreNonSerialized()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>y</name>
+      <value><i4>18</i4></value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(Struct4), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcNonSerializedMember))]
+    public void NonSerializedInStruct()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>x</name>
+      <value><i4>12</i4></value>
+    </member>
+    <member>
+      <name>y</name>
+      <value><i4>18</i4></value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(Struct4), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Struct4 ret = (Struct4)obj;
+      Assert.AreEqual(0, ret.x);
+      Assert.AreEqual(18, ret.y);
+    }
+
+
+    struct Struct5
+    {
+      public int x;
+    }
+
+    [Test]
+    public void UnexpectedMember()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>x</name>
+      <value><i4>12</i4></value>
+    </member>
+    <member>
+      <name>y</name>
+      <value><i4>18</i4></value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(Struct5), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+    }
   }
 }
