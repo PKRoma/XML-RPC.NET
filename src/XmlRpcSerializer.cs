@@ -1861,14 +1861,13 @@ namespace CookComputing.XmlRpc
     XmlNode SelectSingleNode(XmlNode node, string name)
     {
 #if (COMPACT_FRAMEWORK)
-      XmlNodeList nodes = node.ChildNodes;
-      for (int i = 0; i < nodes.Count; i++)
+      foreach (XmlNode selnode in node.ChildNodes)
       {
         // For "*" element else return null
-        if ((name == "*") && !(nodes[i].Name.StartsWith("#")))
-            return nodes[i];
-        if (nodes[i].Name == name)
-          return nodes[i];
+        if ((name == "*") && !(selnode.Name.StartsWith("#")))
+          return selnode;
+        if (selnode.Name == name)
+          return selnode;
       }
       return null;
 #else
@@ -1879,11 +1878,10 @@ namespace CookComputing.XmlRpc
     XmlNode[] SelectNodes(XmlNode node, string name)
     {
       ArrayList list = new ArrayList();
-      XmlNodeList nodes = node.ChildNodes;
-      for (int i = 0; i < nodes.Count; i++)
+      foreach (XmlNode selnode in node.ChildNodes)
       {
-        if (nodes[i].Name == name)
-          list.Add(nodes[i]);
+        if (selnode.Name == name)
+          list.Add(selnode);
       }
       return (XmlNode[])list.ToArray(typeof(XmlNode));
     }
@@ -1903,20 +1901,19 @@ namespace CookComputing.XmlRpc
     {
       node1 = node2 = null;
       dup1 = dup2 = false;
-      XmlNodeList nodes = node.ChildNodes;
-      for (int i = 0; i < nodes.Count; i++)
+      foreach (XmlNode selnode in node.ChildNodes)
       {
-        if (nodes[i].Name == name1)
+        if (selnode.Name == name1)
         {
           if (node1 == null)
-            node1 = nodes[i];
+            node1 = selnode;
           else
             dup1 = true;
         }
-        else if (nodes[i].Name == name2)
+        else if (selnode.Name == name2)
         {
           if (node2 == null)
-            node2 = nodes[i];
+            node2 = selnode;
           else
             dup2 = true;
         }
