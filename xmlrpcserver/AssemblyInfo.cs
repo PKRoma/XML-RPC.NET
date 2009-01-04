@@ -23,44 +23,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
-namespace CookComputing.XmlRpc
-{
-  using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security;
 
-  [AttributeUsage(AttributeTargets.Method)]
-  public class XmlRpcEndAttribute : Attribute
-  {
-    public XmlRpcEndAttribute()
-    {
-    }
+[assembly: AssemblyTitle("XML-RPC.NET Server")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Cook Computing")]
+[assembly: AssemblyProduct("XML-RPC.Net")]
+[assembly: AssemblyCopyright("Charles Cook (c) 2001-2009")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
 
-    public XmlRpcEndAttribute(string method)
-    {
-      this.method = method;
-    }
-
-    public string Method 
-    {
-      get 
-      { return method; }
-    }
-
-    public bool IntrospectionMethod 
-    {
-      get { return introspectionMethod; }
-      set { introspectionMethod = value; }
-    }
-
-    public override string ToString()
-    {
-      string value = "Method : " + method;
-      return value;
-    }
-
-    public string Description = "";
-    public bool Hidden = false;
-    private string method = "";
-    private bool introspectionMethod = false;
-  }
-}
+#if (RELEASE_BUILD)
+[assembly: AssemblyDelaySign(false)]
+[assembly: AssemblyKeyFile("..\\CookComputing.key")]
+[assembly: AssemblyKeyName("")]
+#endif 
 

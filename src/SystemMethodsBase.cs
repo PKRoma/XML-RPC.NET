@@ -4,7 +4,10 @@ using CookComputing.XmlRpc;
 
 namespace CookComputing.XmlRpc
 {
-  public class SystemMethodsBase : MarshalByRefObject
+  public class SystemMethodsBase 
+#if (!SILVERLIGHT)
+    : MarshalByRefObject
+#endif
   {
     [XmlRpcMethod("system.listMethods", IntrospectionMethod = true,
        Description =

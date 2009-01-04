@@ -25,10 +25,10 @@ namespace ntest
       public DateTime mdt;
       public byte[] mb64;
       public int[] ma;
-      public XmlRpcInt xi;
-      public XmlRpcBoolean xb;
-      public XmlRpcDouble xd;
-      public XmlRpcDateTime xdt;
+      public int? xi;
+      public Boolean? xb;
+      public Double? xd;
+      public DateTime? xdt;
       public XmlRpcStruct xstr;
     }
 
@@ -668,10 +668,10 @@ namespace ntest
     {
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?><value><int>12345</int></value>";
-      object obj = Utils.Parse(xml, typeof(XmlRpcInt), MappingAction.Error, 
+      object obj = Utils.Parse(xml, typeof(int?), MappingAction.Error, 
         out parsedType, out parsedArrayType);
-      Assert.IsInstanceOfType(typeof(XmlRpcInt), obj);
-      Assert.AreEqual(12345, (XmlRpcInt)obj);
+      Assert.IsInstanceOfType(typeof(int?), obj);
+      Assert.AreEqual(12345, (int?)obj);
     }
 
     //---------------------- XmlRpcBoolean ---------------------------------// 
@@ -681,9 +681,9 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><boolean>1</boolean></value>";
-      object obj = Utils.Parse(xml, typeof(XmlRpcBoolean), MappingAction.Error, 
+      object obj = Utils.Parse(xml, typeof(Boolean?), MappingAction.Error, 
         out parsedType, out parsedArrayType);
-      Assert.AreEqual(new XmlRpcBoolean(true), (XmlRpcBoolean)obj);
+      Assert.AreEqual(new Boolean?(true), (Boolean?)obj);
     }
             
     //---------------------- XmlRpcDouble ----------------------------------// 
@@ -693,9 +693,9 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><double>543.21</double></value>";
-      object obj = Utils.Parse(xml, typeof(XmlRpcDouble), MappingAction.Error, 
+      object obj = Utils.Parse(xml, typeof(Double?), MappingAction.Error, 
         out parsedType, out parsedArrayType);
-      Assert.AreEqual(new XmlRpcDouble(543.21), (XmlRpcDouble)obj);
+      Assert.AreEqual(new Double?(543.21), (Double?)obj);
     }
       
     //---------------------- XmlRpcDateTime --------------------------------// 
@@ -705,14 +705,13 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T11:25:37</dateTime.iso8601></value>";
-      object obj = Utils.Parse(xml, typeof(XmlRpcDateTime), MappingAction.Error, 
+      object obj = Utils.Parse(xml, typeof(DateTime?), MappingAction.Error, 
         out parsedType, out parsedArrayType);
       Assert.AreEqual(
-        new XmlRpcDateTime(new DateTime(2002, 7, 6, 11, 25, 37)), 
-        (XmlRpcDateTime)obj);
+        new DateTime?(new DateTime(2002, 7, 6, 11, 25, 37)),
+        (DateTime?)obj);
     }
 
-#if !FX1_0
     //---------------------- int? -------------------------------------// 
     [Test]
     public void nullableIntType()
@@ -760,7 +759,6 @@ namespace ntest
         out parsedType, out parsedArrayType);
       Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37), obj);
     }
-#endif
      
   //---------------------- XmlRpcStruct array ----------------------------// 
     [Test]

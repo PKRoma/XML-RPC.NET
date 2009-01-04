@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2009, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -26,72 +26,9 @@ DEALINGS IN THE SOFTWARE.
 namespace CookComputing.XmlRpc
 {
   using System;
-  using System.Collections;
+  using System.Collections.Generic;
   
-  public class XmlRpcStruct : Hashtable
+  public class XmlRpcStruct : Dictionary<string, object>
   {
-    public override void Add(object key, object value)
-    {
-      if (!(key is string))
-      {
-        throw new ArgumentException("XmlRpcStruct key must be a string.");
-      }
-      if (XmlRpcServiceInfo.GetXmlRpcType(value.GetType()) 
-          == XmlRpcType.tInvalid)
-      {
-        throw new ArgumentException(String.Format(
-          "Type {0} cannot be mapped to an XML-RPC type", value.GetType()));
-      }
-      base.Add(key, value);
-    }
-
-    public override object this[object key]
-    {
-      get
-      {
-        return base[key];
-      }
-      set
-      {
-        if (!(key is string))
-        {
-          throw new ArgumentException("XmlRpcStruct key must be a string.");
-        }
-        if (XmlRpcServiceInfo.GetXmlRpcType(value.GetType())
-            == XmlRpcType.tInvalid)
-        {
-          throw new ArgumentException(String.Format(
-            "Type {0} cannot be mapped to an XML-RPC type", value.GetType()));
-        }
-        base[key] = value;
-      }
-    }
-
-    public override bool Equals(Object obj)
-    {
-      if (obj.GetType() != typeof(XmlRpcStruct))
-        return false;
-      XmlRpcStruct xmlRpcStruct = (XmlRpcStruct)obj;
-      if (this.Keys.Count != xmlRpcStruct.Count)
-        return false;
-      foreach (String key in this.Keys)
-      {
-        if (!xmlRpcStruct.ContainsKey(key))
-          return false;
-        if (!this[key].Equals(xmlRpcStruct[key]))
-          return false;
-      }
-      return true;
-    }
-
-    public override int GetHashCode()
-    {
-      int hash = 0;
-      foreach (object obj in Values)
-      {
-        hash ^= obj.GetHashCode();
-      }
-      return hash;
-    }
   }
 }

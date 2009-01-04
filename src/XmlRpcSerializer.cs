@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2009, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -644,7 +644,7 @@ namespace CookComputing.XmlRpc
           if (o is bool)
             boolVal = (bool)o;
           else
-            boolVal = (bool)(XmlRpcBoolean)o;
+            boolVal = (bool)(Boolean)o;
           if (boolVal)
             xtw.WriteElementString("boolean", "1");
           else
@@ -653,21 +653,14 @@ namespace CookComputing.XmlRpc
         else if (xType == XmlRpcType.tDateTime)
         {
           DateTime dt;
-          if (o is DateTime)
-            dt = (DateTime)o;
-          else
-            dt = (XmlRpcDateTime)o;
+          dt = (DateTime)o;
           string sdt = dt.ToString("yyyyMMdd'T'HH':'mm':'ss",
           DateTimeFormatInfo.InvariantInfo);
           xtw.WriteElementString("dateTime.iso8601", sdt);
         }
         else if (xType == XmlRpcType.tDouble)
         {
-          double doubleVal;
-          if (o is double)
-            doubleVal = (double)o;
-          else
-            doubleVal = (XmlRpcDouble)o;
+          double doubleVal = (double)o;
           xtw.WriteElementString("double", doubleVal.ToString(null,
           CultureInfo.InvariantCulture));
         }
@@ -1120,13 +1113,11 @@ namespace CookComputing.XmlRpc
           + XmlRpcServiceInfo.GetXmlRpcTypeString(valueType)
           + " expected " + StackDump(parseStack));
       }
-#if !FX1_0
       if (valueType.IsGenericType
         && valueType.GetGenericTypeDefinition() == typeof(Nullable<>))
       {
         valueType = valueType.GetGenericArguments()[0];
       }
-#endif
       object retObj;
       try
       {
@@ -1424,7 +1415,7 @@ namespace CookComputing.XmlRpc
             throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
               + " contains member with more than one value element"
               + " " + StackDump(parseStack));
-          if (retObj.Contains(rpcName))
+          if (retObj.ContainsKey(rpcName))
           {
             if (!IgnoreDuplicateMembers)
               throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
@@ -1464,10 +1455,7 @@ namespace CookComputing.XmlRpc
     {
       if (ValueType != null && ValueType != typeof(Object)
         && ValueType != typeof(System.Int32)
-#if !FX1_0
- && ValueType != typeof(int?)
-#endif
- && ValueType != typeof(XmlRpcInt))
+        && ValueType != typeof(int?))
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType +
           " contains int value where "
@@ -1499,8 +1487,8 @@ namespace CookComputing.XmlRpc
       {
         parseStack.Pop();
       }
-      if (ValueType == typeof(XmlRpcInt))
-        return new XmlRpcInt(retVal);
+      if (ValueType == typeof(int?))
+        return (int?)retVal;
       else
         return retVal;
     }
@@ -1543,10 +1531,7 @@ namespace CookComputing.XmlRpc
     {
       if (ValueType != null && ValueType != typeof(Object)
         && ValueType != typeof(System.Boolean)
-#if !FX1_0
- && ValueType != typeof(bool?)
-#endif
- && ValueType != typeof(XmlRpcBoolean))
+        && ValueType != typeof(Boolean?))
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType
           + " contains boolean value where "
@@ -1577,8 +1562,8 @@ namespace CookComputing.XmlRpc
       {
         parseStack.Pop();
       }
-      if (ValueType == typeof(XmlRpcBoolean))
-        return new XmlRpcBoolean(retVal);
+      if (ValueType == typeof(Boolean?))
+        return (Boolean?)retVal;
       else
         return retVal;
     }
@@ -1591,10 +1576,7 @@ namespace CookComputing.XmlRpc
     {
       if (ValueType != null && ValueType != typeof(Object)
         && ValueType != typeof(System.Double)
-#if !FX1_0
- && ValueType != typeof(double?)
-#endif
- && ValueType != typeof(XmlRpcDouble))
+        && ValueType != typeof(double?))
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType
           + " contains double value where "
@@ -1617,8 +1599,8 @@ namespace CookComputing.XmlRpc
       {
         parseStack.Pop();
       }
-      if (ValueType == typeof(XmlRpcDouble))
-        return new XmlRpcDouble(retVal);
+      if (ValueType == typeof(Double?))
+        return (Double?)retVal;
       else
         return retVal;
     }
@@ -1631,10 +1613,7 @@ namespace CookComputing.XmlRpc
     {
       if (ValueType != null && ValueType != typeof(Object)
         && ValueType != typeof(System.DateTime)
-#if !FX1_0
- && ValueType != typeof(DateTime?)
-#endif
- && ValueType != typeof(XmlRpcDateTime))
+        && ValueType != typeof(DateTime?))
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType
           + " contains dateTime.iso8601 value where "
@@ -1708,8 +1687,8 @@ namespace CookComputing.XmlRpc
       {
         parseStack.Pop();
       }
-      if (ValueType == typeof(XmlRpcDateTime))
-        return new XmlRpcDateTime(retVal);
+      if (ValueType == typeof(DateTime?))
+        return (DateTime?)retVal;
       else
         return retVal;
     }

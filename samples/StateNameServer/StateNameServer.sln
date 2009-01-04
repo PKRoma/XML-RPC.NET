@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "client", "client\client.csproj", "{B9984631-7145-438E-968C-5F58A10D26C5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D336462F-2F05-4B21-B616-BE7A0F8F8134} = {D336462F-2F05-4B21-B616-BE7A0F8F8134}

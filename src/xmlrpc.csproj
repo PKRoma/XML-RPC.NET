@@ -1,7 +1,7 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{1B4B0A58-0AFB-4090-91DD-18912CC7DE65}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,14 +10,14 @@
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>CookComputing.XmlRpcV2</AssemblyName>
+    <AssemblyName>CookComputing.XmlRpcV3</AssemblyName>
     <AssemblyOriginatorKeyFile Condition="'$(BuildingInsideVisualStudio)' == ''">$(KeyFile)</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>xmlrpc</RootNamespace>
+    <RootNamespace>CookComputing.XmlRpc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -26,6 +26,22 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <SignAssembly Condition="'$(BuildingInsideVisualStudio)' == ''">true</SignAssembly>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>http://localhost/CookComputing.XmlRpcV2/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\bin\</OutputPath>
@@ -81,9 +97,6 @@
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
-    <Reference Include="System.Web">
-      <Name>System.Web</Name>
-    </Reference>
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
@@ -93,18 +106,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GuidEx.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IHttpRequest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IHttpRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IHttpResponse.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IXmlRpcProxy.cs" />
@@ -120,9 +121,6 @@
     <Compile Include="XmlRpcBeginAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XmlRpcBoolean.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="XmlRpcClientFormatterSink.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -131,15 +129,6 @@
     </Compile>
     <Compile Include="XmlRpcClientProtocol.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="XmlRpcDateTime.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcDocWriter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcDouble.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="XmlRpcEndAttribute.cs">
       <SubType>Code</SubType>
@@ -150,21 +139,6 @@
     <Compile Include="XmlRpcFaultException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XmlRpcHttpRequest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcHttpResponse.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcHttpServerProtocol.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcInt.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcListenerRequest.cs" />
-    <Compile Include="XmlRpcListenerResponse.cs" />
-    <Compile Include="XmlRpcListenerService.cs" />
     <Compile Include="XmlRpcLogger.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -211,12 +185,6 @@
     <Compile Include="XmlRpcServerFormatterSinkProvider.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XmlRpcServerProtocol.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcService.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="XmlRpcServiceAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -229,6 +197,36 @@
     <Compile Include="XmlRpcUrlAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="attributes\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="CookComputing.XmlRpc.Targets" Condition="'$(BuildingInsideVisualStudio)' == '' AND '$(TargetFX1_0)'=='true'" />

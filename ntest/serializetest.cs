@@ -239,11 +239,11 @@ namespace ntest
       public int member1;
 
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcInt member2;
+      public int? member2;
 
       [XmlRpcMember("member_3")]
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcInt member3;
+      public int? member3;
     }
 
     [Test]
@@ -517,12 +517,12 @@ namespace ntest
     }  
 
 
-    //---------------------- XmlRpcInt -------------------------------------// 
+    //---------------------- int? -------------------------------------// 
     [Test]
-    public void XmlRpcInt()
+    public void NullableInt()
     {
-      XmlDocument xdoc = Utils.Serialize("SerializeTest.testXmlRpcInt", 
-        new XmlRpcInt(12345), 
+      XmlDocument xdoc = Utils.Serialize("SerializeTest.testint?", 
+        new int?(12345), 
         Encoding.UTF8, MappingAction.Ignore);
       Type parsedType, parsedArrayType;
       object obj = Utils.Parse(xdoc, null, MappingAction.Error, 
@@ -535,7 +535,7 @@ namespace ntest
     public void XmlRpcBoolean()
     {
       XmlDocument xdoc = Utils.Serialize("SerializeTest.testXmlRpcBoolean", 
-        new XmlRpcBoolean(true), 
+        new Boolean?(true), 
         Encoding.UTF8, MappingAction.Ignore);
       Type parsedType, parsedArrayType;
       object obj = Utils.Parse(xdoc, null, MappingAction.Error, 
@@ -543,12 +543,12 @@ namespace ntest
       Assert.AreEqual(true, obj);
     }
 
-    //---------------------- XmlRpcDouble ----------------------------------// 
+    //---------------------- Double? ----------------------------------// 
     [Test]
-    public void XmlRpcDouble()
+    public void NullableDouble()
     {
-      XmlDocument xdoc = Utils.Serialize("SerializeTest.testXmlRpcDouble", 
-        new XmlRpcDouble(543.21), 
+      XmlDocument xdoc = Utils.Serialize("SerializeTest.testDouble?", 
+        new Double?(543.21), 
         Encoding.UTF8, MappingAction.Ignore);
       Type parsedType, parsedArrayType;
       object obj = Utils.Parse(xdoc, null, MappingAction.Error, 
@@ -557,18 +557,18 @@ namespace ntest
     }
 
     [Test]
-    public void XmlRpcDouble_ForeignCulture()
+    public void NullableDouble_ForeignCulture()
     {
       CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
       XmlDocument xdoc;
       try
       {
         Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-BE");
-        XmlRpcDouble xsd = new XmlRpcDouble(543.21);
+        Double? xsd = new Double?(543.21);
         //Console.WriteLine(xsd.ToString());
         xdoc = Utils.Serialize(
-          "SerializeTest.testXmlRpcDouble_ForeignCulture", 
-          new XmlRpcDouble(543.21), 
+          "SerializeTest.testDouble?_ForeignCulture", 
+          new Double?(543.21), 
           Encoding.UTF8, MappingAction.Ignore);
       }
       catch(Exception)
@@ -585,11 +585,11 @@ namespace ntest
       Assert.AreEqual(543.21, obj);
     }
 
-    //---------------------- XmlRpcDateTime ------------------------------// 
+    //---------------------- DateTime? ------------------------------// 
     [Test]
-    public void XmlRpcDateTime()
+    public void NullableDateTime()
     {
-      XmlDocument xdoc = Utils.Serialize("SerializeTest.testXmlRpcDateTime", 
+      XmlDocument xdoc = Utils.Serialize("SerializeTest.testDateTime?", 
         new DateTime(2002, 7, 6, 11, 25, 37), 
         Encoding.UTF8, MappingAction.Ignore);
       Type parsedType, parsedArrayType;

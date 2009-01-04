@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2009, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -31,13 +31,15 @@ using System.Security;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cook Computing")]
 [assembly: AssemblyProduct("XML-RPC.Net")]
-[assembly: AssemblyCopyright("Charles Cook (c) 2001-2005")]
+[assembly: AssemblyCopyright("Charles Cook (c) 2001-2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
+#if (RELEASE_BUILD)
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("..\\CookComputing.key")]
 [assembly: AssemblyKeyName("")]
+#endif 
 
 #if (!COMPACT_FRAMEWORK)
 [assembly: AllowPartiallyTrustedCallers]

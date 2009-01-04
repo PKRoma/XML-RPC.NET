@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2009, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -27,27 +27,25 @@ namespace CookComputing.XmlRpc
 {
   using System;
   using System.Collections;
+  using System.Collections.Generic;
   using System.Reflection;
   using System.Reflection.Emit;
 
   public class XmlRpcProxyGen
   {
-    static Hashtable _types = new Hashtable();
+    static Dictionary<Type, Type> _types = new Dictionary<Type, Type>();
 
-#if (!FX1_0)
     public static T Create<T>()
     {
       return (T)Create(typeof(T));
     }
-#endif
 
     public static object Create(Type itf)
     {
       Type proxyType;
       lock (typeof(XmlRpcProxyGen))
       {
-        proxyType = (Type)_types[itf];
-        if (proxyType == null)
+        if (!_types.TryGetValue(itf, out proxyType))
         {
           Guid guid = Guid.NewGuid();
           string assemblyName = "XmlRpcProxy" + guid.ToString();
@@ -87,9 +85,9 @@ namespace CookComputing.XmlRpc
       string typeName)
     {
       string urlString = GetXmlRpcUrl(itf);
-      ArrayList methods = GetXmlRpcMethods(itf);
-      ArrayList beginMethods = GetXmlRpcBeginMethods(itf);
-      ArrayList endMethods = GetXmlRpcEndMethods(itf);
+      List<MethodData> methods = GetXmlRpcMethods(itf);
+      List<MethodData> beginMethods = GetXmlRpcBeginMethods(itf);
+      List<MethodData> endMethods = GetXmlRpcEndMethods(itf);
       AssemblyName assName = new AssemblyName();
       assName.Name = assemblyName;
       assName.Version = itf.Assembly.GetName().Version;
@@ -110,7 +108,7 @@ namespace CookComputing.XmlRpc
       return assBldr;
     }
 
-    static void BuildMethods(TypeBuilder tb, ArrayList methods)
+    static void BuildMethods(TypeBuilder tb, List<MethodData> methods)
     {
       foreach (MethodData mthdData in methods)
       {
@@ -232,7 +230,7 @@ namespace CookComputing.XmlRpc
       ilgen.Emit(OpCodes.Ret);
     }
 
-    static void BuildBeginMethods(TypeBuilder tb, ArrayList methods)
+    static void BuildBeginMethods(TypeBuilder tb, List<MethodData> methods)
     {
       foreach (MethodData mthdData in methods)
       {
@@ -323,7 +321,7 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    static void BuildEndMethods(TypeBuilder tb, ArrayList methods)
+    static void BuildEndMethods(TypeBuilder tb, List<MethodData> methods)
     {
       LocalBuilder retVal = null;
       LocalBuilder tempRetVal = null;
@@ -451,9 +449,9 @@ namespace CookComputing.XmlRpc
       return (MethodInfo[])result.ToArray(typeof(MethodInfo));
     }
 
-    private static ArrayList GetXmlRpcMethods(Type itf)
+    private static List<MethodData> GetXmlRpcMethods(Type itf)
     {
-      ArrayList ret = new ArrayList();
+      var ret = new List<MethodData>();
       if (!itf.IsInterface)
         throw new Exception("type not interface");
       foreach (MethodInfo mi in GetMethods(itf))
@@ -507,9 +505,9 @@ namespace CookComputing.XmlRpc
       public bool paramsMethod;
     }
 
-    private static ArrayList GetXmlRpcBeginMethods(Type itf)
+    private static List<MethodData> GetXmlRpcBeginMethods(Type itf)
     {
-      ArrayList ret = new ArrayList();
+      var ret = new List<MethodData>();
       if (!itf.IsInterface)
         throw new Exception("type not interface");
       foreach (MethodInfo mi in itf.GetMethods())
@@ -554,9 +552,9 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
-    private static ArrayList GetXmlRpcEndMethods(Type itf)
+    private static List<MethodData> GetXmlRpcEndMethods(Type itf)
     {
-      ArrayList ret = new ArrayList();
+      var ret = new List<MethodData>();
       if (!itf.IsInterface)
         throw new Exception("type not interface");
       foreach (MethodInfo mi in itf.GetMethods())

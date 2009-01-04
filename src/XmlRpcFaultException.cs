@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2009, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -32,10 +32,14 @@ namespace CookComputing.XmlRpc
 
   // used to return server-side errors to client code - also can be 
   // thrown by Service implmentation code to return custom Fault Responses
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
   [Serializable]
 #endif
+#if (!SILVERLIGHT)
   public class XmlRpcFaultException : ApplicationException
+#else
+  public class XmlRpcFaultException : Exception
+#endif  
   { 
     // constructors
     //
@@ -46,7 +50,7 @@ namespace CookComputing.XmlRpc
       m_faultCode = TheCode;
       m_faultString = TheString;
     }
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     // deserialization constructor
     protected XmlRpcFaultException(
       SerializationInfo info, 
@@ -68,7 +72,7 @@ namespace CookComputing.XmlRpc
     {
       get { return m_faultString; } 
     }
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     // public methods
     //
     public override void GetObjectData(

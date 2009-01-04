@@ -18,28 +18,12 @@ namespace ntest
     }
 
     [Test]
-    [ExpectedException(typeof(ArgumentException))]
-    public void SetInvalidKey()
-    {
-      XmlRpcStruct xps = new XmlRpcStruct();
-      xps[1] = "abcdef";
-    }
-
-    [Test]
     public void DoubleSet()
     {
       XmlRpcStruct xps = new XmlRpcStruct();
       xps["foo"] = "12345";
       xps["foo"] = "abcdef";
       Assert.AreEqual("abcdef", xps["foo"]);
-    }
-
-    [Test]
-    [ExpectedException(typeof(ArgumentException))]
-    public void AddInvalidKey()
-    {
-      XmlRpcStruct xps = new XmlRpcStruct();
-      xps.Add(1, "abcdef");
     }
 
     [Test]

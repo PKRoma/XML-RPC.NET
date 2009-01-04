@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2009, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -25,66 +25,57 @@ DEALINGS IN THE SOFTWARE.
 
 namespace CookComputing.XmlRpc
 {
-  public class XmlRpcInt 
+  using System;
+  using System.IO;
+  using System.Net;
+
+  public class XmlRpcListenerResponse : CookComputing.XmlRpc.IHttpResponse
   {
-    private int _value;
-
-    public XmlRpcInt()
+    public XmlRpcListenerResponse(HttpListenerResponse response)
     {
-      this._value = 0;
+      this.response = response;
+      response.SendChunked = false;
     }
 
-    public XmlRpcInt(int val) 
+    Int64 IHttpResponse.ContentLength
     {
-      this._value = val;
+      set { response.ContentLength64 = value; }
     }
 
-    public override string ToString() 
+    string IHttpResponse.ContentType
     {
-      return _value.ToString();
-    }
-    
-    public override int GetHashCode()
-    {
-      return _value.GetHashCode();
+      get { return response.ContentType; }
+      set { response.ContentType = value; }
     }
 
-    public override bool Equals(
-      object o)
+    TextWriter IHttpResponse.Output
     {
-      if (o == null || !(o is XmlRpcInt))
-        return false;
-      XmlRpcInt dbl = o as XmlRpcInt;
-      return (dbl._value == _value);
+      get { return new StreamWriter(response.OutputStream); }
     }
 
-    public static bool operator ==(
-      XmlRpcInt xi, 
-      XmlRpcInt xj)
+    Stream IHttpResponse.OutputStream
     {
-      if (((object)xi) == null && ((object)xj) == null) 
-        return true;
-      else if (((object)xi) == null || ((object)xj) == null)
-        return false;
-      else
-        return xi._value == xj._value;
+      get { return response.OutputStream; }
     }
 
-    public static bool operator != (
-      XmlRpcInt xi, 
-      XmlRpcInt xj)
+    bool IHttpResponse.SendChunked
     {
-      return !(xi == xj);
+      get { return response.SendChunked; }
+      set { response.SendChunked = value; }
     }
 
-    public static implicit operator int (XmlRpcInt x)
+    int IHttpResponse.StatusCode
     {
-      return x._value;
+      get { return response.StatusCode; }
+      set { response.StatusCode = value; }
     }
 
-    public static implicit operator XmlRpcInt(int x) 
+    string IHttpResponse.StatusDescription
     {
-      return new XmlRpcInt (x);
+      get { return response.StatusDescription; }
+      set { response.StatusDescription = value; }
     }
+
+    private HttpListenerResponse response;
   }
 }

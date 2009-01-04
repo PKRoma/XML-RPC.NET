@@ -48,7 +48,6 @@ namespace ntest
       Assert.IsTrue(cp is XmlRpcClientProtocol);
     }
 
-#if !FX1_0
     [Test]
     public void Method1Generic()
     {
@@ -58,7 +57,6 @@ namespace ntest
       Assert.IsTrue(cp is IXmlRpcProxy);
       Assert.IsTrue(cp is XmlRpcClientProtocol);
     }
-#endif
 
     public interface IParent : IXmlRpcProxy
     {
@@ -92,9 +90,7 @@ namespace ntest
       ITest2 proxy = (ITest2)XmlRpcProxyGen.Create(typeof(ITest2));
       X509CertificateCollection certs = proxy.ClientCertificates;
       string groupName = proxy.ConnectionGroupName;
-#if (!FX1_0)
       bool expect100 = proxy.Expect100Continue;
-#endif
       WebHeaderCollection header = proxy.Headers;
       int indentation = proxy.Indentation;
       bool keepAlive = proxy.KeepAlive;
