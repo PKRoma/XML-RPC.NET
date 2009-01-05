@@ -29,6 +29,7 @@ namespace CookComputing.XmlRpc
 {
   using System;
   using System.Collections;
+  using System.Collections.Generic;
   using System.Globalization;
   using System.IO;
   using System.Reflection;
@@ -129,8 +130,7 @@ namespace CookComputing.XmlRpc
 
     public void SerializeRequest(Stream stm, XmlRpcRequest request) 
     {
-      XmlTextWriter xtw = new XmlTextWriter(stm, m_encoding);
-      ConfigureXmlFormat(xtw);
+      XmlWriter xtw = CreateXmlWriter(stm);
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodCall", "");
     {
@@ -164,7 +164,7 @@ namespace CookComputing.XmlRpc
       xtw.Flush();
     }
 
-    void SerializeParams(XmlTextWriter xtw, XmlRpcRequest request,
+    void SerializeParams(XmlWriter xtw, XmlRpcRequest request,
       MappingAction mappingAction)
     {
       ParameterInfo[] pis = null;
@@ -206,7 +206,7 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    void SerializeStructParams(XmlTextWriter xtw, XmlRpcRequest request,
+    void SerializeStructParams(XmlWriter xtw, XmlRpcRequest request,
       MappingAction mappingAction)
     {
       ParameterInfo[] pis = request.mi.GetParameters();
@@ -431,9 +431,7 @@ namespace CookComputing.XmlRpc
         SerializeFaultResponse(stm, (XmlRpcFaultException)ret);
         return;
       }
-
-      XmlTextWriter xtw = new XmlTextWriter(stm, m_encoding);
-      ConfigureXmlFormat(xtw);
+      XmlWriter xtw = CreateXmlWriter(stm);
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "params", "");
@@ -585,7 +583,7 @@ namespace CookComputing.XmlRpc
     public
       //#endif
     void Serialize(
-      XmlTextWriter xtw,
+      XmlWriter xtw,
       Object o,
       MappingAction mappingAction)
     {
@@ -596,7 +594,7 @@ namespace CookComputing.XmlRpc
     public
       //#endif
     void Serialize(
-      XmlTextWriter xtw,
+      XmlWriter xtw,
       Object o,
       MappingAction mappingAction,
       ArrayList nestedObjs)
@@ -773,7 +771,7 @@ namespace CookComputing.XmlRpc
     }
 
     void BuildArrayXml(
-      XmlTextWriter xtw,
+      XmlWriter xtw,
       Array ary,
       int CurRank,
       int[] indices,
@@ -1797,9 +1795,7 @@ namespace CookComputing.XmlRpc
       FaultStruct fs;
       fs.faultCode = faultEx.FaultCode;
       fs.faultString = faultEx.FaultString;
-
-      XmlTextWriter xtw = new XmlTextWriter(stm, m_encoding);
-      ConfigureXmlFormat(xtw);
+      XmlWriter xtw = CreateXmlWriter(stm);
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "fault", "");
@@ -1809,20 +1805,40 @@ namespace CookComputing.XmlRpc
       xtw.Flush();
     }
 
-    void ConfigureXmlFormat(
-      XmlTextWriter xtw)
+    public class EncodingStreamWriter : StreamWriter
     {
-      if (m_bUseIndentation)
+      Encoding _encoding;
+
+      public EncodingStreamWriter(Stream stm, Encoding encoding)
+        : base(stm)
       {
-        xtw.Formatting = Formatting.Indented;
-        xtw.Indentation = m_indentation;
+        _encoding = encoding;
       }
-      else
+
+      public override Encoding Encoding
       {
-        xtw.Formatting = Formatting.None;
+        get { return _encoding; }
       }
     }
 
+    XmlWriter CreateXmlWriter(Stream stm)
+    {
+      var settings = new XmlWriterSettings();
+      if (m_bUseIndentation)
+      {
+        settings.Indent = true;
+        settings.IndentChars = new StringBuilder().Append(' ', m_indentation).ToString();
+      }
+      else
+      {
+        settings.Indent = false;
+      }
+      StreamWriter wrtr;
+      wrtr = new EncodingStreamWriter(stm, m_encoding);
+      var xtw = XmlWriter.Create(wrtr, settings);
+      return xtw;
+    }
+    
     string StackDump(ParseStack parseStack)
     {
       StringBuilder sb = new StringBuilder();
@@ -1925,19 +1941,11 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
-    //#if (DEBUG)
-    public
-      //#endif
-    class ParseStack : Stack
+    public class ParseStack : Stack<string>
     {
       public ParseStack(string parseType)
       {
         m_parseType = parseType;
-      }
-
-      void Push(string str)
-      {
-        base.Push(str);
       }
 
       public string ParseType
