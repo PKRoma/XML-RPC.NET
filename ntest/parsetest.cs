@@ -62,7 +62,49 @@ namespace ntest
         out parsedType, out parsedArrayType);
       Assert.AreEqual(12345, (int)obj);
     }
-      
+
+    //---------------------- Int64 -------------------------------------------// 
+    [Test]
+    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
+    public void Int_TooLarge()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?><value><int>123456789012</int></value>";
+      object obj = Utils.Parse(xml, typeof(int), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.AreEqual(12345, (int)obj);
+    }
+
+    [Test]
+    public void Int64_NullType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?><value><i8>123456789012</i8></value>";
+      object obj = Utils.Parse(xml, null, MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.AreEqual(123456789012, (long)obj);
+    }
+
+    [Test]
+    public void Int64_IntType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?><value><i8>123456789012</i8></value>";
+      object obj = Utils.Parse(xml, typeof(long), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.AreEqual(123456789012, (long)obj);
+    }
+
+    [Test]
+    public void Int64_ObjectType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?><value><i8>123456789012</i8></value>";
+      object obj = Utils.Parse(xml, typeof(object), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.AreEqual(123456789012, (long)obj);
+    }
+
     //---------------------- string ----------------------------------------// 
     [Test]
     public void String_NullType()
