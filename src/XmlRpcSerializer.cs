@@ -293,6 +293,11 @@ namespace CookComputing.XmlRpc
         throw new XmlRpcInvalidXmlRpcException(
           "Request XML not valid XML-RPC - missing methodName element.");
       }
+      if (methodNode.FirstChild == null)
+      {
+        throw new XmlRpcInvalidXmlRpcException(
+          "Request XML not valid XML-RPC - missing methodName element.");
+      }
       request.method = methodNode.FirstChild.Value;
       if (request.method == "")
       {
