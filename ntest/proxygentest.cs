@@ -4,9 +4,11 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using NUnit.Framework;
 using CookComputing.XmlRpc;
+using System.Security.Permissions;
 
 namespace ntest
 {
@@ -288,6 +290,21 @@ namespace ntest
       IStateName2 proxy = (IStateName2)XmlRpcProxyGen.Create(typeof(IStateName2));
       string ret = proxy.GetStateNames(1, 2, 3);
       Assert.AreEqual("Alabama Alaska Arizona", ret);
+    }
+
+    [Test]
+    public void FileIOPermission()
+    {
+      FileIOPermission f = new FileIOPermission(PermissionState.Unrestricted);
+      f.Deny();
+      try
+      {
+        IStateName2 proxy = (IStateName2)XmlRpcProxyGen.Create(typeof(IStateName2));
+      }
+      finally
+      {
+        CodeAccessPermission.RevertDeny();
+      }
     }
   }
 }
