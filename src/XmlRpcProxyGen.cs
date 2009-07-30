@@ -43,6 +43,7 @@ namespace CookComputing.XmlRpc
 
     public static object Create(Type itf)
     {
+      // create transient assembly
       Type proxyType;
       lock (typeof(XmlRpcProxyGen))
       {
@@ -54,7 +55,7 @@ namespace CookComputing.XmlRpc
           string moduleName = "XmlRpcProxy" + guid.ToString() + ".dll";
           string typeName = "XmlRpcProxy" + guid.ToString();
           AssemblyBuilder assBldr = BuildAssembly(itf, assemblyName,
-            moduleName, typeName);
+            moduleName, typeName, AssemblyBuilderAccess.Run);
           proxyType = assBldr.GetType(typeName);
           _types.Add(itf, proxyType);
         }
@@ -69,11 +70,12 @@ namespace CookComputing.XmlRpc
       string assemblyName
       )
     {
+      // create persistable assembly
       if (assemblyName.IndexOf(".dll") == (assemblyName.Length - 4))
         assemblyName = assemblyName.Substring(0, assemblyName.Length - 4);
       string moduleName = assemblyName + ".dll";
       AssemblyBuilder assBldr = BuildAssembly(itf, assemblyName,
-        moduleName, typeName);
+        moduleName, typeName, AssemblyBuilderAccess.RunAndSave);
       Type proxyType = assBldr.GetType(typeName);
       object ret = Activator.CreateInstance(proxyType);
       assBldr.Save(moduleName);
@@ -84,7 +86,8 @@ namespace CookComputing.XmlRpc
       Type itf,
       string assemblyName,
       string moduleName,
-      string typeName)
+      string typeName,
+      AssemblyBuilderAccess access)
     {
       string urlString = GetXmlRpcUrl(itf);
       ArrayList methods = GetXmlRpcMethods(itf);
@@ -92,11 +95,13 @@ namespace CookComputing.XmlRpc
       ArrayList endMethods = GetXmlRpcEndMethods(itf);
       AssemblyName assName = new AssemblyName();
       assName.Name = assemblyName;
-      assName.Version = itf.Assembly.GetName().Version;
+      if (access == AssemblyBuilderAccess.RunAndSave)
+        assName.Version = itf.Assembly.GetName().Version;
       AssemblyBuilder assBldr = AppDomain.CurrentDomain.DefineDynamicAssembly(
-        assName, AssemblyBuilderAccess.RunAndSave);
-      ModuleBuilder modBldr = assBldr.DefineDynamicModule(assName.Name,
-        moduleName);
+        assName, access);
+      ModuleBuilder modBldr = (access == AssemblyBuilderAccess.Run
+        ? assBldr.DefineDynamicModule(assName.Name)
+        : assBldr.DefineDynamicModule(assName.Name, moduleName));
       TypeBuilder typeBldr = modBldr.DefineType(
         typeName,
         TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Public,
