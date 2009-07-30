@@ -117,110 +117,188 @@ namespace ntest
     }
 
     [Test]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void NullRequestStream()
     {
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      Stream stm = null;
-      XmlRpcRequest request = serializer.DeserializeRequest(stm, null);
+      try
+      {
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        Stream stm = null;
+        XmlRpcRequest request = serializer.DeserializeRequest(stm, null);
+        Assert.Fail("Should throw ArgumentNullException");
+      }
+      catch (ArgumentNullException)
+      {
+      }
     }
 
     [Test]
-    [ExpectedException(typeof(XmlRpcIllFormedXmlException))]
     public void EmptyRequestStream()
     {
-      StringReader sr = new StringReader("");
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      try
+      {
+        StringReader sr = new StringReader("");
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        Assert.Fail("Should throw XmlRpcIllFormedXmlException");
+      }
+      catch(XmlRpcIllFormedXmlException)
+      {
+      }
     }
     
-    [Test]
-    [ExpectedException(typeof(XmlRpcIllFormedXmlException))]
+    [Test]    
     public void InvalidXml()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall> </duffMmethodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        Assert.Fail("Should throw XmlRpcIllFormedXmlException");
+      }
+      catch(XmlRpcIllFormedXmlException)
+      {
+      }
     }
 
     // test handling of methodCall element
     [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
     public void MissingMethodCall()
     {
-      string xml = @"<?xml version=""1.0"" ?> <elem/>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> <elem/>";
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        Assert.Fail("Should throw XmlRpcInvalidXmlRpcException");
+      }
+      catch(XmlRpcInvalidXmlRpcException)
+      {
+      }
     }
 
     // test handling of methodName element
     [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
     public void MissingMethodName()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall>
-<params>
-  <param>
-    <value>test string</value>
-  </param>
-</params>
+  <params>
+    <param>
+      <value>test string</value>
+    </param>
+  </params>
 </methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      }
+      catch(Exception ex)
+      {
+        // TODO: should return InvalidXmlRpc
+        string s = ex.Message;
+      }
     }
 
     [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
     public void EmptyMethodName()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall>
-<methodName/> 
-<params>
-  <param>
-    <value>test string</value>
-  </param>
-</params>
+  <methodName/> 
+  <params>
+    <param>
+      <value>test string</value>
+    </param>
+  </params>
 </methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      }
+      catch(Exception ex)
+      {
+
+        // TODO: should return InvalidXmlRpc
+        string s = ex.Message;
+      }
     }
 
     [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
     public void ZeroLengthMethodName()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try 
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall>
-<methodName></methodName> 
-<params>
-  <param>
-    <value>test string</value>
-  </param>
-</params>
+  <methodName></methodName> 
+  <params>
+    <param>
+      <value>test string</value>
+    </param>
+  </params>
 </methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      }
+      catch(Exception ex)
+      {
+        // TODO: should return InvalidXmlRpc
+        string s = ex.Message;
+      }
+    }
+
+    [Test]    
+    public void InvalidCharsMethodName()
+    {
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
+<methodCall>
+  <methodName></methodName> 
+  <params>
+    <param>
+      <value>test string</value>
+    </param>
+  </params>
+</methodCall>";
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      }
+      catch(Exception ex)
+      {
+        // TODO: should return InvalidXmlRpc
+        string s = ex.Message;
+      }
     }
 
     // test handling of params element
     [Test]
     public void MissingParams()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall>
-<methodName>TestString</methodName> 
+  <methodName>TestString</methodName> 
 </methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      }
+      catch(Exception ex)
+      {
+        string s = ex.Message;
+      }
     }
 
 
@@ -234,14 +312,21 @@ namespace ntest
     [Test]    
     public void NoParam1()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall>
-<methodName>MethodNoArgs</methodName> 
-<params/>
+  <methodName>MethodNoArgs</methodName> 
+  <params/>
 </methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+      }
+      catch(Exception ex)
+      {
+        Console.WriteLine(ex);
+      }
     }
 
     // test handling of param element
@@ -261,36 +346,48 @@ namespace ntest
     }
 
     [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
     public void EmptyParam1()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall>
-<methodName>TestString</methodName> 
-<params>
-  <param/>
-</params>
+  <methodName>TestString</methodName> 
+  <params>
+    <param/>
+  </params>
 </methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      }
+      catch(Exception ex)
+      {
+        string s = ex.Message;
+      }
     }
 
-    [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
+    [Test]    
     public void EmptyParam2()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall>
-<methodName>TestString</methodName> 
-<params>
-  <param>
-  </param>
-</params>
+  <methodName>TestString</methodName> 
+  <params>
+    <param>
+    </param>
+  </params>
 </methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      }
+      catch(Exception ex)
+      {
+        string s = ex.Message;
+      }
     }
 
     // test handling integer values
@@ -385,58 +482,76 @@ namespace ntest
     }
 
     [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
     public void EmptyInteger()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall>
-<methodName>TestInt</methodName> 
-<params>
-  <param>
-    <value><i4></i4></value>
-  </param>
-</params>
+  <methodName>TestInt</methodName> 
+  <params>
+    <param>
+      <value><i4></i4></value>
+    </param>
+  </params>
 </methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      }
+      catch(Exception ex)
+      {
+        string s = ex.Message;
+      }
     }
 
     [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
     public void InvalidInteger()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall>
-<methodName>TestInt</methodName> 
-<params>
-  <param>
-    <value><i4>12kiol</i4></value>
-  </param>
-</params>
+  <methodName>TestInt</methodName> 
+  <params>
+    <param>
+      <value><i4>12kiol</i4></value>
+    </param>
+  </params>
 </methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
-      Assert.Fail("Invalid integer should cause exception");
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        Assert.Fail("Invalid integer should cause exception");
+      }
+      catch(Exception ex)
+      {
+        string s = ex.Message;
+      }
     }
 
     [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
     public void OverflowInteger()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall>
-<methodName>TestInt</methodName> 
-<params>
-  <param>
-    <value><i4>99999999999999999999</i4></value>
-  </param>
-</params>
+  <methodName>TestInt</methodName> 
+  <params>
+    <param>
+      <value><i4>99999999999999999999</i4></value>
+    </param>
+  </params>
 </methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      }
+      catch(Exception ex)
+      {
+        string s = ex.Message;
+      }
     }
 
     [Test]
@@ -462,178 +577,28 @@ namespace ntest
     }
 
     [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
     public void NegativeOverflowInteger()
     {
-      string xml = @"<?xml version=""1.0"" ?> 
-<methodCall>
-<methodName>TestInt</methodName> 
-<params>
-  <param>
-    <value><i4>-99999999999999999999</i4></value>
-  </param>
-</params>
-</methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
-    }
-
-    // test handling i8 values
-    [Test]
-    public void I8()
-    {
-      string xml = @"<?xml version=""1.0"" ?> 
+      try
+      {
+        string xml = @"<?xml version=""1.0"" ?> 
 <methodCall>
   <methodName>TestInt</methodName> 
   <params>
     <param>
-      <value>
-        <i8>123456789012</i8>
-      </value>
+      <value><i4>-99999999999999999999</i4></value>
     </param>
   </params>
 </methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
-      Assert.AreEqual(request.args[0].GetType(), typeof(long),
-        "argument is long");
-      Assert.AreEqual((long)request.args[0], 123456789012, "argument is 123456789012");
+        StringReader sr = new StringReader(xml);
+        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      }
+      catch(Exception ex)
+      {
+        string s = ex.Message;
+      }
     }
-
-    [Test]
-    public void I8WithPlus()
-    {
-      string xml = @"<?xml version=""1.0"" ?> 
-<methodCall>
-  <methodName>TestInt</methodName> 
-  <params>
-    <param>
-      <value><i8>+123456789012</i8></value>
-    </param>
-  </params>
-</methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
-      Assert.AreEqual(request.args[0].GetType(), typeof(long),
-        "argument is long");
-      Assert.AreEqual((long)request.args[0], 123456789012, "argument is 123456789012");
-    }
-
-    [Test]
-    public void NegativeI8()
-    {
-      string xml = @"<?xml version=""1.0"" ?> 
-<methodCall>
-  <methodName>TestInt</methodName> 
-  <params>
-    <param>
-      <value><i8>-123456789012</i8></value>
-    </param>
-  </params>
-</methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
-      Assert.AreEqual(request.args[0].GetType(), typeof(long),
-        "argument is long");
-      Assert.AreEqual((long)request.args[0], -123456789012, "argument is -123456789012");
-    }
-
-    [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
-    public void EmptyI8()
-    {
-      string xml = @"<?xml version=""1.0"" ?> 
-<methodCall>
-<methodName>TestInt</methodName> 
-<params>
-  <param>
-    <value><i8></i8></value>
-  </param>
-</params>
-</methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
-    }
-
-    [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
-    public void InvalidI8()
-    {
-      string xml = @"<?xml version=""1.0"" ?> 
-<methodCall>
-<methodName>TestInt</methodName> 
-<params>
-  <param>
-    <value><i8>12kiol</i8></value>
-  </param>
-</params>
-</methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
-    }
-
-    [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
-    public void OverflowI8()
-    {
-      string xml = @"<?xml version=""1.0"" ?> 
-<methodCall>
-<methodName>TestInt</methodName> 
-<params>
-  <param>
-    <value><i8>9999999999999999999999999999999999999999999</i8></value>
-  </param>
-</params>
-</methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
-    }
-
-    [Test]
-    public void ZeroI8()
-    {
-      string xml = @"<?xml version=""1.0"" ?> 
-<methodCall>
-  <methodName>TestInt</methodName> 
-  <params>
-    <param>
-      <value><i8>0</i8></value>
-    </param>
-  </params>
-</methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
-      Assert.AreEqual(request.args[0].GetType(), typeof(long),
-        "argument is long");
-      Assert.AreEqual((long)request.args[0], 0, "argument is 0");
-    }
-
-    [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
-    public void NegativeOverflowI8()
-    {
-      string xml = @"<?xml version=""1.0"" ?> 
-<methodCall>
-<methodName>TestInt</methodName> 
-<params>
-  <param>
-    <value><i8>-9999999999999999999999999999999999999999999</i8></value>
-  </param>
-</params>
-</methodCall>";
-      StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
-    }
-
 
     [Test]
     public void ISO_8859_1()

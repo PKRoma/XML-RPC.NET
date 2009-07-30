@@ -19,17 +19,6 @@ namespace ntest
       string rpcString = XmlRpcServiceInfo.GetXmlRpcTypeString(type);
       Assert.AreEqual(rpcString, "integer", "Int32 doesn't map to 'integer'");
     }
-
-    [Test]
-    public void Int64()
-    {
-      Type type = typeof(long);
-      XmlRpcType rpcType = XmlRpcServiceInfo.GetXmlRpcType(type);
-      Assert.AreEqual(XmlRpcType.tInt64, rpcType,
-        "Int64 doesn't map to XmlRpcType.tInt64");
-      string rpcString = XmlRpcServiceInfo.GetXmlRpcTypeString(type);
-      Assert.AreEqual(rpcString, "i8", "Int64 doesn't map to 'i8'");
-    }
     
     [Test]
     public void XmlRpcInt()
@@ -275,18 +264,6 @@ namespace ntest
       string rpcString = XmlRpcServiceInfo.GetXmlRpcTypeString(type);
       Assert.AreEqual(rpcString, "integer",
         "int? doesn't map to 'integer'");
-    }
-
-    [Test]
-    public void NullableIn64()
-    {
-      Type type = typeof(long?);
-      XmlRpcType rpcType = XmlRpcServiceInfo.GetXmlRpcType(type);
-      Assert.AreEqual(XmlRpcType.tInt64, rpcType,
-        "long? doesn't map to XmlRpcType.tInt64");
-      string rpcString = XmlRpcServiceInfo.GetXmlRpcTypeString(type);
-      Assert.AreEqual(rpcString, "i8",
-        "long? doesn't map to 'i8'");
     }
 
     [Test]
