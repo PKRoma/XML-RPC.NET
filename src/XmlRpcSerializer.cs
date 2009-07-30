@@ -683,6 +683,10 @@ namespace CookComputing.XmlRpc
           else
             xtw.WriteElementString("i4", o.ToString());
         }
+        else if (xType == XmlRpcType.tInt64)
+        {
+          xtw.WriteElementString("i8", o.ToString());
+        }
         else if (xType == XmlRpcType.tString)
         {
           if (UseStringTag)
@@ -880,6 +884,12 @@ namespace CookComputing.XmlRpc
           ParsedType = typeof(int);
           ParsedArrayType = typeof(int[]);
         }
+        else if (node.Name == "i8")
+        {
+          retObj = ParseLong(node, valType, parseStack, mappingAction);
+          ParsedType = typeof(long);
+          ParsedArrayType = typeof(long[]);
+        }
         else if (node.Name == "string")
         {
           retObj = ParseString(node, valType, parseStack, mappingAction);
@@ -904,6 +914,9 @@ namespace CookComputing.XmlRpc
           ParsedType = typeof(DateTime);
           ParsedArrayType = typeof(DateTime[]);
         }
+        else
+          throw new XmlRpcInvalidXmlRpcException(
+            "Invalid value element: <" + node.Name + ">");
       }
       return retObj;
     }
@@ -1489,6 +1502,51 @@ namespace CookComputing.XmlRpc
         return (int?)retVal;
       else
         return retVal;
+    }
+
+    Object ParseLong(
+      XmlNode node,
+      Type ValueType,
+      ParseStack parseStack,
+      MappingAction mappingAction)
+    {
+      if (ValueType != null && ValueType != typeof(Object)
+        && ValueType != typeof(System.Int64)
+#if !FX1_0
+ && ValueType != typeof(long?))
+#endif
+      {
+        throw new XmlRpcTypeMismatchException(parseStack.ParseType +
+          " contains i8 value where "
+          + XmlRpcServiceInfo.GetXmlRpcTypeString(ValueType)
+          + " expected " + StackDump(parseStack));
+      }
+      long retVal;
+      parseStack.Push("i8");
+      try
+      {
+        XmlNode valueNode = node.FirstChild;
+        if (valueNode == null)
+        {
+          throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
+            + " contains invalid i8 element " + StackDump(parseStack));
+        }
+        try
+        {
+          String strValue = valueNode.Value;
+          retVal = Int64.Parse(strValue);
+        }
+        catch (Exception)
+        {
+          throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
+            + " contains invalid i8 value " + StackDump(parseStack));
+        }
+      }
+      finally
+      {
+        parseStack.Pop();
+      }
+      return retVal;
     }
 
     Object ParseString(

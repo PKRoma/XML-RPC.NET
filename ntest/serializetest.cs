@@ -28,6 +28,19 @@ namespace ntest
       Assert.AreEqual(12345, obj);
     }
   
+    //---------------------- i64 -------------------------------------------// 
+    [Test]
+    public void Int64()
+    {
+      XmlDocument xdoc = Utils.Serialize("SerializeTest.testInt64",
+        123456789012,
+        Encoding.UTF8, MappingAction.Ignore);
+      Type parsedType, parsedArrayType;
+      object obj = Utils.Parse(xdoc, null, MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.AreEqual(123456789012, obj);
+    }
+
     //---------------------- string ----------------------------------------// 
     [Test]
     public void String()
