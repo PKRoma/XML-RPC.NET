@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Reflection;
 using  NUnit.Framework;
@@ -44,5 +45,69 @@ namespace ntest
       Assert.Fail("Test should throw ArgumentException");
     }
 
+    [Test]
+    public void OrderingEnumerator()
+    {
+      var xps = new XmlRpcStruct();
+      xps.Add("1", "a");
+      xps.Add("3", "c");
+      xps.Add("2", "b");
+      IDictionaryEnumerator enumerator = xps.GetEnumerator();
+      enumerator.MoveNext();
+      Assert.AreEqual("1", enumerator.Key);
+      Assert.AreEqual("a", enumerator.Value);
+      Assert.IsInstanceOfType(typeof(DictionaryEntry), enumerator.Current);
+      DictionaryEntry de = (DictionaryEntry)enumerator.Current;
+      Assert.AreEqual("1", de.Key);
+      Assert.AreEqual("a", de.Value);
+      enumerator.MoveNext();
+      Assert.AreEqual("3", enumerator.Key);
+      Assert.AreEqual("c", enumerator.Value);
+      Assert.IsInstanceOfType(typeof(DictionaryEntry), enumerator.Current);
+      de = (DictionaryEntry)enumerator.Current;
+      Assert.AreEqual("3", de.Key);
+      Assert.AreEqual("c", de.Value);
+      enumerator.MoveNext();
+      Assert.AreEqual("2", enumerator.Key);
+      Assert.AreEqual("b", enumerator.Value);
+      Assert.IsInstanceOfType(typeof(DictionaryEntry), enumerator.Current);
+      de = (DictionaryEntry)enumerator.Current;
+      Assert.AreEqual("2", de.Key);
+      Assert.AreEqual("b", de.Value);
+    }
+
+    [Test]
+    public void OrderingKeys()
+    {
+      var xps = new XmlRpcStruct();
+      xps.Add("1", "a");
+      xps.Add("3", "c");
+      xps.Add("2", "b");
+
+      IEnumerator enumerator = xps.Keys.GetEnumerator();
+      enumerator.MoveNext();
+      Assert.AreEqual("1", enumerator.Current);
+      enumerator.MoveNext();
+      Assert.AreEqual("3", enumerator.Current);
+      enumerator.MoveNext();
+      Assert.AreEqual("2", enumerator.Current);
+    }
+
+    [Test]
+    public void OrderingValues()
+    {
+      var xps = new XmlRpcStruct();
+      xps.Add("1", "a");
+      xps.Add("3", "c");
+      xps.Add("2", "b");
+
+      IEnumerator enumerator = xps.Values.GetEnumerator();
+      enumerator.MoveNext();
+      Assert.AreEqual("a", enumerator.Current);
+      enumerator.MoveNext();
+      Assert.AreEqual("c", enumerator.Current);
+      enumerator.MoveNext();
+      Assert.AreEqual("b", enumerator.Current);
+    }
   }
 }
