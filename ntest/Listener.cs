@@ -4,6 +4,8 @@ using System.Net;
 using System.Threading;
 using CookComputing.XmlRpc;
 
+#if !FX1_0
+
 namespace ntest
 {
   class Listener
@@ -51,3 +53,5 @@ namespace ntest
     }
   }
 }
+
+#endif

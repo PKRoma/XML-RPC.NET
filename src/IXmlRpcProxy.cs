@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2009, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -34,7 +34,7 @@ namespace CookComputing.XmlRpc
 {
   public interface IXmlRpcProxy
   {
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
     X509CertificateCollection ClientCertificates { get; }
 #endif
 
@@ -42,24 +42,20 @@ namespace CookComputing.XmlRpc
     string ConnectionGroupName { get; set; }
 #endif
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
     CookieContainer CookieContainer { get; }
 #endif
 
-#if (!SILVERLIGHT)
     [Browsable(false)]
     ICredentials Credentials { get; set; }
-#endif
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !FX1_0)
     bool EnableCompression { get; set;}
 
     bool Expect100Continue { get; set; }
 #endif
 
-#if (!SILVERLIGHT)
     [Browsable(false)]
-#endif
     WebHeaderCollection Headers { get; }
 
     Guid Id { get; }
@@ -72,17 +68,13 @@ namespace CookComputing.XmlRpc
 
     bool PreAuthenticate { get; set; }
 
-#if (!SILVERLIGHT)
     [Browsable(false)]
-#endif
     System.Version ProtocolVersion { get; set; }
 
-#if (!SILVERLIGHT)
     [Browsable(false)]
     IWebProxy Proxy { get; set; }
-#endif
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
     [Browsable(false)]
     CookieCollection ResponseCookies { get; }
 
@@ -104,9 +96,7 @@ namespace CookComputing.XmlRpc
 
     string UserAgent { get; set; }
 
-#if (!SILVERLIGHT)
     [Browsable(false)]
-#endif
     Encoding XmlEncoding { get; set; }
 
     string XmlRpcMethod { get; set; }

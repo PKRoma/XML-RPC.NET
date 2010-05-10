@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading;
 using CookComputing.XmlRpc;
 
+#if !FX1_0
+
 namespace ntest
 {
   public class StateNameListnerService : XmlRpcListenerService
@@ -64,3 +66,5 @@ namespace ntest
   }
 
 }
+
+#endif

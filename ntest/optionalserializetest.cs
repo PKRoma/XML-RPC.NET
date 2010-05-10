@@ -21,15 +21,17 @@ namespace ntest
 
     struct Struct0
     {
-      public int? xi;
-      public Boolean? xb;
-      public Double? xd;
-      public DateTime? xdt;
+      public XmlRpcInt xi;
+      public XmlRpcBoolean xb;
+      public XmlRpcDouble xd;
+      public XmlRpcDateTime xdt;
+#if !FX1_0
       public int? nxi;
       public bool? nxb;
       public double? nxd;
       public DateTime? nxdt;
       public ChildStruct? nxstr;
+#endif
     }
 
     struct Struct1
@@ -41,16 +43,18 @@ namespace ntest
       public DateTime mdt;
       public byte[] mb64;
       public int[] ma;
-      public int? xi;
-      public Boolean? xb;
-      public Double? xd;
-      public DateTime? xdt;
+      public XmlRpcInt xi;
+      public XmlRpcBoolean xb;
+      public XmlRpcDouble xd;
+      public XmlRpcDateTime xdt;
       public XmlRpcStruct xstr;
+#if !FX1_0
       public int? nxi;
       public bool? nxb;
       public double? nxd;
       public DateTime? nxdt;
       public ChildStruct? nxstr;
+#endif
     }
 
     [XmlRpcMissingMapping(MappingAction.Error)]
@@ -63,16 +67,18 @@ namespace ntest
       public DateTime mdt;
       public byte[] mb64;
       public int[] ma;
-      public int? xi;
-      public Boolean? xb;
-      public Double? xd;
-      public DateTime? xdt;
+      public XmlRpcInt xi;
+      public XmlRpcBoolean xb;
+      public XmlRpcDouble xd;
+      public XmlRpcDateTime xdt;
       public XmlRpcStruct xstr;
+#if !FX1_0
       public int? nxi;
       public bool? nxb;
       public double? nxd;
       public DateTime? nxdt;
       public ChildStruct? nxstr;
+#endif
     }
 
     struct Struct3
@@ -92,15 +98,16 @@ namespace ntest
       [XmlRpcMissingMapping(MappingAction.Error)]
       public int[] ma;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public int? xi;
+      public XmlRpcInt xi;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public Boolean? xb;
+      public XmlRpcBoolean xb;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public Double? xd;
+      public XmlRpcDouble xd;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public DateTime? xdt;
+      public XmlRpcDateTime xdt;
       [XmlRpcMissingMapping(MappingAction.Error)]
       public XmlRpcStruct xstr;
+#if !FX1_0
       [XmlRpcMissingMapping(MappingAction.Error)]
       public int? nxi;
       [XmlRpcMissingMapping(MappingAction.Error)]
@@ -111,6 +118,7 @@ namespace ntest
       public DateTime? nxdt;
       [XmlRpcMissingMapping(MappingAction.Error)]
       public ChildStruct? nxstr;
+#endif
     }
 
     [XmlRpcMissingMapping(MappingAction.Ignore)]
@@ -131,15 +139,16 @@ namespace ntest
       [XmlRpcMissingMapping(MappingAction.Error)]
       public int[] ma;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public int? xi;
+      public XmlRpcInt xi;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public Boolean? xb;
+      public XmlRpcBoolean xb;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public Double? xd;
+      public XmlRpcDouble xd;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public DateTime? xdt;
+      public XmlRpcDateTime xdt;
       [XmlRpcMissingMapping(MappingAction.Error)]
       public XmlRpcStruct xstr;
+#if !FX1_0
       [XmlRpcMissingMapping(MappingAction.Error)]
       public int? nxi;
       [XmlRpcMissingMapping(MappingAction.Error)]
@@ -150,6 +159,7 @@ namespace ntest
       public DateTime? nxdt;
       [XmlRpcMissingMapping(MappingAction.Error)]
       public ChildStruct? nxstr;
+#endif
     }
 
     [XmlRpcMissingMapping(MappingAction.Ignore)]
@@ -162,16 +172,18 @@ namespace ntest
       public DateTime mdt;
       public byte[] mb64;
       public int[] ma;
-      public int? xi;
-      public Boolean? xb;
-      public Double? xd;
-      public DateTime? xdt;
+      public XmlRpcInt xi;
+      public XmlRpcBoolean xb;
+      public XmlRpcDouble xd;
+      public XmlRpcDateTime xdt;
       public XmlRpcStruct xstr;
+#if !FX1_0
       public int? nxi;
       public bool? nxb;
       public double? nxd;
       public DateTime? nxdt;
       public ChildStruct? nxstr;
+#endif
     }
 
     struct Struct6
@@ -191,15 +203,16 @@ namespace ntest
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public int[] ma;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public int? xi;
+      public XmlRpcInt xi;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public Boolean? xb;
+      public XmlRpcBoolean xb;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public Double? xd;
+      public XmlRpcDouble xd;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public DateTime? xdt;
+      public XmlRpcDateTime xdt;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public XmlRpcStruct xstr;
+#if !FX1_0
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public int? nxi;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
@@ -210,6 +223,7 @@ namespace ntest
       public DateTime? nxdt;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public ChildStruct? nxstr;
+#endif
     }
 
     [XmlRpcMissingMapping(MappingAction.Error)]
@@ -230,15 +244,16 @@ namespace ntest
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public int[] ma;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public int? xi;
+      public XmlRpcInt xi;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public Boolean? xb;
+      public XmlRpcBoolean xb;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public Double? xd;
+      public XmlRpcDouble xd;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public DateTime? xdt;
+      public XmlRpcDateTime xdt;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public XmlRpcStruct xstr;
+#if !FX1_0
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public int? nxi;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
@@ -249,6 +264,7 @@ namespace ntest
       public DateTime? nxdt;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public ChildStruct? nxstr;
+#endif
     }
 
     //-------------------------------------------------------------------------/
@@ -260,11 +276,13 @@ namespace ntest
       strout.xb = true;
       strout.xd = 1234.567;
       strout.xdt = new DateTime(2006, 8, 9, 10, 11, 13);
+#if !FX1_0
       strout.nxi = 5678;
       strout.nxb = true;
       strout.nxd = 2345.678;
       strout.nxdt = new DateTime(2007, 9, 10, 11, 12, 14);
       strout.nxstr = new ChildStruct(567);
+#endif
       XmlDocument xdoc = Utils.Serialize("Struct0_AllExist",
         strout, Encoding.UTF8, MappingAction.Error);
       Type parsedType, parsedArrayType;
@@ -276,11 +294,13 @@ namespace ntest
       Assert.AreEqual(strout.xb, strin.xb);
       Assert.AreEqual(strout.xd, strin.xd);
       Assert.AreEqual(strout.xdt, strin.xdt);
+#if !FX1_0
       Assert.AreEqual(strout.nxi, strin.nxi);
       Assert.AreEqual(strout.nxb, strin.nxb);
       Assert.AreEqual(strout.nxd, strin.nxd);
       Assert.AreEqual(strout.nxdt, strin.nxdt);
       Assert.AreEqual(((ChildStruct)strout.nxstr).x, ((ChildStruct)strin.nxstr).x);
+#endif
     }
 
     //-------------------------------------------------------------------------/

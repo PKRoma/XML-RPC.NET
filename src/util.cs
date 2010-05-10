@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2009, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -80,6 +80,18 @@ namespace CookComputing.XmlRpc
         Trace.WriteLine(s);
         s = trdr.ReadLine();
       }
+    }
+#endif
+
+#if (!COMPACT_FRAMEWORK)
+    public static Guid NewGuid()
+    {
+      return Guid.NewGuid();
+    }
+#else
+    public static Guid NewGuid()
+    {
+      return OpenNETCF.GuidEx.NewGuid();
     }
 #endif
   }

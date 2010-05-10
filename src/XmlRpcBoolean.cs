@@ -23,44 +23,67 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
-using System;
-using System.IO;
-using System.Diagnostics;
-
 namespace CookComputing.XmlRpc
 {
-  public abstract class XmlRpcLogger
+  public class XmlRpcBoolean 
   {
-    public void Attach(XmlRpcClientProtocol proxy)
-    {
-      proxy.RequestEvent += new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent += new XmlRpcResponseEventHandler(OnResponse);
-    }
+    private bool _value;
 
-    public void Attach(IXmlRpcProxy proxy)
-    {
-      proxy.RequestEvent += new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent += new XmlRpcResponseEventHandler(OnResponse);
-    }
-
-    public void Detach(XmlRpcClientProtocol proxy)
-    {
-      proxy.RequestEvent -= new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent -= new XmlRpcResponseEventHandler(OnResponse);
-    }
-
-    public void Detach(IXmlRpcProxy proxy)
-    {
-      proxy.RequestEvent -= new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent -= new XmlRpcResponseEventHandler(OnResponse);
-    }
-
-    protected virtual void OnRequest(object sender, XmlRpcRequestEventArgs e)
+    public XmlRpcBoolean()
     {
     }
 
-    protected virtual void OnResponse(object sender, XmlRpcResponseEventArgs e)
+    public XmlRpcBoolean(bool val) 
     {
+      this._value = val;
+    }
+
+    public override string ToString() 
+    {
+      return _value.ToString();
+    }
+
+    public override int GetHashCode()
+    {
+      return _value.GetHashCode();
+    }
+
+    public override bool Equals(
+      object o)
+    {
+      if (o == null || !(o is XmlRpcBoolean))
+        return false;
+      XmlRpcBoolean dbl = o as XmlRpcBoolean;
+      return (dbl._value == _value);
+    }
+
+    public static bool operator ==(
+      XmlRpcBoolean xi, 
+      XmlRpcBoolean xj)
+    {
+      if (((object)xi) == null && ((object)xj) == null) 
+        return true;
+      else if (((object)xi) == null || ((object)xj) == null)
+        return false;
+      else
+        return xi._value == xj._value;
+    }
+
+    public static bool operator != (
+      XmlRpcBoolean xi, 
+      XmlRpcBoolean xj)
+    {
+      return !(xi == xj);
+    }
+
+    public static implicit operator bool (XmlRpcBoolean x)
+    {
+      return x._value;
+    }
+
+    public static implicit operator XmlRpcBoolean(bool x) 
+    {
+      return new XmlRpcBoolean(x);
     }
   }
 }

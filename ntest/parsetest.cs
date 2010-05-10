@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.IO;
 using System.Xml;
 using System.Reflection;
@@ -26,10 +25,10 @@ namespace ntest
       public DateTime mdt;
       public byte[] mb64;
       public int[] ma;
-      public int? xi;
-      public Boolean? xb;
-      public Double? xd;
-      public DateTime? xdt;
+      public XmlRpcInt xi;
+      public XmlRpcBoolean xb;
+      public XmlRpcDouble xd;
+      public XmlRpcDateTime xdt;
       public XmlRpcStruct xstr;
     }
 
@@ -64,48 +63,6 @@ namespace ntest
       Assert.AreEqual(12345, (int)obj);
     }
       
-    //---------------------- Int64 -------------------------------------------// 
-    [Test]
-    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
-    public void Int_TooLarge()
-    {
-      Type parsedType, parsedArrayType;
-      string xml = @"<?xml version=""1.0"" ?><value><int>123456789012</int></value>";
-      object obj = Utils.Parse(xml, typeof(int), MappingAction.Error,
-        out parsedType, out parsedArrayType);
-      Assert.AreEqual(12345, (int)obj);
-    }
-
-    [Test]
-    public void Int64_NullType()
-    {
-      Type parsedType, parsedArrayType;
-      string xml = @"<?xml version=""1.0"" ?><value><i8>123456789012</i8></value>";
-      object obj = Utils.Parse(xml, null, MappingAction.Error,
-        out parsedType, out parsedArrayType);
-      Assert.AreEqual(123456789012, (long)obj);
-    }
-
-    [Test]
-    public void Int64_IntType()
-    {
-      Type parsedType, parsedArrayType;
-      string xml = @"<?xml version=""1.0"" ?><value><i8>123456789012</i8></value>";
-      object obj = Utils.Parse(xml, typeof(long), MappingAction.Error,
-        out parsedType, out parsedArrayType);
-      Assert.AreEqual(123456789012, (long)obj);
-    }
-
-    [Test]
-    public void Int64_ObjectType()
-    {
-      Type parsedType, parsedArrayType;
-      string xml = @"<?xml version=""1.0"" ?><value><i8>123456789012</i8></value>";
-      object obj = Utils.Parse(xml, typeof(object), MappingAction.Error,
-        out parsedType, out parsedArrayType);
-      Assert.AreEqual(123456789012, (long)obj);
-    }
-
     //---------------------- string ----------------------------------------// 
     [Test]
     public void String_NullType()
@@ -711,10 +668,10 @@ namespace ntest
     {
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?><value><int>12345</int></value>";
-      object obj = Utils.Parse(xml, typeof(int?), MappingAction.Error, 
+      object obj = Utils.Parse(xml, typeof(XmlRpcInt), MappingAction.Error, 
         out parsedType, out parsedArrayType);
-      Assert.IsInstanceOfType(typeof(int?), obj);
-      Assert.AreEqual(12345, (int?)obj);
+      Assert.IsInstanceOfType(typeof(XmlRpcInt), obj);
+      Assert.AreEqual(12345, (XmlRpcInt)obj);
     }
 
     //---------------------- XmlRpcBoolean ---------------------------------// 
@@ -724,9 +681,9 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><boolean>1</boolean></value>";
-      object obj = Utils.Parse(xml, typeof(Boolean?), MappingAction.Error, 
+      object obj = Utils.Parse(xml, typeof(XmlRpcBoolean), MappingAction.Error, 
         out parsedType, out parsedArrayType);
-      Assert.AreEqual(new Boolean?(true), (Boolean?)obj);
+      Assert.AreEqual(new XmlRpcBoolean(true), (XmlRpcBoolean)obj);
     }
             
     //---------------------- XmlRpcDouble ----------------------------------// 
@@ -736,9 +693,9 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><double>543.21</double></value>";
-      object obj = Utils.Parse(xml, typeof(Double?), MappingAction.Error, 
+      object obj = Utils.Parse(xml, typeof(XmlRpcDouble), MappingAction.Error, 
         out parsedType, out parsedArrayType);
-      Assert.AreEqual(new Double?(543.21), (Double?)obj);
+      Assert.AreEqual(new XmlRpcDouble(543.21), (XmlRpcDouble)obj);
     }
       
     //---------------------- XmlRpcDateTime --------------------------------// 
@@ -748,13 +705,14 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T11:25:37</dateTime.iso8601></value>";
-      object obj = Utils.Parse(xml, typeof(DateTime?), MappingAction.Error, 
+      object obj = Utils.Parse(xml, typeof(XmlRpcDateTime), MappingAction.Error, 
         out parsedType, out parsedArrayType);
       Assert.AreEqual(
-        new DateTime?(new DateTime(2002, 7, 6, 11, 25, 37)),
-        (DateTime?)obj);
+        new XmlRpcDateTime(new DateTime(2002, 7, 6, 11, 25, 37)), 
+        (XmlRpcDateTime)obj);
     }
 
+#if !FX1_0
     //---------------------- int? -------------------------------------// 
     [Test]
     public void nullableIntType()
@@ -802,6 +760,7 @@ namespace ntest
         out parsedType, out parsedArrayType);
       Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37), obj);
     }
+#endif
      
   //---------------------- XmlRpcStruct array ----------------------------// 
     [Test]
@@ -971,43 +930,6 @@ namespace ntest
 </value>";
       object obj = Utils.Parse(xml, typeof(Struct5), MappingAction.Error,
         out parsedType, out parsedArrayType);
-    }
-
-    [Test]
-    public void XmlRpcStructOrder()
-    {
-      Type parsedType, parsedArrayType;
-      string xml = @"<?xml version=""1.0"" ?>
-<value>
-  <struct>
-    <member>
-      <name>a</name>
-      <value><i4>1</i4></value>
-    </member>
-    <member>
-      <name>c</name>
-      <value><i4>3</i4></value>
-    </member>
-    <member>
-      <name>b</name>
-      <value><i4>2</i4></value>
-    </member>
-  </struct>
-</value>";
-      object obj = Utils.Parse(xml, typeof(XmlRpcStruct), MappingAction.Error,
-        out parsedType, out parsedArrayType);
-      Assert.IsInstanceOfType(typeof(XmlRpcStruct), obj);
-      XmlRpcStruct strct = obj as XmlRpcStruct;
-      IDictionaryEnumerator denumerator = strct.GetEnumerator();
-      denumerator.MoveNext();
-      Assert.AreEqual("a", denumerator.Key);
-      Assert.AreEqual(1, denumerator.Value);
-      denumerator.MoveNext();
-      Assert.AreEqual("c", denumerator.Key);
-      Assert.AreEqual(3, denumerator.Value);
-      denumerator.MoveNext();
-      Assert.AreEqual("b", denumerator.Key);
-      Assert.AreEqual(2, denumerator.Value);
     }
   }
 }

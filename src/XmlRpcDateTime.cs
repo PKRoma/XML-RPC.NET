@@ -23,44 +23,70 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
-using System;
-using System.IO;
-using System.Diagnostics;
-
 namespace CookComputing.XmlRpc
 {
-  public abstract class XmlRpcLogger
+  using System;
+
+  public class XmlRpcDateTime 
   {
-    public void Attach(XmlRpcClientProtocol proxy)
+    private DateTime _value;
+
+    public XmlRpcDateTime()
     {
-      proxy.RequestEvent += new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent += new XmlRpcResponseEventHandler(OnResponse);
+      this._value = new DateTime();
     }
 
-    public void Attach(IXmlRpcProxy proxy)
+    public XmlRpcDateTime(DateTime val) 
     {
-      proxy.RequestEvent += new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent += new XmlRpcResponseEventHandler(OnResponse);
+      this._value = val;
     }
 
-    public void Detach(XmlRpcClientProtocol proxy)
+    public override string ToString() 
     {
-      proxy.RequestEvent -= new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent -= new XmlRpcResponseEventHandler(OnResponse);
+      return _value.ToString();
     }
 
-    public void Detach(IXmlRpcProxy proxy)
+    public override int GetHashCode()
     {
-      proxy.RequestEvent -= new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent -= new XmlRpcResponseEventHandler(OnResponse);
+      return _value.GetHashCode();
     }
 
-    protected virtual void OnRequest(object sender, XmlRpcRequestEventArgs e)
+    public override bool Equals(
+      object o)
     {
+      if (o == null || !(o is XmlRpcDateTime))
+        return false;
+      XmlRpcDateTime dbl = o as XmlRpcDateTime;
+      return (dbl._value == _value);
     }
 
-    protected virtual void OnResponse(object sender, XmlRpcResponseEventArgs e)
+    public static bool operator ==(
+      XmlRpcDateTime xi, 
+      XmlRpcDateTime xj)
     {
+      if (((object)xi) == null && ((object)xj) == null) 
+        return true;
+      else if (((object)xi) == null || ((object)xj) == null)
+        return false;
+      else
+        return xi._value == xj._value;
+    }
+
+    public static bool operator != (
+      XmlRpcDateTime xi, 
+      XmlRpcDateTime xj)
+    {
+      return !(xi == xj);
+    }
+
+    public static implicit operator DateTime (XmlRpcDateTime x)
+    {
+      return x._value;
+    }
+
+    public static implicit operator XmlRpcDateTime(DateTime x) 
+    {
+      return new XmlRpcDateTime(x);
     }
   }
 }

@@ -28,19 +28,6 @@ namespace ntest
       Assert.AreEqual(12345, obj);
     }
   
-    //---------------------- i64 -------------------------------------------// 
-    [Test]
-    public void Int64()
-    {
-      XmlDocument xdoc = Utils.Serialize("SerializeTest.testInt64",
-        123456789012,
-        Encoding.UTF8, MappingAction.Ignore);
-      Type parsedType, parsedArrayType;
-      object obj = Utils.Parse(xdoc, null, MappingAction.Error,
-        out parsedType, out parsedArrayType);
-      Assert.AreEqual(123456789012, obj);
-    }
-
     //---------------------- string ----------------------------------------// 
     [Test]
     public void String()
@@ -252,11 +239,11 @@ namespace ntest
       public int member1;
 
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public int? member2;
+      public XmlRpcInt member2;
 
       [XmlRpcMember("member_3")]
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public int? member3;
+      public XmlRpcInt member3;
     }
 
     [Test]
@@ -530,12 +517,12 @@ namespace ntest
     }  
 
 
-    //---------------------- int? -------------------------------------// 
+    //---------------------- XmlRpcInt -------------------------------------// 
     [Test]
-    public void NullableInt()
+    public void XmlRpcInt()
     {
-      XmlDocument xdoc = Utils.Serialize("SerializeTest.testint?", 
-        new int?(12345), 
+      XmlDocument xdoc = Utils.Serialize("SerializeTest.testXmlRpcInt", 
+        new XmlRpcInt(12345), 
         Encoding.UTF8, MappingAction.Ignore);
       Type parsedType, parsedArrayType;
       object obj = Utils.Parse(xdoc, null, MappingAction.Error, 
@@ -548,7 +535,7 @@ namespace ntest
     public void XmlRpcBoolean()
     {
       XmlDocument xdoc = Utils.Serialize("SerializeTest.testXmlRpcBoolean", 
-        new Boolean?(true), 
+        new XmlRpcBoolean(true), 
         Encoding.UTF8, MappingAction.Ignore);
       Type parsedType, parsedArrayType;
       object obj = Utils.Parse(xdoc, null, MappingAction.Error, 
@@ -556,12 +543,12 @@ namespace ntest
       Assert.AreEqual(true, obj);
     }
 
-    //---------------------- Double? ----------------------------------// 
+    //---------------------- XmlRpcDouble ----------------------------------// 
     [Test]
-    public void NullableDouble()
+    public void XmlRpcDouble()
     {
-      XmlDocument xdoc = Utils.Serialize("SerializeTest.testDouble?", 
-        new Double?(543.21), 
+      XmlDocument xdoc = Utils.Serialize("SerializeTest.testXmlRpcDouble", 
+        new XmlRpcDouble(543.21), 
         Encoding.UTF8, MappingAction.Ignore);
       Type parsedType, parsedArrayType;
       object obj = Utils.Parse(xdoc, null, MappingAction.Error, 
@@ -570,18 +557,18 @@ namespace ntest
     }
 
     [Test]
-    public void NullableDouble_ForeignCulture()
+    public void XmlRpcDouble_ForeignCulture()
     {
       CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
       XmlDocument xdoc;
       try
       {
         Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-BE");
-        Double? xsd = new Double?(543.21);
+        XmlRpcDouble xsd = new XmlRpcDouble(543.21);
         //Console.WriteLine(xsd.ToString());
         xdoc = Utils.Serialize(
-          "SerializeTest.testDouble?_ForeignCulture", 
-          new Double?(543.21), 
+          "SerializeTest.testXmlRpcDouble_ForeignCulture", 
+          new XmlRpcDouble(543.21), 
           Encoding.UTF8, MappingAction.Ignore);
       }
       catch(Exception)
@@ -598,11 +585,11 @@ namespace ntest
       Assert.AreEqual(543.21, obj);
     }
 
-    //---------------------- DateTime? ------------------------------// 
+    //---------------------- XmlRpcDateTime ------------------------------// 
     [Test]
-    public void NullableDateTime()
+    public void XmlRpcDateTime()
     {
-      XmlDocument xdoc = Utils.Serialize("SerializeTest.testDateTime?", 
+      XmlDocument xdoc = Utils.Serialize("SerializeTest.testXmlRpcDateTime", 
         new DateTime(2002, 7, 6, 11, 25, 37), 
         Encoding.UTF8, MappingAction.Ignore);
       Type parsedType, parsedArrayType;

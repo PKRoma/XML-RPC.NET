@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", "{6445B53D-C3CE-4326-A579-D96D0CD437F6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2328EC1C-A36E-4CD7-BA38-0DDD9B886054} = {2328EC1C-A36E-4CD7-BA38-0DDD9B886054}

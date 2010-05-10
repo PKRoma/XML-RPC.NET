@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2009, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -35,37 +35,26 @@ using System.Text;
 
 namespace CookComputing.XmlRpc
 {
-#if (!SILVERLIGHT)
   public class XmlRpcClientProtocol : Component, IXmlRpcProxy
-#else
-  public class XmlRpcClientProtocol : IXmlRpcProxy
-#endif
   {
+    #region Instance Variables
 #if (!COMPACT_FRAMEWORK)
     private string _connectionGroupName = null;
 #endif
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !FX1_0)
     private bool _expect100Continue = false;
     private bool _enableCompression = false;
 #endif
-#if (!SILVERLIGHT)
     private ICredentials _credentials = null;
-#endif
     private WebHeaderCollection _headers = new WebHeaderCollection();
     private int _indentation = 2;
     private bool _keepAlive = true;
     private XmlRpcNonStandard _nonStandard = XmlRpcNonStandard.None;
     private bool _preAuthenticate = false;
-#if (!SILVERLIGHT)
     private Version _protocolVersion = HttpVersion.Version11;
-#endif
-#if (!SILVERLIGHT)
     private IWebProxy _proxy = null;
-#endif
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
-    private CookieCollection _responseCookies;
-#endif
 #if (!COMPACT_FRAMEWORK)
+    private CookieCollection _responseCookies;
     private WebHeaderCollection _responseHeaders;
 #endif
     private int _timeout = 100000;
@@ -78,17 +67,16 @@ namespace CookComputing.XmlRpc
     private Encoding _xmlEncoding = null;
     private string _xmlRpcMethod = null;
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
     private X509CertificateCollection _clientCertificates
       = new X509CertificateCollection();
-#endif
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     private CookieContainer _cookies = new CookieContainer();
 #endif
-    private Guid _id = Guid.NewGuid();
+    #endregion
+    private Guid _id = Util.NewGuid();
 
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
     public XmlRpcClientProtocol(System.ComponentModel.IContainer container)
     {
       container.Add(this);
@@ -100,34 +88,27 @@ namespace CookComputing.XmlRpc
       InitializeComponent();
     }
 
-#if (!SILVERLIGHT)
     public object Invoke(
       MethodBase mb,
       params object[] Parameters)
     {
       return Invoke(this, mb as MethodInfo, Parameters);
     }
-#endif
 
-#if (!SILVERLIGHT)
     public object Invoke(
       MethodInfo mi,
       params object[] Parameters)
     {
       return Invoke(this, mi, Parameters);
     }
-#endif
 
-#if (!SILVERLIGHT)
     public object Invoke(
       string MethodName,
       params object[] Parameters)
     {
       return Invoke(this, MethodName, Parameters);
     }
-#endif
 
-#if (!SILVERLIGHT)
     public object Invoke(
       Object clientObj,
       string methodName,
@@ -136,15 +117,13 @@ namespace CookComputing.XmlRpc
       MethodInfo mi = GetMethodInfoFromName(clientObj, methodName, parameters);
       return Invoke(this, mi, parameters);
     }
-#endif
 
-#if (!SILVERLIGHT)
     public object Invoke(
       Object clientObj,
       MethodInfo mi,
       params object[] parameters)
     {
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
       _responseHeaders = null;
       _responseCookies = null;
 #endif
@@ -157,10 +136,8 @@ namespace CookComputing.XmlRpc
         XmlRpcRequest req = MakeXmlRpcRequest(webReq, mi, parameters,
           clientObj, _xmlRpcMethod, _id);
         SetProperties(webReq);
-#if (!SILVERLIGHT)
         SetRequestHeaders(_headers, webReq);
-#endif
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
         SetClientCertificates(_clientCertificates, webReq);
 #endif
         Stream serStream = null;
@@ -199,10 +176,8 @@ namespace CookComputing.XmlRpc
             reqStream.Close();
         }
         HttpWebResponse webResp = GetWebResponse(webReq) as HttpWebResponse;
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
         _responseCookies = webResp.Cookies;
-#endif
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
         _responseHeaders = webResp.Headers;
 #endif
         Stream respStm = null;
@@ -222,7 +197,7 @@ namespace CookComputing.XmlRpc
             deserStream.Flush();
             deserStream.Position = 0;
           }
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK && !FX1_0)
           deserStream = MaybeDecompressStream((HttpWebResponse)webResp, 
             deserStream);          
 #endif
@@ -254,9 +229,10 @@ namespace CookComputing.XmlRpc
       }
       return reto;
     }
-#endif
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+    #region Properties
+
+#if (!COMPACT_FRAMEWORK)
     [Browsable(false)]
     public X509CertificateCollection ClientCertificates
     {
@@ -272,16 +248,14 @@ namespace CookComputing.XmlRpc
     }
 #endif
 
-#if (!SILVERLIGHT)
     [Browsable(false)]
     public ICredentials Credentials
     {
       get { return _credentials; }
       set { _credentials = value; }
     }
-#endif
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !FX1_0)
     public bool EnableCompression
     {
       get { return _enableCompression; }
@@ -295,7 +269,7 @@ namespace CookComputing.XmlRpc
       get { return _headers; }
     }
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !FX1_0)
     public bool Expect100Continue
     {
       get { return _expect100Continue; }
@@ -303,7 +277,7 @@ namespace CookComputing.XmlRpc
     }
 #endif
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
     public CookieContainer CookieContainer
     {
       get { return _cookies; }
@@ -338,23 +312,22 @@ namespace CookComputing.XmlRpc
       get { return _preAuthenticate; }
       set { _preAuthenticate = value; }
     }
-#if (!SILVERLIGHT)
+
     [Browsable(false)]
     public System.Version ProtocolVersion
     {
       get { return _protocolVersion; }
       set { _protocolVersion = value; }
     }
-#endif
-#if (!SILVERLIGHT)
+
     [Browsable(false)]
     public IWebProxy Proxy
     {
       get { return _proxy; }
       set { _proxy = value; }
     }
-#endif
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+
+#if (!COMPACT_FRAMEWORK)
     public CookieCollection ResponseCookies
     {
       get { return _responseCookies; }
@@ -423,50 +396,36 @@ namespace CookComputing.XmlRpc
       set { _xmlRpcMethod = value; }
     }
 
+    #endregion
+
     public void SetProperties(WebRequest webReq)
     {
-#if (!SILVERLIGHT)
       if (_proxy != null)
         webReq.Proxy = _proxy;
-#endif
       HttpWebRequest httpReq = (HttpWebRequest)webReq;
-#if (!SILVERLIGHT)
       httpReq.UserAgent = _userAgent;
-#endif
-#if (!SILVERLIGHT)
       httpReq.ProtocolVersion = _protocolVersion;
-#endif
-#if (!SILVERLIGHT)
       httpReq.KeepAlive = _keepAlive;
-#endif
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
       httpReq.CookieContainer = _cookies;
 #endif
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK && !FX1_0)
       httpReq.ServicePoint.Expect100Continue = _expect100Continue;
 #endif
-#if (!SILVERLIGHT)
       webReq.Timeout = Timeout;
-#endif
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
       webReq.ConnectionGroupName = this._connectionGroupName;
 #endif
-#if (!SILVERLIGHT)
       webReq.Credentials = Credentials;
-#endif
-#if (!SILVERLIGHT)
       webReq.PreAuthenticate = PreAuthenticate;
-#endif
-#if (!SILVERLIGHT)
       // Compact Framework sets this to false by default
       (webReq as HttpWebRequest).AllowWriteStreamBuffering = true;
-#endif
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK && !FX1_0)
       if (_enableCompression)
         webReq.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
 #endif
     }
-#if (!SILVERLIGHT)
+
     private void SetRequestHeaders(
       WebHeaderCollection headers,
       WebRequest webReq)
@@ -476,8 +435,7 @@ namespace CookComputing.XmlRpc
         webReq.Headers.Add(key, headers[key]);
       }
     }
-#endif
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
     private void SetClientCertificates(
       X509CertificateCollection certificates,
       WebRequest webReq)
@@ -513,14 +471,10 @@ namespace CookComputing.XmlRpc
         // status 400 is used for errors caused by the client
         // status 500 is used for server errors (not server application
         // errors which are returned as fault responses)
-#if (!SILVERLIGHT)
         if (httpResp.StatusCode == HttpStatusCode.BadRequest)
           throw new XmlRpcException(httpResp.StatusDescription);
         else
           throw new XmlRpcServerException(httpResp.StatusDescription);
-#else
-        throw new XmlRpcServerException(httpResp.StatusDescription);
-#endif
       }
       XmlRpcSerializer serializer = new XmlRpcSerializer();
       serializer.NonStandard = _nonStandard;
@@ -647,10 +601,8 @@ namespace CookComputing.XmlRpc
       XmlRpcRequest xmlRpcReq = MakeXmlRpcRequest(webReq, mi,
         parameters, clientObj, _xmlRpcMethod, _id);
       SetProperties(webReq);
-#if (!SILVERLIGHT)
       SetRequestHeaders(_headers, webReq);
-#endif
-#if (!COMPACT_FRAMEWORK &&!SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
       SetClientCertificates(_clientCertificates, webReq);
 #endif
       Encoding useEncoding = null;
@@ -865,7 +817,7 @@ namespace CookComputing.XmlRpc
           throw new Exception("dup call to EndSend");
         clientResult.EndSendCalled = true;
         HttpWebResponse webResp = (HttpWebResponse)clientResult.WaitForResponse();
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
         clientResult._responseCookies = webResp.Cookies;
         clientResult._responseHeaders = webResp.Headers;
 #endif
@@ -878,7 +830,7 @@ namespace CookComputing.XmlRpc
             responseStream));
           responseStream.Position = 0;
         }
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK && !FX1_0)
         responseStream = MaybeDecompressStream((HttpWebResponse)webResp, 
           responseStream);
 #endif
@@ -922,27 +874,12 @@ namespace CookComputing.XmlRpc
       return useUrl;
     }
 
-#if (!SILVERLIGHT)
+    #region Introspection Methods
     [XmlRpcMethod("system.listMethods")]
     public string[] SystemListMethods()
     {
       return (string[])Invoke("SystemListMethods", new Object[0]);
     }
-
-    [XmlRpcMethod("system.methodSignature")]
-    public object[] SystemMethodSignature(string MethodName)
-    {
-      return (object[])Invoke("SystemMethodSignature",
-        new Object[] { MethodName });
-    }
-
-    [XmlRpcMethod("system.methodHelp")]
-    public string SystemMethodHelp(string MethodName)
-    {
-      return (string)Invoke("SystemMethodHelp",
-        new Object[] { MethodName });
-    }
-#endif
 
     [XmlRpcMethod("system.listMethods")]
     public IAsyncResult BeginSystemListMethods(
@@ -958,6 +895,12 @@ namespace CookComputing.XmlRpc
       return (string[])EndInvoke(AsyncResult);
     }
 
+    [XmlRpcMethod("system.methodSignature")]
+    public object[] SystemMethodSignature(string MethodName)
+    {
+      return (object[])Invoke("SystemMethodSignature",
+        new Object[] { MethodName });
+    }
 
     [XmlRpcMethod("system.methodSignature")]
     public IAsyncResult BeginSystemMethodSignature(
@@ -975,6 +918,13 @@ namespace CookComputing.XmlRpc
     }
 
     [XmlRpcMethod("system.methodHelp")]
+    public string SystemMethodHelp(string MethodName)
+    {
+      return (string)Invoke("SystemMethodHelp",
+        new Object[] { MethodName });
+    }
+
+    [XmlRpcMethod("system.methodHelp")]
     public IAsyncResult BeginSystemMethodHelp(
       string MethodName,
       AsyncCallback Callback,
@@ -988,7 +938,9 @@ namespace CookComputing.XmlRpc
     {
       return (string)EndInvoke(AsyncResult);
     }
+    #endregion
 
+    #region Component Designer generated code
     /// <summary>
     /// Required method for Designer support - do not modify
     /// the contents of this method with the code editor.
@@ -996,6 +948,7 @@ namespace CookComputing.XmlRpc
     private void InitializeComponent()
     {
     }
+    #endregion
 
     protected virtual WebRequest GetWebRequest(Uri uri)
     {
@@ -1003,7 +956,6 @@ namespace CookComputing.XmlRpc
       return req;
     }
 
-#if (!SILVERLIGHT)
     protected virtual WebResponse GetWebResponse(WebRequest request)
     {
       WebResponse ret = null;
@@ -1019,9 +971,8 @@ namespace CookComputing.XmlRpc
       }
       return ret;
     }
-#endif
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK && !FX1_0)
     // support for gzip and deflate
     protected Stream MaybeDecompressStream(HttpWebResponse httpWebResp, 
       Stream respStream)
@@ -1082,7 +1033,7 @@ namespace CookComputing.XmlRpc
     }
   }
 
-#if (COMPACT_FRAMEWORK || SILVERLIGHT)
+#if (COMPACT_FRAMEWORK)
   // dummy attribute because System.ComponentModel.Browsable is not
   // support in the compact framework
   [AttributeUsage(AttributeTargets.Property)]

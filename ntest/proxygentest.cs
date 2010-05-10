@@ -4,11 +4,9 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Threading;
-using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using NUnit.Framework;
 using CookComputing.XmlRpc;
-using System.Security.Permissions;
 
 namespace ntest
 {
@@ -50,6 +48,7 @@ namespace ntest
       Assert.IsTrue(cp is XmlRpcClientProtocol);
     }
 
+#if !FX1_0
     [Test]
     public void Method1Generic()
     {
@@ -59,6 +58,7 @@ namespace ntest
       Assert.IsTrue(cp is IXmlRpcProxy);
       Assert.IsTrue(cp is XmlRpcClientProtocol);
     }
+#endif
 
     public interface IParent : IXmlRpcProxy
     {
@@ -92,7 +92,9 @@ namespace ntest
       ITest2 proxy = (ITest2)XmlRpcProxyGen.Create(typeof(ITest2));
       X509CertificateCollection certs = proxy.ClientCertificates;
       string groupName = proxy.ConnectionGroupName;
+#if (!FX1_0)
       bool expect100 = proxy.Expect100Continue;
+#endif
       WebHeaderCollection header = proxy.Headers;
       int indentation = proxy.Indentation;
       bool keepAlive = proxy.KeepAlive;
@@ -286,21 +288,6 @@ namespace ntest
       IStateName2 proxy = (IStateName2)XmlRpcProxyGen.Create(typeof(IStateName2));
       string ret = proxy.GetStateNames(1, 2, 3);
       Assert.AreEqual("Alabama Alaska Arizona", ret);
-    }
-
-    [Test]
-    public void FileIOPermission()
-    {
-      FileIOPermission f = new FileIOPermission(PermissionState.Unrestricted);
-      f.Deny();
-      try
-      {
-        IStateName2 proxy = (IStateName2)XmlRpcProxyGen.Create(typeof(IStateName2));
-      }
-      finally
-      {
-        CodeAccessPermission.RevertDeny();
-      }
     }
   }
 }

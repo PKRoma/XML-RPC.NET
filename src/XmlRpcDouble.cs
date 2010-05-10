@@ -23,44 +23,69 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
-using System;
-using System.IO;
-using System.Diagnostics;
-
 namespace CookComputing.XmlRpc
 {
-  public abstract class XmlRpcLogger
+  public class XmlRpcDouble 
   {
-    public void Attach(XmlRpcClientProtocol proxy)
+    private double _value;
+
+    public XmlRpcDouble()
     {
-      proxy.RequestEvent += new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent += new XmlRpcResponseEventHandler(OnResponse);
+      this._value = 0;
     }
 
-    public void Attach(IXmlRpcProxy proxy)
+    public XmlRpcDouble(
+      double val) 
     {
-      proxy.RequestEvent += new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent += new XmlRpcResponseEventHandler(OnResponse);
+      this._value = val;
     }
 
-    public void Detach(XmlRpcClientProtocol proxy)
+    public override string ToString() 
     {
-      proxy.RequestEvent -= new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent -= new XmlRpcResponseEventHandler(OnResponse);
+      return _value.ToString();
     }
 
-    public void Detach(IXmlRpcProxy proxy)
+    public override int GetHashCode()
     {
-      proxy.RequestEvent -= new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent -= new XmlRpcResponseEventHandler(OnResponse);
+      return _value.GetHashCode();
     }
 
-    protected virtual void OnRequest(object sender, XmlRpcRequestEventArgs e)
+    public override bool Equals(
+      object o)
     {
+      if (o == null || !(o is XmlRpcDouble))
+        return false;
+      XmlRpcDouble dbl = o as XmlRpcDouble;
+      return dbl._value == _value;
     }
 
-    protected virtual void OnResponse(object sender, XmlRpcResponseEventArgs e)
+    public static bool operator ==(
+      XmlRpcDouble xi, 
+      XmlRpcDouble xj)
     {
+      if (((object)xi) == null && ((object)xj) == null) 
+        return true;
+      else if (((object)xi) == null || ((object)xj) == null)
+        return false;
+      else
+        return xi._value == xj._value;
+    }
+
+    public static bool operator != (
+      XmlRpcDouble xi, 
+      XmlRpcDouble xj)
+    {
+      return !(xi == xj);
+    }
+
+    public static implicit operator double (XmlRpcDouble x)
+    {
+      return x._value;
+    }
+
+    public static implicit operator XmlRpcDouble(double x) 
+    {
+      return new XmlRpcDouble(x);
     }
   }
 }

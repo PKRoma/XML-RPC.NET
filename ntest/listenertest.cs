@@ -4,6 +4,8 @@ using System.Net;
 using CookComputing.XmlRpc;
 using NUnit.Framework;
 
+#if !FX1_0
+
 namespace ntest
 {
   [TestFixture]
@@ -90,3 +92,5 @@ namespace ntest
     }
   }
 }
+
+#endif

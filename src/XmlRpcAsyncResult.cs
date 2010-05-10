@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2009, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -74,7 +74,7 @@ namespace CookComputing.XmlRpc
       get { return isCompleted; } 
     }
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK)
     public CookieCollection ResponseCookies
     {
       get { return _responseCookies; }
@@ -272,10 +272,8 @@ namespace CookComputing.XmlRpc
     int _indentation;
     bool _useIntTag;
     bool _useStringTag;
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
-    internal CookieCollection _responseCookies;
-#endif
 #if (!COMPACT_FRAMEWORK)
+    internal CookieCollection _responseCookies;
     internal WebHeaderCollection _responseHeaders;
 #endif
   }
