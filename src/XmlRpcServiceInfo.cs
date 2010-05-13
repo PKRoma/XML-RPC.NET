@@ -34,6 +34,7 @@ namespace CookComputing.XmlRpc
   {
     tInvalid,
     tInt32,
+    tInt64,
     tBoolean,
     tString,
     tDouble,
@@ -256,6 +257,8 @@ namespace CookComputing.XmlRpc
         ret = XmlRpcType.tInt32;
       else if (t == typeof(XmlRpcInt))
         ret = XmlRpcType.tInt32;
+      else if (t == typeof(Int64))
+        ret = XmlRpcType.tInt64;
       else if (t == typeof(Boolean))
         ret = XmlRpcType.tBoolean;
       else if (t == typeof(XmlRpcBoolean))
@@ -328,6 +331,8 @@ namespace CookComputing.XmlRpc
 #if !FX1_0
       else if (t == typeof(int?))
         ret = XmlRpcType.tInt32;
+      else if (t == typeof(long?))
+        ret = XmlRpcType.tInt64;
       else if (t == typeof(Boolean?))
         ret = XmlRpcType.tBoolean;
       else if (t == typeof(Double?))
@@ -385,6 +390,8 @@ namespace CookComputing.XmlRpc
       string ret = null;
       if (t == XmlRpcType.tInt32)
         ret = "integer";
+      else if (t == XmlRpcType.tInt64)
+        ret = "i8";
       else if (t == XmlRpcType.tBoolean)
         ret = "boolean";
       else if (t == XmlRpcType.tString)

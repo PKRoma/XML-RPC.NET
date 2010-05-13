@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Xml;
 using System.Reflection;
@@ -62,7 +63,49 @@ namespace ntest
         out parsedType, out parsedArrayType);
       Assert.AreEqual(12345, (int)obj);
     }
-      
+
+    //---------------------- Int64 -------------------------------------------// 
+    [Test]
+    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
+    public void Int_TooLarge()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?><value><int>123456789012</int></value>";
+      object obj = Utils.Parse(xml, typeof(int), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.AreEqual(12345, (int)obj);
+    }
+
+    [Test]
+    public void Int64_NullType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?><value><i8>123456789012</i8></value>";
+      object obj = Utils.Parse(xml, null, MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.AreEqual(123456789012, (long)obj);
+    }
+
+    [Test]
+    public void Int64_IntType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?><value><i8>123456789012</i8></value>";
+      object obj = Utils.Parse(xml, typeof(long), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.AreEqual(123456789012, (long)obj);
+    }
+
+    [Test]
+    public void Int64_ObjectType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?><value><i8>123456789012</i8></value>";
+      object obj = Utils.Parse(xml, typeof(object), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.AreEqual(123456789012, (long)obj);
+    }
+
     //---------------------- string ----------------------------------------// 
     [Test]
     public void String_NullType()
@@ -930,6 +973,71 @@ namespace ntest
 </value>";
       object obj = Utils.Parse(xml, typeof(Struct5), MappingAction.Error,
         out parsedType, out parsedArrayType);
+    }
+
+
+    struct Struct6
+    {
+      [NonSerialized]
+      public decimal x;
+      public int y;
+    }
+
+    [Test]
+    public void NonSerializedNonXmlRpcType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>y</name>
+      <value><i4>18</i4></value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(Struct4), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Struct4 ret = (Struct4)obj;
+      Assert.AreEqual(0, ret.x);
+      Assert.AreEqual(18, ret.y);
+    }
+
+    [Test]
+    public void XmlRpcStructOrder()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>a</name>
+      <value><i4>1</i4></value>
+    </member>
+    <member>
+      <name>c</name>
+      <value><i4>3</i4></value>
+    </member>
+    <member>
+      <name>b</name>
+      <value><i4>2</i4></value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(XmlRpcStruct), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsInstanceOfType(typeof(XmlRpcStruct), obj);
+      XmlRpcStruct strct = obj as XmlRpcStruct;
+      IDictionaryEnumerator denumerator = strct.GetEnumerator();
+      denumerator.MoveNext();
+      Assert.AreEqual("a", denumerator.Key);
+      Assert.AreEqual(1, denumerator.Value);
+      denumerator.MoveNext();
+      Assert.AreEqual("c", denumerator.Key);
+      Assert.AreEqual(3, denumerator.Value);
+      denumerator.MoveNext();
+      Assert.AreEqual("b", denumerator.Key);
+      Assert.AreEqual(2, denumerator.Value);
     }
   }
 }
