@@ -1532,8 +1532,9 @@ namespace CookComputing.XmlRpc
       if (ValueType != null && ValueType != typeof(Object)
         && ValueType != typeof(System.Int64)
 #if !FX1_0
- && ValueType != typeof(long?))
+ && ValueType != typeof(long?)
 #endif
+      )
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType +
           " contains i8 value where "
