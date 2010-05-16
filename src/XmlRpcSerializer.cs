@@ -245,11 +245,15 @@ namespace CookComputing.XmlRpc
       if (stm == null)
         throw new ArgumentNullException("stm",
           "XmlRpcSerializer.DeserializeRequest");
-      XmlDocument xdoc = new XmlDocument();
+      XmlDocument xdoc = new XmlDocument(); 
       xdoc.PreserveWhitespace = true;
       try
       {
-        xdoc.Load(stm);
+        using (XmlTextReader xmlRdr = new XmlTextReader(stm))
+        {
+          xmlRdr.ProhibitDtd = true;
+          xdoc.Load(xmlRdr);
+        }
       }
       catch (Exception ex)
       {
@@ -268,7 +272,11 @@ namespace CookComputing.XmlRpc
       xdoc.PreserveWhitespace = true;
       try
       {
-        xdoc.Load(txtrdr);
+        using (XmlTextReader xmlRdr = new XmlTextReader(txtrdr))
+        {
+          xmlRdr.ProhibitDtd = true;
+          xdoc.Load(xmlRdr);
+        }
       }
       catch (Exception ex)
       {
@@ -496,7 +504,13 @@ namespace CookComputing.XmlRpc
       xdoc.PreserveWhitespace = true;
       try
       {
-        xdoc.Load(stm);
+        using (XmlTextReader xmlRdr = new XmlTextReader(stm))
+        {
+#if (!COMPACT_FRAMEWORK)
+          xmlRdr.ProhibitDtd = true;
+#endif
+          xdoc.Load(xmlRdr);
+        }
       }
       catch (Exception ex)
       {
@@ -515,7 +529,13 @@ namespace CookComputing.XmlRpc
       xdoc.PreserveWhitespace = true;
       try
       {
-        xdoc.Load(txtrdr);
+        using (XmlTextReader xmlRdr = new XmlTextReader(txtrdr))
+        {
+#if (!COMPACT_FRAMEWORK)
+          xmlRdr.ProhibitDtd = true;
+#endif
+          xdoc.Load(xmlRdr);
+        }
       }
       catch (Exception ex)
       {
