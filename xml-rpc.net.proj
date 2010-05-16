@@ -84,10 +84,11 @@
     <ZipFiles Include="samples/**/*.sln" />
     <ZipFiles Include="samples/**/*.csproj" />
     <ZipFiles Include="samples/**/*.vbproj" />
-    <ZipFiles Include="samples/StateNameServer/server/StateNameServer.exe.config" />
     <ZipFiles Include="samples/**/*.resx" />
     <ZipFiles Include="samples/**/*.ashx" />
+    <ZipFiles Include="samples/**/*.config" />
     <ZipFiles Include="samples/**/*.ico" />
+    <ZipFiles Include="samples/**/MathService.dll" />
     <ZipFiles Include="README.txt" />
     <ZipFiles Include="xml-rpc.net.proj" />
 
@@ -102,7 +103,6 @@
     <ZipFiles Include="$(BuildDir)/CookComputing.XmlRpc.CF.dll" />
     <ZipFiles Include="$(BuildDir)/CookComputing.XmlRpcV2.dll" />
     <ZipFiles Include="$(BuildDir)/IStateName.dll" />
-    <ZipFiles Include="$(BuildDir)/MathService.dll" />
 
     <ZipFiles Include="xrpgen/AssemblyInfo.vb" />
     <ZipFiles Include="xrpgen/Main.vb" />
