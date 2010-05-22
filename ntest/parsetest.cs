@@ -1039,5 +1039,187 @@ namespace ntest
       Assert.AreEqual("b", denumerator.Key);
       Assert.AreEqual(2, denumerator.Value);
     }
+
+    class RecursiveMember
+    {
+      public string Level;
+      [XmlRpcMissingMapping(MappingAction.Ignore)]
+      public RecursiveMember childExample;
+    }
+
+    [Test]
+    public void RecursiveMemberTest()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>Level</name>
+      <value>1</value>
+    </member>
+    <member>
+      <name>childExample</name>
+      <value>
+        <struct>
+          <member>
+            <name>Level</name>
+            <value>2</value>
+          </member>
+          <member>
+            <name>childExample</name>
+            <value>
+              <struct>
+                <member>
+                  <name>Level</name>
+                  <value>3</value>
+                </member>
+              </struct>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(RecursiveMember), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      RecursiveMember ret = (RecursiveMember)obj;
+    }
+
+    class RecursiveArrayMember
+    {
+      public string Level;
+      public RecursiveArrayMember[] childExamples;
+    }
+
+    [Test]
+    public void RecursiveArrayMemberTest()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>Level</name>
+      <value>1</value>
+    </member>
+    <member>
+      <name>childExamples</name>
+      <value>
+       <array>
+          <data>
+            <value>
+              <struct>
+                <member>
+                  <name>Level</name>
+                  <value>1-1</value>
+                </member>
+                <member>
+                  <name>childExamples</name>
+                  <value>
+                   <array>
+                      <data>
+                        <value>
+                          <struct>
+                            <member>
+                              <name>Level</name>
+                              <value>1-1-1</value>
+                            </member>
+                            <member>
+                              <name>childExamples</name>
+                              <value>
+                               <array>
+                                  <data>
+                                  </data>
+                                </array>
+                              </value>
+                            </member>
+                          </struct>
+                        </value>
+                        <value>
+                          <struct>
+                            <member>
+                              <name>Level</name>
+                              <value>1-1-2</value>
+                            </member>
+                            <member>
+                              <name>childExamples</name>
+                              <value>
+                               <array>
+                                  <data>
+                                  </data>
+                                </array>
+                              </value>
+                            </member>
+                          </struct>
+                        </value>
+                      </data>
+                    </array>
+                  </value>
+                </member>
+              </struct>
+            </value>
+            <value>
+              <struct>
+                <member>
+                  <name>Level</name>
+                  <value>1-2</value>
+                </member>
+                <member>
+                  <name>childExamples</name>
+                  <value>
+                   <array>
+                      <data>
+                        <value>
+                          <struct>
+                            <member>
+                              <name>Level</name>
+                              <value>1-2-1</value>
+                            </member>
+                            <member>
+                              <name>childExamples</name>
+                              <value>
+                               <array>
+                                  <data>
+                                  </data>
+                                </array>
+                              </value>
+                            </member>
+                          </struct>
+                        </value>
+                        <value>
+                          <struct>
+                            <member>
+                              <name>Level</name>
+                              <value>1-2-2</value>
+                            </member>
+                            <member>
+                              <name>childExamples</name>
+                              <value>
+                               <array>
+                                  <data>
+                                  </data>
+                                </array>
+                              </value>
+                            </member>
+                          </struct>
+                        </value>
+                      </data>
+                    </array>
+                  </value>
+                </member>
+              </struct>
+            </value>
+          </data>
+        </array>
+      </value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(RecursiveArrayMember), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      RecursiveArrayMember ret = (RecursiveArrayMember)obj;
+    }
   }
 }

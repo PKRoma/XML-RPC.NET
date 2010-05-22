@@ -27,6 +27,7 @@ namespace CookComputing.XmlRpc
 {
   using System;
   using System.Collections;
+  using System.Collections.Generic;
   using System.Reflection;
   using System.Text.RegularExpressions;
 
@@ -252,6 +253,11 @@ namespace CookComputing.XmlRpc
 
     public static XmlRpcType GetXmlRpcType(Type t)
     {
+      return GetXmlRpcType(t, new Stack());
+    }
+
+    private static XmlRpcType GetXmlRpcType(Type t, Stack typeStack)
+    {
       XmlRpcType ret;
       if (t == typeof(Int32))
         ret = XmlRpcType.tInt32;
@@ -286,7 +292,7 @@ namespace CookComputing.XmlRpc
 #if (!COMPACT_FRAMEWORK)
         Type elemType = t.GetElementType();
         if (elemType != typeof(Object)
-          && GetXmlRpcType(elemType) == XmlRpcType.tInvalid)
+          && GetXmlRpcType(elemType, typeStack) == XmlRpcType.tInvalid)
         {
           ret = XmlRpcType.tInvalid;
         }
@@ -320,7 +326,7 @@ namespace CookComputing.XmlRpc
         if (elemType != null)
         {
           if (elemType != typeof(Object) 
-            && GetXmlRpcType(elemType) == XmlRpcType.tInvalid)
+            && GetXmlRpcType(elemType, typeStack) == XmlRpcType.tInvalid)
           {
             ret = XmlRpcType.tInvalid;
           }
@@ -356,19 +362,39 @@ namespace CookComputing.XmlRpc
           if (mi.MemberType == MemberTypes.Field)
           {
             FieldInfo fi = (FieldInfo)mi;
-            if ((fi.FieldType == t) || (fi.FieldType != typeof(Object)
-              && GetXmlRpcType(fi.FieldType) == XmlRpcType.tInvalid))
+            if (typeStack.Contains(fi.FieldType))
+              continue;
+            try
             {
-              return XmlRpcType.tInvalid;
+              typeStack.Push(fi.FieldType);
+              if ((fi.FieldType != typeof(Object)
+                && GetXmlRpcType(fi.FieldType, typeStack) == XmlRpcType.tInvalid))
+              {
+                return XmlRpcType.tInvalid;
+              }
+            }
+            finally
+            {
+              typeStack.Pop();
             }
           }
           else if (mi.MemberType == MemberTypes.Property)
           {
             PropertyInfo pi = (PropertyInfo)mi;
-            if ((pi.PropertyType == t) || (pi.PropertyType != typeof(Object)
-              && GetXmlRpcType(pi.PropertyType) == XmlRpcType.tInvalid))
+            if (typeStack.Contains(pi.PropertyType))
+              continue;
+            try
             {
-              return XmlRpcType.tInvalid;
+              typeStack.Push(pi.PropertyType);
+              if ((pi.PropertyType != typeof(Object)
+                && GetXmlRpcType(pi.PropertyType, typeStack) == XmlRpcType.tInvalid))
+              {
+                return XmlRpcType.tInvalid;
+              }
+            }
+            finally
+            {
+              typeStack.Pop();
             }
           }
         }
