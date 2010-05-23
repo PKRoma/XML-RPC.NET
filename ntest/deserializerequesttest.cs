@@ -1226,6 +1226,66 @@ AQIDBAUGBwg=</base64>
         "argument is string");
       Assert.AreEqual("\r\n", request.args[0]);
     }
+
+    [XmlRpcMethod("blogger.getUsersBlogs")]
+    public void GetUsersBlogs(string username, string password)
+    {
+
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcInvalidParametersException))]
+    public void TooManyParameters()
+    {
+      string xml = @"<?xml version=""1.0""?>
+<methodCall>
+<methodName>blogger.getUsersBlogs</methodName>
+<params>
+<param>
+<value>
+<string>ffffffabffffffce6dffffff93ffffffac29ffffffc9fffffff826ffffffdefffff
+fc9ff\
+ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
+</value>
+</param>
+<param>
+<value>
+<string>myusername</string>
+</value>
+</param>
+<param>
+<value>
+<string>mypassword</string>
+</value>
+</param>
+</params>
+</methodCall>";
+
+      StringReader sr = new StringReader(xml);
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcInvalidParametersException))]
+    public void TooFewParameters()
+    {
+      string xml = @"<?xml version=""1.0""?>
+<methodCall>
+<methodName>blogger.getUsersBlogs</methodName>
+<params>
+<param>
+<value>
+<string>myusername</string>
+</value>
+</param>
+</params>
+</methodCall>";
+
+      StringReader sr = new StringReader(xml);
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+    }
   }
 }
 

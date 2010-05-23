@@ -362,11 +362,16 @@ namespace CookComputing.XmlRpc
       }
       XmlNode[] paramNodes = SelectNodes(paramsNode, "param");
       int paramsPos = GetParamsPos(pis);
-      if (paramNodes.Length < paramsPos)
+      int minParamCount = paramsPos == -1 ? pis.Length : paramsPos;
+      if (svcType != null && paramNodes.Length < minParamCount)
       {
         throw new XmlRpcInvalidParametersException(
-          "Method takes parameters and there is incorrect number of param "
-            + "elements.");
+          "Request contains too few param elements based on method signature.");
+      }
+      if (svcType != null && paramsPos == -1 && paramNodes.Length > pis.Length)
+      {
+        throw new XmlRpcInvalidParametersException(
+          "Request contains too many param elements based on method signature.");
       }
       ParseStack parseStack = new ParseStack("request");
       // TODO: use global action setting
