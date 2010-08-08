@@ -19,13 +19,10 @@ namespace CookComputing.XmlRpc
       var m = _dateTime8601Regex.Match(date);
       if (m == null)
         return false;
-      string tz = m.Groups["tz"].Value;
-      if (tz == "+00" || tz == "+0000" || tz == "-00" || tz == "-0000")
-        tz = ""; 
       string normalized = m.Groups["year"].Value + m.Groups["month"].Value + m.Groups["day"].Value
         + "T"
         + m.Groups["hour"].Value + m.Groups["minute"].Value + m.Groups["second"].Value
-        + tz;
+        + m.Groups["tz"].Value;
       var formats = new string[]
       {
         "yyyyMMdd'T'HHmmss", 
