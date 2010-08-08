@@ -1745,52 +1745,21 @@ namespace CookComputing.XmlRpc
               + StackDump(parseStack));
         }
         string s = child.Value;
-        try
+        // Allow various iso8601 formats, e.g.
+        //   XML-RPC spec yyyyMMddThh:mm:ss
+        //   WordPress yyyyMMddThh:mm:ssZ
+        //   TypePad yyyy-MM-ddThh:mm:ssZ
+        //   other yyyy-MM-ddThh:mm:ss
+        if (!DateTime8601.TryParseDateTime8601(s, out retVal))
         {
-          // XML-RPC spec yyyyMMddThh:mm:ss
-          string dateTimeFormat = "yyyyMMdd'T'HH':'mm':'ss";
-          if (AllowNonStandardDateTime)
-          {
-            if (s.IndexOf("T") == 8)
-            {
-              if (s.EndsWith("Z"))
-              {
-                // WordPress yyyyMMddThh:mm:ssZ
-                dateTimeFormat = "yyyyMMdd'T'HH':'mm':'ss'Z'";
-              }
-              else if (s.EndsWith("-00") || s.EndsWith("-0000")
-                || s.EndsWith("+00") || s.EndsWith("+0000"))
-              {
-                s = s.Substring(0, 17);
-              }
-            }
-            else
-            {
-              if (s.EndsWith("Z"))
-              {
-                // TypePad yyyy-MM-ddThh:mm:ssZ
-                dateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
-              }
-              else
-              {
-                // other yyyy-MM-ddThh:mm:ss
-                dateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss";
-              }
-            }
-          }
           if (MapZerosDateTimeToMinValue && s.StartsWith("0000")
             && (s == "00000000T00:00:00" || s == "0000-00-00T00:00:00Z"
             || s == "00000000T00:00:00Z" || s == "0000-00-00T00:00:00"))
             retVal = DateTime.MinValue;
-          else
-            retVal = DateTime.ParseExact(s, dateTimeFormat,
-              DateTimeFormatInfo.InvariantInfo);
-        }
-        catch (Exception)
-        {
-          throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
-            + " contains invalid dateTime value "
-            + StackDump(parseStack));
+          else 
+            throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
+              + " contains invalid dateTime value "
+              + StackDump(parseStack));
         }
       }
       finally

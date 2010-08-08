@@ -105,6 +105,9 @@
       <Link>AssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="..\src\DateTime8601.cs">
+      <Link>DateTime8601.cs</Link>
+    </Compile>
     <Compile Include="..\src\GuidEx.cs">
       <Link>GuidEx.cs</Link>
       <SubType>Code</SubType>
