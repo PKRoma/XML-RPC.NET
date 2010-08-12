@@ -1175,7 +1175,7 @@ namespace CookComputing.XmlRpc
       {
         retObj = Activator.CreateInstance(valueType);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType
           + " contains struct value where "
