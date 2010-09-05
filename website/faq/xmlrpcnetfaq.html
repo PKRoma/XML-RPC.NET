@@ -714,7 +714,7 @@ an instance of the proxy class:
 </p>
 
 <pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
-proxy.Url = &quot;http://www.cookcomputing.com/SumAndDiff.rem&quot;);
+proxy.Url = &quot;http://www.cookcomputing.com/SumAndDiff.rem&quot;;
 SumAndDiffValue ret = proxy.SumAndDifference(2, 3);
 </pre>
 
@@ -724,7 +724,7 @@ Url. To use a different port add ':' followed by the port number to the host
 name. For example:
 </p>
 
-<pre>proxy.Url = &quot;http://www.cookcomputing.com:8080/SumAndDiff.rem&quot;);
+<pre>proxy.Url = &quot;http://www.cookcomputing.com:8080/SumAndDiff.rem&quot;;
 </pre>
 
 
