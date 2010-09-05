@@ -50,6 +50,87 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <h1>XML-RPC.NET - History</h1>
 
 
+<h3>2.4.0</h3>
+
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.4.0.zip">xml-rpc.net.2.4.0.zip</a> 
+
+<p>New feature and fixed issues:</p>
+
+<ul>
+
+<li>
+New StructParams property on XmlRpcMethodAttribute which provides supports for APIs which
+use a struct to provide named parameters to a method call. 
+(<a href="./faq/xmlrpcnetfaq.html#2.34">more</a>).
+</li>
+
+<li>
+NonSerialized attribute can be applied to struct members to prevent 
+them being serialized and deserialized.
+(<a href="./faq/xmlrpcnetfaq.html#2.35">more</a>).
+</li>
+
+
+<li> Fixed issues:
+
+<ul>
+
+<li>
+Issue 25: NullReferenceException when struct member name is an empty string. 
+Now throws XmlRpcInvalidXmlRpcException.
+</li>
+
+<li>
+Issue 26: Auto-Documentation does not work with HttpListener.
+</li>
+
+<li>
+Issue 27: XmlRpcListenerService.ProcessRequest may not close stream in case of exception.
+</li>
+
+<li>
+Issue 28: XmlRpcSerializer.GetStructName does not check for Properties.
+</li>
+
+<li>
+Issue 31: UseIntTag is being ignored.
+</li>
+
+<li>
+Issue 32: XmlRpcClientProtocol problem with response from void method.
+</li>
+
+<li>
+Issue 34: XmlRpcServerProtocol should be derived from MarshalByRefObject. 
+The system.* methods do not work with remoting object.
+</li>
+
+<li>
+Issue 35: UseEmptyParamsTag property on the proxy doesn’t work unless you are making asynchronous calls.
+</li>
+
+<li>
+Issue 36: Fixed SelectSingleNode and using statement in 
+XmlRpcFaultException for Compact Framework version.
+</li>
+
+<li>
+Issue 38: Check of ParamArrayAttribute causes crash under Mono/Linux.
+</li>
+
+<li>
+Issue 40: Deserialization performance enhancement.
+</li>
+</ul>
+
+</li>
+
+</ul>
+
+
+
+
+
 <h3>2.3.2</h3>
 <a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.3.2.zip">xml-rpc.net.2.3.2.zip</a> 
 </p>
@@ -579,7 +660,7 @@ document.write('<a href="mailto:' + '&#99;&#104;&#97;&#115;' +'&#99;&#111;&#111;
   with any feedback or suggestions for XML-RPC.NET. </p>
 <p>&nbsp;</p>
 <p style="font-size: x-small;">
-Charles Cook, 2001-2008 All Rights Reserved. 19th December 2008
+Charles Cook, 2001-2010 All Rights Reserved. 19th May 2010
 </p>
 
 </div>

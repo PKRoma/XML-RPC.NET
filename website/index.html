@@ -51,79 +51,78 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h2>Latest News</h2>
 
-<h3>19th December 2008</h3>
-<p>Version 2.4.0 has been released:
-<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.4.0.zip">xml-rpc.net.2.4.0.zip</a> 
+<h3>5th September 2010</h3>
+<p>Version 2.5.0 has been released:
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.5.0.zip">xml-rpc.net.2.5.0.zip</a> 
 
 </p>
 
-<p>New feature and fixed issues:</p>
+<p>New features, changes, and fixed issues:</p>
 
 <ul>
 
 <li>
-New StructParams property on XmlRpcMethodAttribute which provides supports for APIs which
-use a struct to provide named parameters to a method call. 
-(<a href="./faq/xmlrpcnetfaq.html#2.34">more</a>).
+Added &lt;i8&gt; to support 64-bit long integer values. 
 </li>
 
 <li>
-NonSerialized attribute can be applied to struct members to prevent 
-them being serialized and deserialized.
-(<a href="./faq/xmlrpcnetfaq.html#2.35">more</a>).
+Added support for more ISO8601 date formats. AllowNonStandardDateTime flag is now
+deprecated. The following formats are now accepted by default, with the '-' 
+and ':' separators being optional. 
+<ul>
+<li>
+yyyy-mm-ddThh:mm:ss 
+</li>
+<li>
+yyyy-mm-ddThh:mm:ssZ 
+</li>
+<li>
+yyyy-mm-ddThh:mm:ss±hh 
+</li>
+<li>
+yyyy-mm-ddThh:mm:ss±hh:mm 
+</li>
+</ul>
+Note: the XML-RPC spec describes the format as 19980717T14:08:55.
 </li>
 
+<li>
+Added AllowAutoRedirect property to IXmlRpcProxy. Default behaviour remains 
+the same (property set to true).
+</li>
+
+<li>
+Moved to Visual Studio 2008. 
+</li>
+
+<li>
+Discontinued support for .NET 1.0 and 1.1. 
+</li>
 
 <li> Fixed issues:
 
 <ul>
 
 <li>
-Issue 25: NullReferenceException when struct member name is an empty string. 
-Now throws XmlRpcInvalidXmlRpcException.
+Issue 55 : change XmlRpcProxyGen so that FileIOPermission is not required for
+calls to Create.
 </li>
 
 <li>
-Issue 26: Auto-Documentation does not work with HttpListener.
+Issue 56: Maintain XML-RPC struct member ordering in XmlRpcStruct after
+deserialization.
 </li>
 
 <li>
-Issue 27: XmlRpcListenerService.ProcessRequest may not close stream in case of exception.
+Issue 65: When deserializing request, check that the number of parameters is
+consistent with the method signature.
 </li>
 
 <li>
-Issue 28: XmlRpcSerializer.GetStructName does not check for Properties.
+Issue 70: Allow structs/classes to have members or arrays of the same type as
+the parent type.
 </li>
 
-<li>
-Issue 31: UseIntTag is being ignored.
-</li>
-
-<li>
-Issue 32: XmlRpcClientProtocol problem with response from void method.
-</li>
-
-<li>
-Issue 34: XmlRpcServerProtocol should be derived from MarshalByRefObject. 
-The system.* methods do not work with remoting object.
-</li>
-
-<li>
-Issue 35: UseEmptyParamsTag property on the proxy doesn’t work unless you are making asynchronous calls.
-</li>
-
-<li>
-Issue 36: Fixed SelectSingleNode and using statement in 
-XmlRpcFaultException for Compact Framework version.
-</li>
-
-<li>
-Issue 38: Check of ParamArrayAttribute causes crash under Mono/Linux.
-</li>
-
-<li>
-Issue 40: Deserialization performance enhancement.
-</li>
 </ul>
 
 </li>
@@ -143,8 +142,8 @@ Use a utility such as WinZip instead.
 <h2>Overview</h2>
 <p>
 XML-RPC.NET is a library for implementing <a href="http://www.xmlrpc.com">XML-RPC</a> 
-  Services and clients in the .NET environment, supporting versions 1.0, 1.1, 
-  and 2.0 of the .NET runtime. The library has been in development 
+  Services and clients in the .NET environment, supporting versions 2.0 and upwards 
+  of the .NET runtime. The library has been in development 
   since March 2001 and is used in many open-source and business applications. 
   Its features include:
 </p>
@@ -382,7 +381,7 @@ document.write('<a href="mailto:' + '&#99;&#104;&#97;&#115;' +'&#99;&#111;&#111;
 
 <p>&nbsp;</p>
 <p style="font-size: x-small;">
-Charles Cook, 2001-2008 All Rights Reserved. 19th December 2008
+Charles Cook, 2001-2010 All Rights Reserved. 14th August 2010
 </p>
 
 </div>
