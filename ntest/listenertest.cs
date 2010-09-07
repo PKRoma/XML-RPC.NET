@@ -36,6 +36,7 @@ namespace ntest
     {
       IStateName proxy = XmlRpcProxyGen.Create < IStateName>();
       proxy.Url = "http://127.0.0.1:11000/";
+      proxy.AllowAutoRedirect = false;
       string name = proxy.GetStateName(1);
     }
 

@@ -34,6 +34,8 @@ namespace CookComputing.XmlRpc
 {
   public interface IXmlRpcProxy
   {
+    bool AllowAutoRedirect { get; set; }
+
 #if (!COMPACT_FRAMEWORK)
     X509CertificateCollection ClientCertificates { get; }
 #endif

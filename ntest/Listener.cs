@@ -46,9 +46,8 @@ namespace ntest
           _svc.ProcessRequest(context);
         }
       }
-      catch (HttpListenerException ex)
+      catch (HttpListenerException)
       {
-        int a = 0;
       }
     }
   }

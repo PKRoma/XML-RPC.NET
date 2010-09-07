@@ -260,8 +260,8 @@ namespace ntest
       DBNull value = System.DBNull.Value;
       Type type = value.GetType();
       XmlRpcType rpcType = XmlRpcServiceInfo.GetXmlRpcType(type);
-      Assert.AreEqual(XmlRpcType.tInvalid, rpcType,
-        "GetXmlRpcType return DBNull as tInvalid");
+      Assert.AreEqual(XmlRpcType.tStruct, rpcType,
+        "GetXmlRpcType return DBNull as tStruct");
     }
 
 #if !FX1_0
@@ -358,9 +358,38 @@ namespace ntest
       XmlRpcServiceInfo svcinfo = XmlRpcServiceInfo.CreateServiceInfo(
         typeof(IDupXmlRpcNames));
     }
+
+
+    class Example
+    {
+      public Example childExample;
+      public Example ChildExample { get; set; }
+    }
+
+    [Test]
+    public void RecursiveClass()
+    {
+      Type type = typeof(Example);
+      XmlRpcType rpcType = XmlRpcServiceInfo.GetXmlRpcType(type);
+      Assert.AreEqual(XmlRpcType.tStruct, rpcType);
+    }
+
+    class ExampleWithArray
+    {
+      public ExampleWithArray[] childExamples;
+      public ExampleWithArray[] ChildExamples { get; set; }
+    }
+
+    [Test]
+    public void RecursiveArrayClass()
+    {
+      Type type = typeof(ExampleWithArray);
+      XmlRpcType rpcType = XmlRpcServiceInfo.GetXmlRpcType(type);
+      Assert.AreEqual(XmlRpcType.tStruct, rpcType);
+    }
   }
 
-  interface IFoo
+interface IFoo
   {
     [XmlRpcMethod("IFoo.Foo", Description = "IFoo")]
     int Foo(int x);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Xml;
 using System.Reflection;
@@ -355,6 +356,51 @@ namespace ntest
     }
 
     [Test]
+    public void DateTime_TZPlus01()
+    {
+      // yyyyMMddThh:mm:ssZ+00
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20020706T12:25:37+01</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
+    public void DateTime_TZPlus0130()
+    {
+      // yyyyMMddThh:mm:ssZ+00
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20020706T12:55:37+0130</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
+    public void DateTime_TZPlus01Colon30()
+    {
+      // yyyyMMddThh:mm:ssZ+00
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20020706T12:55:37+01:30</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
     public void DateTime_TZPlus00()
     {
       // yyyyMMddThh:mm:ssZ+00
@@ -376,6 +422,51 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T11:25:37+0000</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
+    public void DateTime_TZMinus01()
+    {
+      // yyyyMMddThh:mm:ssZ+00
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20020706T10:25:37-01</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
+    public void DateTime_TZMinus0130()
+    {
+      // yyyyMMddThh:mm:ssZ+00
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20020706T09:55:37-0130</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2002, 7, 6, 11, 25, 37),
+        (DateTime)obj);
+    }
+
+    [Test]
+    public void DateTime_TZMinus01Colon30()
+    {
+      // yyyyMMddThh:mm:ssZ+00
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20020706T09:55:37-01:30</dateTime.iso8601></value>";
       XmlRpcSerializer serializer = new XmlRpcSerializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
@@ -489,6 +580,20 @@ namespace ntest
       XmlRpcSerializer serializer = new XmlRpcSerializer();
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error, serializer,
         out parsedType, out parsedArrayType);
+    }
+
+    [Test]
+    public void Issue72()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><dateTime.iso8601>20090209T22:20:01+01:00</dateTime.iso8601></value>";
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
+        serializer, out parsedType, out parsedArrayType);
+      Assert.AreEqual(new DateTime(2009, 2, 9, 21, 20, 01),
+        (DateTime)obj);
     }
 
     //---------------------- base64 ----------------------------------------// 
@@ -972,6 +1077,253 @@ namespace ntest
 </value>";
       object obj = Utils.Parse(xml, typeof(Struct5), MappingAction.Error,
         out parsedType, out parsedArrayType);
+    }
+
+
+    struct Struct6
+    {
+      [NonSerialized]
+      public decimal x;
+      public int y;
+    }
+
+    [Test]
+    public void NonSerializedNonXmlRpcType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>y</name>
+      <value><i4>18</i4></value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(Struct4), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Struct4 ret = (Struct4)obj;
+      Assert.AreEqual(0, ret.x);
+      Assert.AreEqual(18, ret.y);
+    }
+
+    [Test]
+    public void XmlRpcStructOrder()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>a</name>
+      <value><i4>1</i4></value>
+    </member>
+    <member>
+      <name>c</name>
+      <value><i4>3</i4></value>
+    </member>
+    <member>
+      <name>b</name>
+      <value><i4>2</i4></value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(XmlRpcStruct), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsInstanceOfType(typeof(XmlRpcStruct), obj);
+      XmlRpcStruct strct = obj as XmlRpcStruct;
+      IDictionaryEnumerator denumerator = strct.GetEnumerator();
+      denumerator.MoveNext();
+      Assert.AreEqual("a", denumerator.Key);
+      Assert.AreEqual(1, denumerator.Value);
+      denumerator.MoveNext();
+      Assert.AreEqual("c", denumerator.Key);
+      Assert.AreEqual(3, denumerator.Value);
+      denumerator.MoveNext();
+      Assert.AreEqual("b", denumerator.Key);
+      Assert.AreEqual(2, denumerator.Value);
+    }
+
+    class RecursiveMember
+    {
+      public string Level;
+      [XmlRpcMissingMapping(MappingAction.Ignore)]
+      public RecursiveMember childExample;
+    }
+
+    [Test]
+    public void RecursiveMemberTest()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>Level</name>
+      <value>1</value>
+    </member>
+    <member>
+      <name>childExample</name>
+      <value>
+        <struct>
+          <member>
+            <name>Level</name>
+            <value>2</value>
+          </member>
+          <member>
+            <name>childExample</name>
+            <value>
+              <struct>
+                <member>
+                  <name>Level</name>
+                  <value>3</value>
+                </member>
+              </struct>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(RecursiveMember), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      RecursiveMember ret = (RecursiveMember)obj;
+    }
+
+    class RecursiveArrayMember
+    {
+      public string Level;
+      public RecursiveArrayMember[] childExamples;
+    }
+
+    [Test]
+    public void RecursiveArrayMemberTest()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <struct>
+    <member>
+      <name>Level</name>
+      <value>1</value>
+    </member>
+    <member>
+      <name>childExamples</name>
+      <value>
+       <array>
+          <data>
+            <value>
+              <struct>
+                <member>
+                  <name>Level</name>
+                  <value>1-1</value>
+                </member>
+                <member>
+                  <name>childExamples</name>
+                  <value>
+                   <array>
+                      <data>
+                        <value>
+                          <struct>
+                            <member>
+                              <name>Level</name>
+                              <value>1-1-1</value>
+                            </member>
+                            <member>
+                              <name>childExamples</name>
+                              <value>
+                               <array>
+                                  <data>
+                                  </data>
+                                </array>
+                              </value>
+                            </member>
+                          </struct>
+                        </value>
+                        <value>
+                          <struct>
+                            <member>
+                              <name>Level</name>
+                              <value>1-1-2</value>
+                            </member>
+                            <member>
+                              <name>childExamples</name>
+                              <value>
+                               <array>
+                                  <data>
+                                  </data>
+                                </array>
+                              </value>
+                            </member>
+                          </struct>
+                        </value>
+                      </data>
+                    </array>
+                  </value>
+                </member>
+              </struct>
+            </value>
+            <value>
+              <struct>
+                <member>
+                  <name>Level</name>
+                  <value>1-2</value>
+                </member>
+                <member>
+                  <name>childExamples</name>
+                  <value>
+                   <array>
+                      <data>
+                        <value>
+                          <struct>
+                            <member>
+                              <name>Level</name>
+                              <value>1-2-1</value>
+                            </member>
+                            <member>
+                              <name>childExamples</name>
+                              <value>
+                               <array>
+                                  <data>
+                                  </data>
+                                </array>
+                              </value>
+                            </member>
+                          </struct>
+                        </value>
+                        <value>
+                          <struct>
+                            <member>
+                              <name>Level</name>
+                              <value>1-2-2</value>
+                            </member>
+                            <member>
+                              <name>childExamples</name>
+                              <value>
+                               <array>
+                                  <data>
+                                  </data>
+                                </array>
+                              </value>
+                            </member>
+                          </struct>
+                        </value>
+                      </data>
+                    </array>
+                  </value>
+                </member>
+              </struct>
+            </value>
+          </data>
+        </array>
+      </value>
+    </member>
+  </struct>
+</value>";
+      object obj = Utils.Parse(xml, typeof(RecursiveArrayMember), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      RecursiveArrayMember ret = (RecursiveArrayMember)obj;
     }
   }
 }

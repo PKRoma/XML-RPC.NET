@@ -494,6 +494,272 @@ namespace ntest
 </methodCall>", reqstr);
     }
 
+    class RecursiveMember
+    {
+      public string Level;
+      [XmlRpcMissingMapping(MappingAction.Ignore)]
+      public RecursiveMember childExample;
+    }
+
+    [Test]
+    public void RecursiveMemberTest()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      var example = new RecursiveMember
+      {
+        Level = "1",
+        childExample = new RecursiveMember
+        {
+          Level = "2",
+          childExample = new RecursiveMember
+          {
+            Level = "3",
+          }
+        }
+      };
+      req.args = new Object[] { example };
+      req.method = "Foo";
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.UseStringTag = false;
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+      Assert.AreEqual(
+@"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Foo</methodName>
+  <params>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>Level</name>
+            <value>1</value>
+          </member>
+          <member>
+            <name>childExample</name>
+            <value>
+              <struct>
+                <member>
+                  <name>Level</name>
+                  <value>2</value>
+                </member>
+                <member>
+                  <name>childExample</name>
+                  <value>
+                    <struct>
+                      <member>
+                        <name>Level</name>
+                        <value>3</value>
+                      </member>
+                    </struct>
+                  </value>
+                </member>
+              </struct>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
+    class RecursiveArrayMember
+    {
+      public string Level;
+      public RecursiveArrayMember[] childExamples;
+    }
+
+    [Test]
+    public void RecursiveArrayMemberTest()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      var example = new RecursiveArrayMember
+      {
+        Level = "1",
+        childExamples = new RecursiveArrayMember[]
+        {
+          new RecursiveArrayMember
+          {
+            Level = "1-1",
+            childExamples = new RecursiveArrayMember[]
+            {
+              new RecursiveArrayMember
+              {
+                Level = "1-1-1",
+                childExamples = new RecursiveArrayMember[]
+                {
+                }
+              },
+              new RecursiveArrayMember
+              {
+                Level = "1-1-2",
+                childExamples = new RecursiveArrayMember[]
+                {
+                }
+              }
+            }
+          },
+          new RecursiveArrayMember
+          {
+            Level = "1-2",
+            childExamples = new RecursiveArrayMember[]
+            {
+              new RecursiveArrayMember
+              {
+                Level = "1-2-1",
+                childExamples = new RecursiveArrayMember[]
+                {
+                }
+              },
+              new RecursiveArrayMember
+              {
+                Level = "1-2-2",
+                childExamples = new RecursiveArrayMember[]
+                {
+                }
+              }
+            }
+          }
+        }
+      };
+      req.args = new Object[] { example };
+      req.method = "Foo";
+      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ser.UseStringTag = false;
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+      Assert.AreEqual(
+@"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Foo</methodName>
+  <params>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>Level</name>
+            <value>1</value>
+          </member>
+          <member>
+            <name>childExamples</name>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <struct>
+                      <member>
+                        <name>Level</name>
+                        <value>1-1</value>
+                      </member>
+                      <member>
+                        <name>childExamples</name>
+                        <value>
+                          <array>
+                            <data>
+                              <value>
+                                <struct>
+                                  <member>
+                                    <name>Level</name>
+                                    <value>1-1-1</value>
+                                  </member>
+                                  <member>
+                                    <name>childExamples</name>
+                                    <value>
+                                      <array>
+                                        <data />
+                                      </array>
+                                    </value>
+                                  </member>
+                                </struct>
+                              </value>
+                              <value>
+                                <struct>
+                                  <member>
+                                    <name>Level</name>
+                                    <value>1-1-2</value>
+                                  </member>
+                                  <member>
+                                    <name>childExamples</name>
+                                    <value>
+                                      <array>
+                                        <data />
+                                      </array>
+                                    </value>
+                                  </member>
+                                </struct>
+                              </value>
+                            </data>
+                          </array>
+                        </value>
+                      </member>
+                    </struct>
+                  </value>
+                  <value>
+                    <struct>
+                      <member>
+                        <name>Level</name>
+                        <value>1-2</value>
+                      </member>
+                      <member>
+                        <name>childExamples</name>
+                        <value>
+                          <array>
+                            <data>
+                              <value>
+                                <struct>
+                                  <member>
+                                    <name>Level</name>
+                                    <value>1-2-1</value>
+                                  </member>
+                                  <member>
+                                    <name>childExamples</name>
+                                    <value>
+                                      <array>
+                                        <data />
+                                      </array>
+                                    </value>
+                                  </member>
+                                </struct>
+                              </value>
+                              <value>
+                                <struct>
+                                  <member>
+                                    <name>Level</name>
+                                    <value>1-2-2</value>
+                                  </member>
+                                  <member>
+                                    <name>childExamples</name>
+                                    <value>
+                                      <array>
+                                        <data />
+                                      </array>
+                                    </value>
+                                  </member>
+                                </struct>
+                              </value>
+                            </data>
+                          </array>
+                        </value>
+                      </member>
+                    </struct>
+                  </value>
+                </data>
+              </array>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
 
     //---------------------- XmlRpcStruct ------------------------------------// 
     [Test]

@@ -75,7 +75,7 @@ namespace ntest
           wrtr.Close();
         }
       }
-      catch (HttpListenerException ex)
+      catch (HttpListenerException)
       {
       }
     }

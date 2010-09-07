@@ -245,11 +245,15 @@ namespace CookComputing.XmlRpc
       if (stm == null)
         throw new ArgumentNullException("stm",
           "XmlRpcSerializer.DeserializeRequest");
-      XmlDocument xdoc = new XmlDocument();
+      XmlDocument xdoc = new XmlDocument(); 
       xdoc.PreserveWhitespace = true;
       try
       {
-        xdoc.Load(stm);
+        using (XmlTextReader xmlRdr = new XmlTextReader(stm))
+        {
+          xmlRdr.ProhibitDtd = true;
+          xdoc.Load(xmlRdr);
+        }
       }
       catch (Exception ex)
       {
@@ -268,7 +272,11 @@ namespace CookComputing.XmlRpc
       xdoc.PreserveWhitespace = true;
       try
       {
-        xdoc.Load(txtrdr);
+        using (XmlTextReader xmlRdr = new XmlTextReader(txtrdr))
+        {
+          xmlRdr.ProhibitDtd = true;
+          xdoc.Load(xmlRdr);
+        }
       }
       catch (Exception ex)
       {
@@ -354,11 +362,16 @@ namespace CookComputing.XmlRpc
       }
       XmlNode[] paramNodes = SelectNodes(paramsNode, "param");
       int paramsPos = GetParamsPos(pis);
-      if (paramNodes.Length < paramsPos)
+      int minParamCount = paramsPos == -1 ? pis.Length : paramsPos;
+      if (svcType != null && paramNodes.Length < minParamCount)
       {
         throw new XmlRpcInvalidParametersException(
-          "Method takes parameters and there is incorrect number of param "
-            + "elements.");
+          "Request contains too few param elements based on method signature.");
+      }
+      if (svcType != null && paramsPos == -1 && paramNodes.Length > pis.Length)
+      {
+        throw new XmlRpcInvalidParametersException(
+          "Request contains too many param elements based on method signature.");
       }
       ParseStack parseStack = new ParseStack("request");
       // TODO: use global action setting
@@ -496,7 +509,13 @@ namespace CookComputing.XmlRpc
       xdoc.PreserveWhitespace = true;
       try
       {
-        xdoc.Load(stm);
+        using (XmlTextReader xmlRdr = new XmlTextReader(stm))
+        {
+#if (!COMPACT_FRAMEWORK)
+          xmlRdr.ProhibitDtd = true;
+#endif
+          xdoc.Load(xmlRdr);
+        }
       }
       catch (Exception ex)
       {
@@ -515,7 +534,13 @@ namespace CookComputing.XmlRpc
       xdoc.PreserveWhitespace = true;
       try
       {
-        xdoc.Load(txtrdr);
+        using (XmlTextReader xmlRdr = new XmlTextReader(txtrdr))
+        {
+#if (!COMPACT_FRAMEWORK)
+          xmlRdr.ProhibitDtd = true;
+#endif
+          xdoc.Load(xmlRdr);
+        }
       }
       catch (Exception ex)
       {
@@ -1150,7 +1175,7 @@ namespace CookComputing.XmlRpc
       {
         retObj = Activator.CreateInstance(valueType);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType
           + " contains struct value where "
@@ -1532,8 +1557,9 @@ namespace CookComputing.XmlRpc
       if (ValueType != null && ValueType != typeof(Object)
         && ValueType != typeof(System.Int64)
 #if !FX1_0
- && ValueType != typeof(long?))
+ && ValueType != typeof(long?)
 #endif
+      )
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType +
           " contains i8 value where "
@@ -1719,52 +1745,21 @@ namespace CookComputing.XmlRpc
               + StackDump(parseStack));
         }
         string s = child.Value;
-        try
+        // Allow various iso8601 formats, e.g.
+        //   XML-RPC spec yyyyMMddThh:mm:ss
+        //   WordPress yyyyMMddThh:mm:ssZ
+        //   TypePad yyyy-MM-ddThh:mm:ssZ
+        //   other yyyy-MM-ddThh:mm:ss
+        if (!DateTime8601.TryParseDateTime8601(s, out retVal))
         {
-          // XML-RPC spec yyyyMMddThh:mm:ss
-          string dateTimeFormat = "yyyyMMdd'T'HH':'mm':'ss";
-          if (AllowNonStandardDateTime)
-          {
-            if (s.IndexOf("T") == 8)
-            {
-              if (s.EndsWith("Z"))
-              {
-                // WordPress yyyyMMddThh:mm:ssZ
-                dateTimeFormat = "yyyyMMdd'T'HH':'mm':'ss'Z'";
-              }
-              else if (s.EndsWith("-00") || s.EndsWith("-0000")
-                || s.EndsWith("+00") || s.EndsWith("+0000"))
-              {
-                s = s.Substring(0, 17);
-              }
-            }
-            else
-            {
-              if (s.EndsWith("Z"))
-              {
-                // TypePad yyyy-MM-ddThh:mm:ssZ
-                dateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
-              }
-              else
-              {
-                // other yyyy-MM-ddThh:mm:ss
-                dateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss";
-              }
-            }
-          }
           if (MapZerosDateTimeToMinValue && s.StartsWith("0000")
             && (s == "00000000T00:00:00" || s == "0000-00-00T00:00:00Z"
             || s == "00000000T00:00:00Z" || s == "0000-00-00T00:00:00"))
             retVal = DateTime.MinValue;
-          else
-            retVal = DateTime.ParseExact(s, dateTimeFormat,
-              DateTimeFormatInfo.InvariantInfo);
-        }
-        catch (Exception)
-        {
-          throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
-            + " contains invalid dateTime value "
-            + StackDump(parseStack));
+          else 
+            throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
+              + " contains invalid dateTime value "
+              + StackDump(parseStack));
         }
       }
       finally

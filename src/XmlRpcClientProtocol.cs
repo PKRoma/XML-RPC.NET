@@ -38,6 +38,7 @@ namespace CookComputing.XmlRpc
   public class XmlRpcClientProtocol : Component, IXmlRpcProxy
   {
     #region Instance Variables
+    private bool _allowAutoRedirect = true;
 #if (!COMPACT_FRAMEWORK)
     private string _connectionGroupName = null;
 #endif
@@ -232,6 +233,12 @@ namespace CookComputing.XmlRpc
 
     #region Properties
 
+    public bool AllowAutoRedirect
+    {
+      get { return _allowAutoRedirect; }
+      set { _allowAutoRedirect = value; }
+    }
+
 #if (!COMPACT_FRAMEWORK)
     [Browsable(false)]
     public X509CertificateCollection ClientCertificates
@@ -412,6 +419,7 @@ namespace CookComputing.XmlRpc
 #if (!COMPACT_FRAMEWORK && !FX1_0)
       httpReq.ServicePoint.Expect100Continue = _expect100Continue;
 #endif
+      httpReq.AllowAutoRedirect = _allowAutoRedirect;
       webReq.Timeout = Timeout;
 #if (!COMPACT_FRAMEWORK)
       webReq.ConnectionGroupName = this._connectionGroupName;

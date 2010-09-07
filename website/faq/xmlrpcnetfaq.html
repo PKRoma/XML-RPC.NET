@@ -49,7 +49,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h1>XML-RPC.NET FAQ</h1>
 
-<p>19th December 2008. &copy; Charles Cook, 2002-2008.</p>
+<p>5th September 2010. &copy; Charles Cook, 2002-2010.</p>
 <p>Please send feedback, corrections, etc, to xmlrpcfaq@gmail.com.</p>
 <h2>Contents</h2>
 <p>1. Introduction</p>
@@ -248,8 +248,7 @@ XML-RPC.NET is used as a single assembly which contains both client and server
 classes. When used by another program, installation is simply a matter of 
 ensuring that the assembly is in the same directory as the program using it 
 or referred to using the program's config file if in another directory. There 
-are two builds of the assembly: <b>CookComputing.XmlRpc.dll</b> which runs
-on all versions of .NET and <b>CookComputing.XmlRpcV2.dll</b> which runs on 
+is one build of the assembly: <b>CookComputing.XmlRpcV2.dll</b> which runs on 
 .NET 2.0 onwards.  
 </p>
 
@@ -330,6 +329,11 @@ XML-RPC simple types are mapped to and from the following .NET types:
     <td>XML-RPC.NET by default outputs &lt;i4&gt;</td>
   </tr>
   <tr> 
+    <td>&lt;i8&gt;</td>
+    <td >System.Int64</td>
+    <td>Extension to XML-RPC.</td>
+  </tr>
+  <tr> 
     <td >&lt;boolean&gt;</td>
     <td >System.Boolean</td>
     <td>&nbsp;</td>
@@ -348,8 +352,7 @@ XML-RPC simple types are mapped to and from the following .NET types:
   <tr> 
     <td >&lt;dateTime.iso8601&gt;</td>
     <td >System.DateTime</td>
-    <td>Note that the format used in XML-RPC -<span style="font: Courier New, Courier, mono; font-size:smaller">YYYYMMDDTHH:mm:SS</span> 
-      - is not one of the formats described in the ISO8601 specification</td>
+    <td>&nbsp;</td>
   </tr>
   <tr> 
     <td >&lt;base64&gt;</td>
@@ -619,24 +622,10 @@ handled appropriately.
 <h3><a id="1.17"></a>1.17 With which versions of .NET is XML-RPC.NET compatible??</h3>
 
 <p>
-As of version 2.0.0 of XML-RPC.NET the distribution contains two assemblies 
-named CookComputing.XmlRpc.dll and CookComputing.XmlRpcV2.dll. 
+As of version 2.5.0 of XML-RPC.NET the distribution contains a single assembly 
+named CookComputing.XmlRpcV2.dll which is built for .NET 2.0 and so can be used
+with this and later versions of .NET.
 </p>
-
-<p>
-The CookComputing.XmlRpc assembly located in the bin1_0 directory is built 
-with the .NET 1.0 compiler (version 1.0.3705). This allows it to used with 
-all released versions of the .NET runtime and with code built for all those 
-versions. The version should be used where backwards compatibility is required. 
-</p>
-
-<p>
-The CookComputing.XmlRpcV2 assembly located in the bin directory is built with 
-the .NET 2.0 compiler (version 2.0.50727). This version takes advantage of 
-.NET 2.0 features such as generics and nullable types and only runs on the 
-.NET 2.0 runtime. 
-</p>
-
 
 <h2>2. Clients</h2>
 
@@ -730,7 +719,7 @@ an instance of the proxy class:
 </p>
 
 <pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
-proxy.Url = &quot;http://www.cookcomputing.com/SumAndDiff.rem&quot;);
+proxy.Url = &quot;http://www.cookcomputing.com/SumAndDiff.rem&quot;;
 SumAndDiffValue ret = proxy.SumAndDifference(2, 3);
 </pre>
 
@@ -740,7 +729,7 @@ Url. To use a different port add ':' followed by the port number to the host
 name. For example:
 </p>
 
-<pre>proxy.Url = &quot;http://www.cookcomputing.com:8080/SumAndDiff.rem&quot;);
+<pre>proxy.Url = &quot;http://www.cookcomputing.com:8080/SumAndDiff.rem&quot;;
 </pre>
 
 
@@ -1309,10 +1298,25 @@ some servers return it as a string. This flag is used to indicate that a string 
 acceptable and should be converted into an integer.
 </li>
 <li>
-AllowNonStandardDateTime - XML-RPC dateTime values should be in this format: 
-yyyyMMddThh:mm:ss. However some servers use different formats and this flag is used
-to allow these. The supported formats are yyyyMMddThh:mm:ssZ, yyyy-MM-ddThh:mm:ssZ,
-and yyyy-MM-ddThh:mm:ss.
+AllowNonStandardDateTime - deprecated - the following examples 
+illustrate the formats which are accepted by default with the '-' and 
+':' separators being optional (the XML-RPC spec describes the format as 
+19980717T14:08:55 but it's unclear whether this is an example of an ISO 8601 
+date/time format or a specification):
+<ul>
+<li>
+1998-07-17T14:08:55 
+</li>
+<li>
+1998-07-17T14:08:55Z 
+</li>
+<li>
+1998-07-17T14:08:55+01 
+</li>
+<li>
+1998-07-17T14:08:55+0100 
+</li>
+</ul>
 </li>
 <li>
 IgnoreDuplicateMembers - some servers return XML-RPC struct with two or more
