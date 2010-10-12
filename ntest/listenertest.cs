@@ -102,9 +102,26 @@ namespace ntest
       proxy.ResponseEvent += (sender, args) =>
       {
         response = args.ProxyID.ToString();
+
       };
       string name = proxy.GetStateName(1);
     }
+
+    [Test]
+    public void RequestEvent()
+    {
+      string response;
+      IStateName proxy = XmlRpcProxyGen.Create<IStateName>();
+      proxy.Url = "http://127.0.0.1:11000/";
+      proxy.AllowAutoRedirect = false;
+      proxy.RequestEvent += (sender, args) =>
+      {
+        response = args.ProxyID.ToString();
+
+      };
+      string name = proxy.GetStateName(1);
+    }
+
   }
 }
 
