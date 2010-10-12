@@ -91,6 +91,20 @@ namespace ntest
       Assert.IsNotNull(doc);
       Assert.IsTrue(doc.StartsWith("<html>"));
     }
+
+    [Test]
+    public void ResponseEvent()
+    {
+      string response;
+      IStateName proxy = XmlRpcProxyGen.Create<IStateName>();
+      proxy.Url = "http://127.0.0.1:11000/";
+      proxy.AllowAutoRedirect = false;
+      proxy.ResponseEvent += (sender, args) =>
+      {
+        response = args.ProxyID.ToString();
+      };
+      string name = proxy.GetStateName(1);
+    }
   }
 }
 
