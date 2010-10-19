@@ -872,6 +872,7 @@ namespace ntest
       try
       {
         XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(void));
+        Assert.Fail("Expected fault exception to be thrown");
       }
       catch (XmlRpcFaultException fex)
       {
@@ -879,7 +880,44 @@ namespace ntest
         Assert.AreEqual(fex.FaultString, "Too many parameters.");
       }
     }
- 
+
+    [Test]
+    public void FaultStringCodeWithAllowStringFaultCode()
+    {
+      // Alex Hung reported that some servers, e.g. WordPress, return fault code
+      // as a string
+      string xml = @"<?xml version=""1.0"" ?> 
+<methodResponse>
+  <fault>
+    <value>
+      <struct>
+        <member>
+          <name>faultCode</name>
+          <value><string>4</string></value>
+        </member>
+        <member>
+          <name>faultString</name>
+          <value><string>Too many parameters.</string></value>
+        </member>
+      </struct>
+    </value>
+  </fault>
+</methodResponse>";
+      StringReader sr = new StringReader(xml);
+      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      serializer.NonStandard = XmlRpcNonStandard.AllowStringFaultCode;
+      try
+      {
+        XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(void));
+        Assert.Fail("Expected fault exception to be thrown");
+      }
+      catch (XmlRpcFaultException fex)
+      {
+        Assert.AreEqual(fex.FaultCode, 4);
+        Assert.AreEqual(fex.FaultString, "Too many parameters.");
+      }
+    }
+  
     [Test]
     public void Yolanda()
     {

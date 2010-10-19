@@ -1827,23 +1827,20 @@ namespace CookComputing.XmlRpc
       catch (Exception ex)
       {
         // some servers incorrectly return fault code in a string
-        if (AllowStringFaultCode)
-          throw;
-        else
+        // ignore AllowStringFaultCode setting because existing applications
+        // may rely on incorrect handling of this setting
+        FaultStructStringCode faultStrCode;
+        try
         {
-          FaultStructStringCode faultStrCode;
-          try
-          {
-            faultStrCode = (FaultStructStringCode)ParseValue(structNode,
-              typeof(FaultStructStringCode), parseStack, mappingAction);
-            fault.faultCode = Convert.ToInt32(faultStrCode.faultCode);
-            fault.faultString = faultStrCode.faultString;
-          }
-          catch (Exception)
-          {
-            // use exception from when attempting to parse code as integer
-            throw ex;
-          }
+          faultStrCode = (FaultStructStringCode)ParseValue(structNode,
+            typeof(FaultStructStringCode), parseStack, mappingAction);
+          fault.faultCode = Convert.ToInt32(faultStrCode.faultCode);
+          fault.faultString = faultStrCode.faultString;
+        }
+        catch (Exception)
+        {
+          // use exception from when attempting to parse code as integer
+          throw ex;
         }
       }
       return new XmlRpcFaultException(fault.faultCode, fault.faultString);
