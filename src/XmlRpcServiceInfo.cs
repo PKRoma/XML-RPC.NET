@@ -359,6 +359,8 @@ namespace CookComputing.XmlRpc
         MemberInfo[] mis = t.GetMembers();
         foreach (MemberInfo mi in mis)
         {
+          if (Attribute.IsDefined(mi, typeof(NonSerializedAttribute)))
+            continue;
           if (mi.MemberType == MemberTypes.Field)
           {
             FieldInfo fi = (FieldInfo)mi;
