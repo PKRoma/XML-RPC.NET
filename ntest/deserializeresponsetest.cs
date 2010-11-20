@@ -24,7 +24,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
 
       Object o = response.retVal;
@@ -45,7 +45,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(int));
 
       Object o = response.retVal;
@@ -66,7 +66,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
 
       Object o = response.retVal;
@@ -87,7 +87,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(int));
 
       Object o = response.retVal;
@@ -110,7 +110,7 @@ namespace ntest
   </params>
 </methodResponse>";
         StringReader sr = new StringReader(xml);
-        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcDeserializer serializer = new XmlRpcDeserializer();
         XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(string));
         Assert.Fail("Should throw XmlRpcTypeMismatchException");
       }
@@ -136,7 +136,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
 
       Object o = response.retVal;
@@ -157,7 +157,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
 
       Object o = response.retVal;
@@ -178,7 +178,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(string));
 
       Object o = response.retVal;
@@ -199,7 +199,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(string));
 
       Object o = response.retVal;
@@ -222,7 +222,7 @@ namespace ntest
   </params>
 </methodResponse>";
         StringReader sr = new StringReader(xml);
-        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcDeserializer serializer = new XmlRpcDeserializer();
         XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(int));
         Assert.Fail("Should throw XmlRpcTypeMismatchException");
       }
@@ -243,7 +243,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(string));
 
       Object o = response.retVal;
@@ -268,7 +268,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
       XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(DateTime));
       Object o = response.retVal;
@@ -288,7 +288,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
       XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(DateTime));
 
@@ -309,7 +309,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
       XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(DateTime));
 
@@ -330,7 +330,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
       XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(DateTime));
 
@@ -351,7 +351,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       try
       {
@@ -395,7 +395,7 @@ namespace ntest
 </methodResponse>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response 
         = serializer.DeserializeResponse(sr, typeof(object));
       
@@ -426,7 +426,7 @@ namespace ntest
 </methodResponse>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response 
         = serializer.DeserializeResponse(sr, typeof(XmlRpcStruct));
       
@@ -464,7 +464,7 @@ namespace ntest
 </methodResponse>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
       
       Object o = response.retVal;
@@ -512,7 +512,7 @@ namespace ntest
 </methodResponse>";      
 
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
       Object o = response.retVal;
 
@@ -566,7 +566,7 @@ namespace ntest
 </methodResponse>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response 
         = serializer.DeserializeResponse(sr, typeof(MyStruct));
       
@@ -592,7 +592,7 @@ namespace ntest
 
 </methodResponse>"; 
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response 
         = serializer.DeserializeResponse(sr, typeof(int));
       
@@ -629,7 +629,7 @@ namespace ntest
   </params> 
 </methodResponse>"; 
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       try
       {
         XmlRpcResponse response 
@@ -678,7 +678,7 @@ namespace ntest
   </params> 
 </methodResponse>"; 
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response 
         = serializer.DeserializeResponse(sr, typeof(BillStruct));
       
@@ -709,7 +709,7 @@ namespace ntest
 </params>
 </methodResponse>"; 
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       try 
       {
         XmlRpcResponse response 
@@ -734,7 +734,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(void));
       Assert.IsTrue(response.retVal == null, "retval is null");
     }
@@ -751,7 +751,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(string));
       string s = (string)response.retVal;
       Assert.IsTrue(s == "", "retval is empty string");
@@ -802,7 +802,7 @@ namespace ntest
       using(Stream stm = new FileStream("../iso-8859-1_response.xml",
                FileMode.Open, FileAccess.Read))
       {
-        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        XmlRpcDeserializer serializer = new XmlRpcDeserializer();
         XmlRpcResponse response 
           = serializer.DeserializeResponse(stm, typeof(String));
         String ret = (String)response.retVal;
@@ -833,7 +833,7 @@ namespace ntest
   </fault>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       try
       {
         XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(void));
@@ -868,7 +868,7 @@ namespace ntest
   </fault>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       try
       {
         XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(void));
@@ -904,7 +904,7 @@ namespace ntest
   </fault>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowStringFaultCode;
       try
       {
@@ -923,7 +923,7 @@ namespace ntest
     {
       string xml = @"<?xml version=""1.0"" encoding=""ISO-8859-1""?><methodResponse><params><param><value><array><data><value>addressbook</value><value>system</value></data></array></value></param></params></methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
 
       Object o = response.retVal;
@@ -937,7 +937,7 @@ namespace ntest
 + "</double></value></member><member><name>scalebar</name><value><int>1</int></value></member><member><name>content</name><value><string>http://mapserv.where2getit.net/maptools/mapserv.cgi/a5955239d080dfbb7002fd063aa7b47e0d.png</string></value></member><member><name>scale</name><value><int>26000</int></value></member><member><name>map_style</name><value><string>default</string></value></member><member><name>size</name><value><array><data><value><int>600</int></value><value><int>400</int></value></data></array></value></member><member><name>content_type</name><value><string>text/uri-list</string></value></member><member><name>buffer</name><value><double>0.01</double></value></member><member><name>center</name><value><struct><member><name>georesult</name><value><string>AUTOBBOX</string></value></member><member><name>latitude</name><value><double>39.74147878</double></value></member><member><name>longitude</name><value><double>-104.9874159</double></value></member></struct></value></member></struct></value></member><member><name>result_count</name><value><int>1</int></value></member><member><name>image_map</name><value><boolean>1</boolean></value></member><member><name>result_total_count</name><value><int>1</int></value></member></struct></value></member><member><name>times</name><value><struct><member><name>csys</name><value><int>0</int></value></member><member><name>cusr</name><value><int>0</int></value></member><member><name>sys</name><value><int>0</int></value></member><member><name>usr</name><value><double>0.0200000000000005"
         + "</double></value></member><member><name>wallclock</name><value><double>2.547471</double></value></member></struct></value></member><member><name>request</name><value><struct><member><name>state</name><value><string>CO</string></value></member><member><name>%sort</name><value><array><data /></array></value></member><member><name>%id</name><value><string>4669b341d87be7f450b4bf0dc4cd0a1e</string></value></member><member><name>city</name><value><string>denver</string></value></member><member><name>%limit</name><value><int>10</int></value></member><member><name>%offset</name><value><int>0</int></value></member></struct></value></member></struct></value></param></params></methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr, 
         typeof(XmlRpcStruct));
 
@@ -979,7 +979,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       try
       {
         XmlRpcResponse response1 = serializer.DeserializeResponse(sr1, typeof(DupMem));
@@ -1022,7 +1022,7 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       try
       {
         XmlRpcResponse response1 = serializer.DeserializeResponse(sr1, typeof(XmlRpcStruct));
@@ -1059,8 +1059,8 @@ namespace ntest
       StreamWriter wrtr = new StreamWriter(stm, Encoding.ASCII);
       wrtr.Write(xml);
       wrtr.Flush();
-      stm.Position = 0; 
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      stm.Position = 0;
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
     }
 
@@ -1082,8 +1082,8 @@ namespace ntest
       StreamWriter wrtr = new StreamWriter(stm, Encoding.ASCII);
       wrtr.Write(xml);
       wrtr.Flush();
-      stm.Position = 0; 
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      stm.Position = 0;
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
       XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
 
@@ -1114,7 +1114,7 @@ namespace ntest
       wrtr.Flush();
       stm.Position = 0;
 
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
       XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
 
@@ -1133,8 +1133,8 @@ namespace ntest
       StreamWriter wrtr = new StreamWriter(stm, Encoding.ASCII);
       wrtr.Write(xml);
       wrtr.Flush();
-      stm.Position = 0; 
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      stm.Position = 0;
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
     }
 
@@ -1147,8 +1147,8 @@ namespace ntest
       StreamWriter wrtr = new StreamWriter(stm, Encoding.ASCII);
       wrtr.Write(xml);
       wrtr.Flush();
-      stm.Position = 0; 
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      stm.Position = 0;
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
       XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
     }
@@ -1163,7 +1163,7 @@ namespace ntest
       wrtr.Write(xml);
       wrtr.Flush();
       stm.Position = 0;
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
       XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
     }
@@ -1178,7 +1178,7 @@ namespace ntest
       wrtr.Write(xml);
       wrtr.Flush();
       stm.Position = 0;
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
       XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
     }
@@ -1209,7 +1209,7 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
       XmlRpcResponse response = serializer.DeserializeResponse(sr1,
         typeof(XmlRpcStruct));
@@ -1238,7 +1238,7 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
       XmlRpcResponse response = serializer.DeserializeResponse(sr1, 
         typeof(XmlRpcStruct));
@@ -1266,7 +1266,7 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
       XmlRpcResponse response = serializer.DeserializeResponse(sr1, 
         typeof(XmlRpcStruct));
@@ -1303,7 +1303,7 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
       XmlRpcResponse response = serializer.DeserializeResponse(sr1,
         typeof(Donhrobjartz));
@@ -1332,7 +1332,7 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
       XmlRpcResponse response = serializer.DeserializeResponse(sr1,
         typeof(Donhrobjartz));
@@ -1360,7 +1360,7 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
       XmlRpcResponse response = serializer.DeserializeResponse(sr1,
         typeof(Donhrobjartz));
@@ -1430,7 +1430,7 @@ This should be ignored.
  </params>
  </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
       XmlRpcResponse response = serializer.DeserializeResponse(sr1,
         typeof(Category[]));
@@ -1445,7 +1445,7 @@ This should be ignored.
 </methodResponse>
 ";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcResponse response = serializer.DeserializeResponse(sr1,
         typeof(void));
       Assert.IsNull(response.retVal);

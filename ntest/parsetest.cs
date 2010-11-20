@@ -317,7 +317,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>2002-07-06T11:25:37</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error, serializer,
         out parsedType, out parsedArrayType);
@@ -332,7 +332,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T11:25:37Z</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -347,7 +347,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>2002-07-06T11:25:37Z</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -362,7 +362,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T12:25:37+01</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -377,7 +377,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T12:55:37+0130</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -392,7 +392,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T12:55:37+01:30</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -407,7 +407,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T11:25:37+00</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -422,7 +422,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T11:25:37+0000</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -437,7 +437,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T10:25:37-01</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -452,7 +452,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T09:55:37-0130</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -467,7 +467,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T09:55:37-01:30</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -482,7 +482,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T11:25:37-00</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -497,7 +497,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20020706T11:25:37-0000</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);
@@ -511,7 +511,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>0000-00-00T00:00:00</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error, serializer,
         out parsedType, out parsedArrayType);
@@ -524,7 +524,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>0000-00-00T00:00:00Z</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error, serializer,
         out parsedType, out parsedArrayType);
@@ -537,7 +537,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>00000000T00:00:00Z</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error, serializer,
         out parsedType, out parsedArrayType);
@@ -550,7 +550,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>0000-00-00T00:00:00</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error, serializer,
         out parsedType, out parsedArrayType);
@@ -563,7 +563,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601></dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.MapEmptyDateTimeToMinValue;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error, serializer,
         out parsedType, out parsedArrayType);
@@ -577,7 +577,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601></dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error, serializer,
         out parsedType, out parsedArrayType);
     }
@@ -588,7 +588,7 @@ namespace ntest
       Type parsedType, parsedArrayType;
       string xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601>20090209T22:20:01+01:00</dateTime.iso8601></value>";
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       object obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error,
         serializer, out parsedType, out parsedArrayType);

@@ -162,11 +162,11 @@ namespace CookComputing.XmlRpc
       ITransportHeaders headers,
       Stream stream)
     {
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
       object tp = mcm.MethodBase;           
       System.Reflection.MethodInfo mi = (System.Reflection.MethodInfo)tp;
       System.Type t = mi.ReturnType;
-      XmlRpcResponse xmlRpcResp = serializer.DeserializeResponse(stream, t);
+      XmlRpcResponse xmlRpcResp = deserializer.DeserializeResponse(stream, t);
       IMessage imsg = new ReturnMessage(xmlRpcResp.retVal, null, 0, null, mcm);
       return imsg;
     } 

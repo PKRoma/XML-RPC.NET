@@ -82,9 +82,9 @@ namespace ntest
       out Type parsedArrayType)
     {
       XmlNode node = SelectValueNode(xdoc.SelectSingleNode("value"));               
-      XmlRpcSerializer.ParseStack parseStack 
-        = new XmlRpcSerializer.ParseStack("request");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      ParseStack parseStack 
+        = new ParseStack("request");
+      XmlRpcDeserializer ser = new XmlRpcDeserializer();
       object obj = ser.ParseValue(node, valueType, parseStack, action,
         out parsedType, out parsedArrayType);
       return obj;
@@ -94,7 +94,7 @@ namespace ntest
       string xml,
       Type valueType,
       MappingAction action,
-      XmlRpcSerializer serializer,
+      XmlRpcDeserializer serializer,
       out Type parsedType,
       out Type parsedArrayType)
     {
@@ -110,13 +110,12 @@ namespace ntest
       XmlDocument xdoc,
       Type valueType,
       MappingAction action,
-      XmlRpcSerializer serializer,
+      XmlRpcDeserializer serializer,
       out Type parsedType,
       out Type parsedArrayType)
     {
       XmlNode node = SelectValueNode(xdoc.SelectSingleNode("value"));
-      XmlRpcSerializer.ParseStack parseStack
-        = new XmlRpcSerializer.ParseStack("request");
+      ParseStack parseStack = new ParseStack("request");
       object obj = serializer.ParseValue(node, valueType, parseStack, action,
         out parsedType, out parsedArrayType);
       return obj;

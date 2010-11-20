@@ -129,6 +129,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IXmlRpcProxy.cs" />
+    <Compile Include="ParseStack.cs" />
     <Compile Include="RequestResponseLogger.cs" />
     <Compile Include="SystemMethodsBase.cs" />
     <Compile Include="Tracer.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="XmlRpcDateTime.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcDeserializer.cs" />
     <Compile Include="XmlRpcDocWriter.cs">
       <SubType>Code</SubType>
     </Compile>

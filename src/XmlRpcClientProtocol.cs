@@ -155,7 +155,6 @@ namespace CookComputing.XmlRpc
             serializer.XmlEncoding = _xmlEncoding;
           serializer.UseIndentation = _useIndentation;
           serializer.Indentation = _indentation;
-          serializer.NonStandard = _nonStandard;
           serializer.UseStringTag = _useStringTag;
           serializer.UseIntTag = _useIntTag;
           serializer.UseEmptyParamsTag = _useEmptyParamsTag;
@@ -484,13 +483,13 @@ namespace CookComputing.XmlRpc
         else
           throw new XmlRpcServerException(httpResp.StatusDescription);
       }
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      serializer.NonStandard = _nonStandard;
+      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
+      deserializer.NonStandard = _nonStandard;
       Type retType = returnType;
       if (retType == null)
         retType = req.mi.ReturnType;
       XmlRpcResponse xmlRpcResp
-        = serializer.DeserializeResponse(respStm, retType);
+        = deserializer.DeserializeResponse(respStm, retType);
       return xmlRpcResp;
     }
 
