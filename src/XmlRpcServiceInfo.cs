@@ -261,23 +261,15 @@ namespace CookComputing.XmlRpc
       XmlRpcType ret;
       if (t == typeof(Int32))
         ret = XmlRpcType.tInt32;
-      else if (t == typeof(XmlRpcInt))
-        ret = XmlRpcType.tInt32;
       else if (t == typeof(Int64))
         ret = XmlRpcType.tInt64;
       else if (t == typeof(Boolean))
-        ret = XmlRpcType.tBoolean;
-      else if (t == typeof(XmlRpcBoolean))
         ret = XmlRpcType.tBoolean;
       else if (t == typeof(String))
         ret = XmlRpcType.tString;
       else if (t == typeof(Double))
         ret = XmlRpcType.tDouble;
-      else if (t == typeof(XmlRpcDouble))
-        ret = XmlRpcType.tDouble;
       else if (t == typeof(DateTime))
-        ret = XmlRpcType.tDateTime;
-      else if (t == typeof(XmlRpcDateTime))
         ret = XmlRpcType.tDateTime;
       else if (t == typeof(byte[]))
         ret = XmlRpcType.tBase64;

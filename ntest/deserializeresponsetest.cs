@@ -388,6 +388,12 @@ namespace ntest
               <string>this is a test</string>
             </value>
           </member>
+          <member>
+            <name>key4</name>
+            <value>
+              <string>this is a test 2</string>
+            </value>
+          </member>
         </struct>
       </value>
     </param>
@@ -401,6 +407,9 @@ namespace ntest
       
       Object o = response.retVal;
       string ret = (string)((XmlRpcStruct)o)["key3"];
+      Assert.AreEqual("this is a test", ret);
+      string ret2 = (string)((XmlRpcStruct)o)["key4"];
+      Assert.AreEqual("this is a test 2", ret2);
     }
 
 
@@ -1308,7 +1317,7 @@ This should be ignored.
       XmlRpcResponse response = serializer.DeserializeResponse(sr1,
         typeof(Donhrobjartz));
       Donhrobjartz ret = (Donhrobjartz)response.retVal;
-      Assert.AreEqual(ret.period, "1w");
+      Assert.AreEqual("1w", ret.period);
     }
 
     [Test]

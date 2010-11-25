@@ -33,10 +33,10 @@ namespace ntest
       public DateTime mdt;
       public byte[] mb64;
       public int[] ma;
-      public XmlRpcInt xi;
-      public XmlRpcBoolean xb;
-      public XmlRpcDouble xd;
-      public XmlRpcDateTime xdt;
+      public int? xi;
+      public bool? xb;
+      public double? xd;
+      public DateTime? xdt;
       public XmlRpcStruct xstr;
 #if !FX1_0
       public int? nxi;
@@ -57,10 +57,10 @@ namespace ntest
       public DateTime mdt;
       public byte[] mb64;
       public int[] ma;
-      public XmlRpcInt xi;
-      public XmlRpcBoolean xb;
-      public XmlRpcDouble xd;
-      public XmlRpcDateTime xdt;
+      public int? xi;
+      public bool? xb;
+      public double? xd;
+      public DateTime? xdt;
       public XmlRpcStruct xstr;
 #if !FX1_0
       public int? nxi;
@@ -88,13 +88,13 @@ namespace ntest
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public int[] ma;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcInt xi;
+      public int? xi;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcBoolean xb;
+      public bool? xb;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcDouble xd;
+      public double? xd;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcDateTime xdt;
+      public DateTime? xdt;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public XmlRpcStruct xstr;
 #if !FX1_0
@@ -129,13 +129,13 @@ namespace ntest
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public int[] ma;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcInt xi;
+      public int? xi;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcBoolean xb;
+      public bool? xb;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcDouble xd;
+      public double? xd;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcDateTime xdt;
+      public DateTime? xdt;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public XmlRpcStruct xstr;
 #if !FX1_0
@@ -178,10 +178,10 @@ namespace ntest
       Assert.AreEqual(new DateTime(), ((Struct1)obj).mdt, "dateTime member");
       Assert.AreEqual(null, ((Struct1)obj).mb64, "base64 member"); 
       Assert.AreEqual(null, ((Struct1)obj).ma, "array member"); 
-      Assert.AreEqual(null, ((Struct1)obj).xi, "XmlRpcInt member"); 
-      Assert.AreEqual(null, ((Struct1)obj).xb, "XmlRpcBoolean member"); 
+      Assert.AreEqual(null, ((Struct1)obj).xi, "int? member"); 
+      Assert.AreEqual(null, ((Struct1)obj).xb, "bool? member"); 
       Assert.AreEqual(null, ((Struct1)obj).xd, "XmlRpcDouble member"); 
-      Assert.AreEqual(null, ((Struct1)obj).xdt, "XmlRpcDateTime member");                
+      Assert.AreEqual(null, ((Struct1)obj).xdt, "DateTime? member");                
       Assert.AreEqual(null, ((Struct1)obj).xstr, "XmlRpcStructTime member");
 #if !FX1_0
       Assert.AreEqual(null, ((Struct1)obj).nxi, "int? member");
@@ -232,7 +232,7 @@ namespace ntest
       Assert.AreEqual(new DateTime(2002, 7, 7, 11, 25, 37), ((Struct1)obj).mdt, "dateTime member");
 // TODO:      Assert.AreEqual(null, ((Struct1)obj).mb64, "base64 member");
 // TODO:       Assert.AreEqual(null, ((Struct1)obj).ma, "array member");
-      Assert.AreEqual(23456, ((Struct1)obj).xi, "XmlRpcInt member");
+      Assert.AreEqual(23456, ((Struct1)obj).xi, "int? member");
       Assert.IsTrue(true == ((Struct1)obj).xb);
       Assert.IsTrue(2345.678 == ((Struct1)obj).xd);
       Assert.IsTrue(new DateTime(2003, 8, 8, 11, 25, 37).Equals(((Struct1)obj).xdt));
@@ -260,10 +260,10 @@ namespace ntest
       Assert.AreEqual(new DateTime(), ((Struct2)obj).mdt, "dateTime member");
       Assert.AreEqual(null, ((Struct2)obj).mb64, "base64 member");        
       Assert.AreEqual(null, ((Struct2)obj).ma, "array member"); 
-      Assert.AreEqual(null, ((Struct2)obj).xi, "XmlRpcInt member"); 
-      Assert.AreEqual(null, ((Struct2)obj).xb, "XmlRpcBoolean member"); 
+      Assert.AreEqual(null, ((Struct2)obj).xi, "int? member"); 
+      Assert.AreEqual(null, ((Struct2)obj).xb, "bool? member"); 
       Assert.AreEqual(null, ((Struct2)obj).xd, "XmlRpcDouble member"); 
-      Assert.AreEqual(null, ((Struct2)obj).xdt, "XmlRpcDateTime member");                
+      Assert.AreEqual(null, ((Struct2)obj).xdt, "DateTime? member");                
       Assert.AreEqual(null, ((Struct2)obj).xstr, "XmlRpcStructTime member");
 #if !FX1_0
       Assert.AreEqual(null, ((Struct2)obj).nxi, "int? member");
@@ -289,10 +289,10 @@ namespace ntest
       Assert.AreEqual(new DateTime(), ((Struct3)obj).mdt, "dateTime member");
       Assert.AreEqual(null, ((Struct3)obj).mb64, "base64 member");        
       Assert.AreEqual(null, ((Struct3)obj).ma, "array member"); 
-      Assert.AreEqual(null, ((Struct3)obj).xi, "XmlRpcInt member"); 
-      Assert.AreEqual(null, ((Struct3)obj).xb, "XmlRpcBoolean member"); 
+      Assert.AreEqual(null, ((Struct3)obj).xi, "int? member"); 
+      Assert.AreEqual(null, ((Struct3)obj).xb, "bool? member"); 
       Assert.AreEqual(null, ((Struct3)obj).xd, "XmlRpcDouble member"); 
-      Assert.AreEqual(null, ((Struct3)obj).xdt, "XmlRpcDateTime member");                
+      Assert.AreEqual(null, ((Struct3)obj).xdt, "DateTime? member");                
       Assert.AreEqual(null, ((Struct3)obj).xstr, "XmlRpcStructTime member");
 #if !FX1_0
       Assert.AreEqual(null, ((Struct3)obj).nxi, "int? member");
@@ -318,10 +318,10 @@ namespace ntest
       Assert.AreEqual(new DateTime(), ((Struct4)obj).mdt, "dateTime member");
       Assert.AreEqual(null, ((Struct4)obj).mb64, "base64 member");        
       Assert.AreEqual(null, ((Struct4)obj).ma, "array member"); 
-      Assert.AreEqual(null, ((Struct4)obj).xi, "XmlRpcInt member"); 
-      Assert.AreEqual(null, ((Struct4)obj).xb, "XmlRpcBoolean member"); 
+      Assert.AreEqual(null, ((Struct4)obj).xi, "int? member"); 
+      Assert.AreEqual(null, ((Struct4)obj).xb, "bool? member"); 
       Assert.AreEqual(null, ((Struct4)obj).xd, "XmlRpcDouble member"); 
-      Assert.AreEqual(null, ((Struct4)obj).xdt, "XmlRpcDateTime member");                
+      Assert.AreEqual(null, ((Struct4)obj).xdt, "DateTime? member");                
       Assert.AreEqual(null, ((Struct4)obj).xstr, "XmlRpcStructTime member");
 #if !FX1_0
       Assert.AreEqual(null, ((Struct4)obj).nxi, "int? member");
@@ -347,16 +347,16 @@ namespace ntest
       Assert.AreEqual(new DateTime(), ((Struct4)obj).mdt, "dateTime member");
       Assert.AreEqual(null, ((Struct4)obj).mb64, "base64 member");        
       Assert.AreEqual(null, ((Struct4)obj).ma, "array member"); 
-      Assert.AreEqual(null, ((Struct4)obj).xi, "XmlRpcInt member"); 
-      Assert.AreEqual(null, ((Struct4)obj).xb, "XmlRpcBoolean member"); 
+      Assert.AreEqual(null, ((Struct4)obj).xi, "int? member"); 
+      Assert.AreEqual(null, ((Struct4)obj).xb, "bool? member"); 
       Assert.AreEqual(null, ((Struct4)obj).xd, "XmlRpcDouble member"); 
-      Assert.AreEqual(null, ((Struct4)obj).xdt, "XmlRpcDateTime member");                
+      Assert.AreEqual(null, ((Struct4)obj).xdt, "DateTime? member");                
       Assert.AreEqual(null, ((Struct4)obj).xstr, "XmlRpcStructTime member");
 #if !FX1_0
-      Assert.AreEqual(null, ((Struct4)obj).xi, "XmlRpcInt member");
-      Assert.AreEqual(null, ((Struct4)obj).xb, "XmlRpcBoolean member");
+      Assert.AreEqual(null, ((Struct4)obj).xi, "int? member");
+      Assert.AreEqual(null, ((Struct4)obj).xb, "bool? member");
       Assert.AreEqual(null, ((Struct4)obj).xd, "XmlRpcDouble member");
-      Assert.AreEqual(null, ((Struct4)obj).xdt, "XmlRpcDateTime member");
+      Assert.AreEqual(null, ((Struct4)obj).xdt, "DateTime? member");
 #endif
     }
 

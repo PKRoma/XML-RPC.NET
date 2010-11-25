@@ -294,11 +294,7 @@ namespace CookComputing.XmlRpc
         }
         else if (xType == XmlRpcType.tBoolean)
         {
-          bool boolVal;
-          if (o is bool)
-            boolVal = (bool)o;
-          else
-            boolVal = (bool)(XmlRpcBoolean)o;
+          bool boolVal = (bool)o;
           if (boolVal)
             xtw.WriteElementString("boolean", "1");
           else
@@ -306,22 +302,14 @@ namespace CookComputing.XmlRpc
         }
         else if (xType == XmlRpcType.tDateTime)
         {
-          DateTime dt;
-          if (o is DateTime)
-            dt = (DateTime)o;
-          else
-            dt = (XmlRpcDateTime)o;
+          DateTime dt = (DateTime)o;
           string sdt = dt.ToString("yyyyMMdd'T'HH':'mm':'ss",
           DateTimeFormatInfo.InvariantInfo);
           xtw.WriteElementString("dateTime.iso8601", sdt);
         }
         else if (xType == XmlRpcType.tDouble)
         {
-          double doubleVal;
-          if (o is double)
-            doubleVal = (double)o;
-          else
-            doubleVal = (XmlRpcDouble)o;
+          double doubleVal = (double)o;
           xtw.WriteElementString("double", doubleVal.ToString(null,
           CultureInfo.InvariantCulture));
         }
