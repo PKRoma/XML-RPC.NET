@@ -18,7 +18,7 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>xmlrpc</RootNamespace>
+    <RootNamespace>CookComputing.XmlRpc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -29,6 +29,7 @@
     <SignAssembly Condition="'$(BuildingInsideVisualStudio)' == ''">false</SignAssembly>
     <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -41,7 +42,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -119,19 +119,9 @@
     <Compile Include="GuidEx.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IHttpRequest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IHttpRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IHttpResponse.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="IXmlRpcProxy.cs" />
     <Compile Include="ParseStack.cs" />
     <Compile Include="RequestResponseLogger.cs" />
-    <Compile Include="SystemMethodsBase.cs" />
     <Compile Include="Tracer.cs" />
     <Compile Include="util.cs">
       <SubType>Code</SubType>
@@ -152,9 +142,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="XmlRpcDeserializer.cs" />
-    <Compile Include="XmlRpcDocWriter.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="XmlRpcEndAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -164,18 +151,6 @@
     <Compile Include="XmlRpcFaultException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XmlRpcHttpRequest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcHttpResponse.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcHttpServerProtocol.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcListenerRequest.cs" />
-    <Compile Include="XmlRpcListenerResponse.cs" />
-    <Compile Include="XmlRpcListenerService.cs" />
     <Compile Include="XmlRpcLogger.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -214,18 +189,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XmlRpcSerializer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcServerFormatterSink.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcServerFormatterSinkProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcServerProtocol.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcService.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XmlRpcServiceAttribute.cs">

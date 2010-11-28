@@ -27,7 +27,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OSVersion>4.20</OSVersion>
-    <OldToolsVersion>3.5</OldToolsVersion>
+    <OldToolsVersion>4.0</OldToolsVersion>
     <NativePlatformName>Pocket PC 2003</NativePlatformName>
   </PropertyGroup>
   <PropertyGroup>

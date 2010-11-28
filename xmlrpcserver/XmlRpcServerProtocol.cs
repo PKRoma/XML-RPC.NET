@@ -38,8 +38,8 @@ namespace CookComputing.XmlRpc
     {
       try
       {
-        XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
-        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        var serializer = new XmlRpcSerializer();
+        var deserializer = new XmlRpcDeserializer();
         Type type = this.GetType();
         XmlRpcServiceAttribute serviceAttr = (XmlRpcServiceAttribute)
           Attribute.GetCustomAttribute(this.GetType(),
@@ -53,7 +53,7 @@ namespace CookComputing.XmlRpc
           serializer.UseIndentation = serviceAttr.UseIndentation;
           serializer.Indentation = serviceAttr.Indentation;
         }
-        XmlRpcRequest xmlRpcReq 
+        XmlRpcRequest xmlRpcReq
           = deserializer.DeserializeRequest(requestStream, this.GetType());
         XmlRpcResponse xmlRpcResp = Invoke(xmlRpcReq);
         Stream responseStream = new MemoryStream();

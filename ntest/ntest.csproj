@@ -92,6 +92,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CookComputing.XmlRpcServerV3">
+      <HintPath>..\bin\CookComputing.XmlRpcServerV3.dll</HintPath>
+    </Reference>
     <Reference Include="CookComputing.XmlRpcV2, Version=0.0.0.0, Culture=neutral" Condition="'$(TargetFX1_0)'!='true'">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\bin\CookComputing.XmlRpcV2.dll</HintPath>
@@ -108,9 +111,6 @@
     </Reference>
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Services">
-      <Name>System.Web.Services</Name>
-    </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>

@@ -132,7 +132,7 @@ namespace CookComputing.XmlRpc
     {
       string requestUri = (string) requestHeaders["__RequestUri"];
       Type svcType = GetServiceType(requestUri);
-      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcDeserializer();
       XmlRpcRequest xmlRpcReq 
         = deserializer.DeserializeRequest(requestStream, svcType);
       Header[] headers = GetChannelHeaders(requestHeaders, xmlRpcReq, svcType);
