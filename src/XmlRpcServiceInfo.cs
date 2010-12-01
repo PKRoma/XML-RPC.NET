@@ -63,7 +63,7 @@ namespace CookComputing.XmlRpc
       else
         svcInfo.Name = type.Name;
       // extract method info
-      Hashtable methods = new Hashtable();
+      var methods = new Dictionary<string, XmlRpcMethodInfo>();
 
       foreach (Type itf in type.GetInterfaces())
       {
@@ -87,7 +87,7 @@ namespace CookComputing.XmlRpc
 
       foreach (MethodInfo mi in type.GetMethods())
       {
-        ArrayList mthds = new ArrayList();
+        var mthds = new List<MethodInfo>();
         mthds.Add(mi);
         MethodInfo curMi = mi;
         while (true)
@@ -109,7 +109,8 @@ namespace CookComputing.XmlRpc
       return svcInfo;
     }
 
-    static void ExtractMethodInfo(Hashtable methods, MethodInfo mi, Type type)
+    static void ExtractMethodInfo(Dictionary<string, XmlRpcMethodInfo> methods, 
+      MethodInfo mi, Type type)
     {
       XmlRpcMethodAttribute attr = (XmlRpcMethodAttribute)
         Attribute.GetCustomAttribute(mi,
@@ -123,7 +124,7 @@ namespace CookComputing.XmlRpc
       mthdInfo.Doc = attr.Description;
       mthdInfo.IsHidden = attr.IntrospectionMethod | attr.Hidden;
       // extract parameters information
-      ArrayList parmList = new ArrayList();
+      var parmList = new List<XmlRpcParameterInfo>();
       ParameterInfo[] parms = mi.GetParameters();
       foreach (ParameterInfo parm in parms)
       {
@@ -145,8 +146,7 @@ namespace CookComputing.XmlRpc
           typeof(ParamArrayAttribute));
         parmList.Add(parmInfo);
       }
-      mthdInfo.Parameters = (XmlRpcParameterInfo[])
-        parmList.ToArray(typeof(XmlRpcParameterInfo));
+      mthdInfo.Parameters = parmList.ToArray();
       // extract return type information
       mthdInfo.ReturnType = mi.ReturnType;
       mthdInfo.ReturnXmlRpcType = GetXmlRpcTypeString(mi.ReturnType);
@@ -253,10 +253,10 @@ namespace CookComputing.XmlRpc
 
     public static XmlRpcType GetXmlRpcType(Type t)
     {
-      return GetXmlRpcType(t, new Stack());
+      return GetXmlRpcType(t, new Stack<Type>());
     }
 
-    private static XmlRpcType GetXmlRpcType(Type t, Stack typeStack)
+    private static XmlRpcType GetXmlRpcType(Type t, Stack<Type> typeStack)
     {
       XmlRpcType ret;
       if (t == typeof(Int32))

@@ -59,6 +59,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xmlrpcCF", "..\xmlrpcCF\xml
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xmlrpcserver", "..\xmlrpcserver\xmlrpcserver.csproj", "{7549FCD3-D436-44DC-A013-0D0630B7236B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xmlrpcsilverlight", "..\xmlrpcsilverlight\xmlrpcsilverlight.csproj", "{9AB65050-0663-40BC-B3DF-6CD3EC96CAA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,10 @@ Global
 		{7549FCD3-D436-44DC-A013-0D0630B7236B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7549FCD3-D436-44DC-A013-0D0630B7236B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7549FCD3-D436-44DC-A013-0D0630B7236B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AB65050-0663-40BC-B3DF-6CD3EC96CAA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AB65050-0663-40BC-B3DF-6CD3EC96CAA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AB65050-0663-40BC-B3DF-6CD3EC96CAA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AB65050-0663-40BC-B3DF-6CD3EC96CAA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

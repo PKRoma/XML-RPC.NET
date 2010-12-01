@@ -36,22 +36,22 @@ namespace CookComputing.XmlRpc
   {
     bool AllowAutoRedirect { get; set; }
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT && !SILVERLIGHT)
     X509CertificateCollection ClientCertificates { get; }
 #endif
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     string ConnectionGroupName { get; set; }
 #endif
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     CookieContainer CookieContainer { get; }
 #endif
 
     [Browsable(false)]
     ICredentials Credentials { get; set; }
 
-#if (!COMPACT_FRAMEWORK && !FX1_0)
+#if (!COMPACT_FRAMEWORK && !FX1_0 && !SILVERLIGHT)
     bool EnableCompression { get; set;}
 
     bool Expect100Continue { get; set; }
@@ -70,13 +70,17 @@ namespace CookComputing.XmlRpc
 
     bool PreAuthenticate { get; set; }
 
+#if (!SILVERLIGHT)
     [Browsable(false)]
     System.Version ProtocolVersion { get; set; }
+#endif
 
+#if (!SILVERLIGHT)
     [Browsable(false)]
     IWebProxy Proxy { get; set; }
+#endif
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     [Browsable(false)]
     CookieCollection ResponseCookies { get; }
 

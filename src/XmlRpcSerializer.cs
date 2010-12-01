@@ -36,6 +36,7 @@ namespace CookComputing.XmlRpc
   using System.Text.RegularExpressions;
   using System.Threading;
   using System.Xml;
+  using System.Collections.Generic;
 
   public class XmlRpcSerializer
   {
@@ -85,42 +86,41 @@ namespace CookComputing.XmlRpc
 
     public void SerializeRequest(Stream stm, XmlRpcRequest request) 
     {
-      XmlTextWriter xtw = new XmlTextWriter(stm, m_encoding);
-      ConfigureXmlFormat(xtw);
+      XmlWriter xtw = XmlWriter.Create(stm, ConfigureXmlFormat());
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodCall", "");
-    {
-      // TODO: use global action setting
-      MappingAction mappingAction = MappingAction.Error; 
-      if (request.xmlRpcMethod == null)
-        xtw.WriteElementString("methodName", request.method);
-      else
-        xtw.WriteElementString("methodName", request.xmlRpcMethod);
-      if (request.args.Length > 0 || UseEmptyParamsTag)
       {
-        xtw.WriteStartElement("", "params", "");
-        try
+        // TODO: use global action setting
+        MappingAction mappingAction = MappingAction.Error; 
+        if (request.xmlRpcMethod == null)
+          xtw.WriteElementString("methodName", request.method);
+        else
+          xtw.WriteElementString("methodName", request.xmlRpcMethod);
+        if (request.args.Length > 0 || UseEmptyParamsTag)
         {
-          if (!IsStructParamsMethod(request.mi))
-            SerializeParams(xtw, request, mappingAction);
-          else
-            SerializeStructParams(xtw, request, mappingAction);
+          xtw.WriteStartElement("", "params", "");
+          try
+          {
+            if (!IsStructParamsMethod(request.mi))
+              SerializeParams(xtw, request, mappingAction);
+            else
+              SerializeStructParams(xtw, request, mappingAction);
+          }
+          catch (XmlRpcUnsupportedTypeException ex)
+          {
+            throw new XmlRpcUnsupportedTypeException(ex.UnsupportedType,
+              String.Format("A parameter is of, or contains an instance of, "
+              + "type {0} which cannot be mapped to an XML-RPC type",
+              ex.UnsupportedType));
+          }
+          xtw.WriteEndElement();
         }
-        catch (XmlRpcUnsupportedTypeException ex)
-        {
-          throw new XmlRpcUnsupportedTypeException(ex.UnsupportedType,
-            String.Format("A parameter is of, or contains an instance of, "
-            + "type {0} which cannot be mapped to an XML-RPC type",
-            ex.UnsupportedType));
-        }
-        xtw.WriteEndElement();
       }
-    }
       xtw.WriteEndElement();
       xtw.Flush();
     }
 
-    void SerializeParams(XmlTextWriter xtw, XmlRpcRequest request,
+    void SerializeParams(XmlWriter xtw, XmlRpcRequest request,
       MappingAction mappingAction)
     {
       ParameterInfo[] pis = null;
@@ -162,7 +162,7 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    void SerializeStructParams(XmlTextWriter xtw, XmlRpcRequest request,
+    void SerializeStructParams(XmlWriter xtw, XmlRpcRequest request,
       MappingAction mappingAction)
     {
       ParameterInfo[] pis = request.mi.GetParameters();
@@ -205,8 +205,7 @@ namespace CookComputing.XmlRpc
         return;
       }
 
-      XmlTextWriter xtw = new XmlTextWriter(stm, m_encoding);
-      ConfigureXmlFormat(xtw);
+      XmlWriter xtw = XmlWriter.Create(stm, ConfigureXmlFormat());
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "params", "");
@@ -239,21 +238,21 @@ namespace CookComputing.XmlRpc
     public
       //#endif
     void Serialize(
-      XmlTextWriter xtw,
+      XmlWriter xtw,
       Object o,
       MappingAction mappingAction)
     {
-      Serialize(xtw, o, mappingAction, new ArrayList(16));
+      Serialize(xtw, o, mappingAction, new List<object>());
     }
 
     //#if (DEBUG)
     public
       //#endif
     void Serialize(
-      XmlTextWriter xtw,
+      XmlWriter xtw,
       Object o,
       MappingAction mappingAction,
-      ArrayList nestedObjs)
+      List<object> nestedObjs)
     {
       if (nestedObjs.Contains(o))
         throw new XmlRpcUnsupportedTypeException(nestedObjs[0].GetType(),
@@ -426,12 +425,12 @@ namespace CookComputing.XmlRpc
     }
 
     void BuildArrayXml(
-      XmlTextWriter xtw,
+      XmlWriter xtw,
       Array ary,
       int CurRank,
       int[] indices,
       MappingAction mappingAction,
-      ArrayList nestedObjs)
+      List<object> nestedObjs)
     {
       xtw.WriteStartElement("", "array", "");
       xtw.WriteStartElement("", "data", "");
@@ -477,8 +476,7 @@ namespace CookComputing.XmlRpc
       fs.faultCode = faultEx.FaultCode;
       fs.faultString = faultEx.FaultString;
 
-      XmlTextWriter xtw = new XmlTextWriter(stm, m_encoding);
-      ConfigureXmlFormat(xtw);
+      XmlWriter xtw = XmlWriter.Create(stm, ConfigureXmlFormat());
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "fault", "");
@@ -488,17 +486,24 @@ namespace CookComputing.XmlRpc
       xtw.Flush();
     }
 
-    void ConfigureXmlFormat(
-      XmlTextWriter xtw)
+    XmlWriterSettings ConfigureXmlFormat()
     {
       if (m_bUseIndentation)
       {
-        xtw.Formatting = Formatting.Indented;
-        xtw.Indentation = m_indentation;
+        return new XmlWriterSettings
+        {
+          Indent = true,
+          IndentChars = new string(' ', m_indentation),
+          Encoding = m_encoding
+        };
       }
       else
       {
-        xtw.Formatting = Formatting.None;
+        return new XmlWriterSettings
+        {
+          Indent = false,
+          Encoding = m_encoding
+        };
       }
     }
 
@@ -514,79 +519,6 @@ namespace CookComputing.XmlRpc
       sb.Insert(0, "[");
       sb.Append("]");
       return sb.ToString();
-    }
-
-    XmlNode SelectSingleNode(XmlNode node, string name)
-    {
-#if (COMPACT_FRAMEWORK)
-      foreach (XmlNode selnode in node.ChildNodes)
-      {
-        // For "*" element else return null
-        if ((name == "*") && !(selnode.Name.StartsWith("#")))
-          return selnode;
-        if (selnode.Name == name)
-          return selnode;
-      }
-      return null;
-#else
-      return node.SelectSingleNode(name);
-#endif
-    }
-
-    XmlNode[] SelectNodes(XmlNode node, string name)
-    {
-      ArrayList list = new ArrayList();
-      foreach (XmlNode selnode in node.ChildNodes)
-      {
-        if (selnode.Name == name)
-          list.Add(selnode);
-      }
-      return (XmlNode[])list.ToArray(typeof(XmlNode));
-    }
-
-    XmlNode SelectValueNode(XmlNode valueNode)
-    {
-      // an XML-RPC value is either held as the child node of a <value> element
-      // or is just the text of the value node as an implicit string value
-      XmlNode vvNode = SelectSingleNode(valueNode, "*");
-      if (vvNode == null)
-        vvNode = valueNode.FirstChild;
-      return vvNode;
-    }
-
-    void SelectTwoNodes(XmlNode node, string name1, out XmlNode node1,
-      out bool dup1, string name2, out XmlNode node2, out bool dup2)
-    {
-      node1 = node2 = null;
-      dup1 = dup2 = false;
-      foreach (XmlNode selnode in node.ChildNodes)
-      {
-        if (selnode.Name == name1)
-        {
-          if (node1 == null)
-            node1 = selnode;
-          else
-            dup1 = true;
-        }
-        else if (selnode.Name == name2)
-        {
-          if (node2 == null)
-            node2 = selnode;
-          else
-            dup2 = true;
-        }
-      }
-    }
-
-    // TODO: following to return Array?
-    object CreateArrayInstance(Type type, object[] args)
-    {
-#if (!COMPACT_FRAMEWORK)
-      return Activator.CreateInstance(type, args);
-#else
-		Object Arr = Array.CreateInstance(type.GetElementType(), (int)args[0]);
-		return Arr;
-#endif
     }
 
     bool IsStructParamsMethod(MethodInfo mi)
@@ -605,8 +537,8 @@ namespace CookComputing.XmlRpc
     }
 
     MappingAction StructMappingAction(
-  Type type,
-  MappingAction currentAction)
+      Type type,
+      MappingAction currentAction)
     {
       // if struct member has mapping action attribute, override the current
       // mapping action else just return the current action

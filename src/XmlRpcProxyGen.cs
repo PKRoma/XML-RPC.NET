@@ -27,12 +27,13 @@ namespace CookComputing.XmlRpc
 {
   using System;
   using System.Collections;
+  using System.Collections.Generic;
   using System.Reflection;
   using System.Reflection.Emit;
 
   public class XmlRpcProxyGen
   {
-    static Hashtable _types = new Hashtable();
+    static Dictionary<Type, Type> _types = new Dictionary<Type, Type>();
 
 #if (!FX1_0)
     public static T Create<T>()
@@ -64,11 +65,12 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
+#if (!SILVERLIGHT)
     public static object CreateAssembly(
       Type itf,
       string typeName,
       string assemblyName
-      )
+     ) 
     {
       // create persistable assembly
       if (assemblyName.IndexOf(".dll") == (assemblyName.Length - 4))
@@ -81,6 +83,7 @@ namespace CookComputing.XmlRpc
       assBldr.Save(moduleName);
       return ret;
     }
+#endif
 
     static AssemblyBuilder BuildAssembly(
       Type itf,
@@ -90,18 +93,24 @@ namespace CookComputing.XmlRpc
       AssemblyBuilderAccess access)
     {
       string urlString = GetXmlRpcUrl(itf);
-      ArrayList methods = GetXmlRpcMethods(itf);
-      ArrayList beginMethods = GetXmlRpcBeginMethods(itf);
-      ArrayList endMethods = GetXmlRpcEndMethods(itf);
+      List<MethodData> methods = GetXmlRpcMethods(itf);
+      List<MethodData> beginMethods = GetXmlRpcBeginMethods(itf);
+      List<MethodData> endMethods = GetXmlRpcEndMethods(itf);
       AssemblyName assName = new AssemblyName();
       assName.Name = assemblyName;
+#if (!SILVERLIGHT)
       if (access == AssemblyBuilderAccess.RunAndSave)
         assName.Version = itf.Assembly.GetName().Version;
+#endif
       AssemblyBuilder assBldr = AppDomain.CurrentDomain.DefineDynamicAssembly(
         assName, access);
+#if (!SILVERLIGHT)
       ModuleBuilder modBldr = (access == AssemblyBuilderAccess.Run
         ? assBldr.DefineDynamicModule(assName.Name)
         : assBldr.DefineDynamicModule(assName.Name, moduleName));
+#else
+      ModuleBuilder modBldr = assBldr.DefineDynamicModule(assName.Name);
+#endif
       TypeBuilder typeBldr = modBldr.DefineType(
         typeName,
         TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Public,
@@ -115,7 +124,7 @@ namespace CookComputing.XmlRpc
       return assBldr;
     }
 
-    static void BuildMethods(TypeBuilder tb, ArrayList methods)
+    static void BuildMethods(TypeBuilder tb, List<MethodData> methods)
     {
       foreach (MethodData mthdData in methods)
       {
@@ -237,7 +246,7 @@ namespace CookComputing.XmlRpc
       ilgen.Emit(OpCodes.Ret);
     }
 
-    static void BuildBeginMethods(TypeBuilder tb, ArrayList methods)
+    static void BuildBeginMethods(TypeBuilder tb, List<MethodData> methods)
     {
       foreach (MethodData mthdData in methods)
       {
@@ -328,7 +337,7 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    static void BuildEndMethods(TypeBuilder tb, ArrayList methods)
+    static void BuildEndMethods(TypeBuilder tb, List<MethodData> methods)
     {
       LocalBuilder retVal = null;
       LocalBuilder tempRetVal = null;
@@ -448,17 +457,18 @@ namespace CookComputing.XmlRpc
         return methods;
       }
 
-      ArrayList result = new ArrayList(methods);
+      var result = new List<MethodInfo>();
+      result.AddRange(methods);
       foreach (Type itf in type.GetInterfaces())
       {
         result.AddRange(itf.GetMethods());
       }
-      return (MethodInfo[])result.ToArray(typeof(MethodInfo));
+      return result.ToArray();
     }
 
-    private static ArrayList GetXmlRpcMethods(Type itf)
+    private static List<MethodData> GetXmlRpcMethods(Type itf)
     {
-      ArrayList ret = new ArrayList();
+      var ret = new List<MethodData>();
       if (!itf.IsInterface)
         throw new Exception("type not interface");
       foreach (MethodInfo mi in GetMethods(itf))
@@ -512,9 +522,9 @@ namespace CookComputing.XmlRpc
       public bool paramsMethod;
     }
 
-    private static ArrayList GetXmlRpcBeginMethods(Type itf)
+    private static List<MethodData> GetXmlRpcBeginMethods(Type itf)
     {
-      ArrayList ret = new ArrayList();
+      var ret = new List<MethodData>();
       if (!itf.IsInterface)
         throw new Exception("type not interface");
       foreach (MethodInfo mi in itf.GetMethods())
@@ -559,9 +569,9 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
-    private static ArrayList GetXmlRpcEndMethods(Type itf)
+    private static List<MethodData> GetXmlRpcEndMethods(Type itf)
     {
-      ArrayList ret = new ArrayList();
+      var ret = new List<MethodData>();
       if (!itf.IsInterface)
         throw new Exception("type not interface");
       foreach (MethodInfo mi in itf.GetMethods())

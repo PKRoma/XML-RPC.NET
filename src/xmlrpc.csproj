@@ -173,7 +173,6 @@
     <Compile Include="XmlRpcParameterInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XmlRpcProxyCodeGen.cs" />
     <Compile Include="XmlRpcProxyGen.cs">
       <SubType>Code</SubType>
     </Compile>
