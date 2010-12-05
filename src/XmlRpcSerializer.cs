@@ -82,11 +82,12 @@ namespace CookComputing.XmlRpc
       get { return m_encoding; }
       set { m_encoding = value; }
     }
-    Encoding m_encoding = null;
+    Encoding m_encoding = Encoding.UTF8;
 
     public void SerializeRequest(Stream stm, XmlRpcRequest request) 
     {
-      XmlWriter xtw = XmlWriter.Create(stm, ConfigureXmlFormat());
+      var stmWriter = new EncodingStreamWriter(stm, null);
+      XmlWriter xtw = XmlWriter.Create(stmWriter, ConfigureXmlFormat());
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodCall", "");
       {
@@ -494,7 +495,8 @@ namespace CookComputing.XmlRpc
         {
           Indent = true,
           IndentChars = new string(' ', m_indentation),
-          Encoding = m_encoding
+          Encoding = m_encoding,
+          NewLineHandling = NewLineHandling.None,
         };
       }
       else

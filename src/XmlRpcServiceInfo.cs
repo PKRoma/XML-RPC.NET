@@ -157,7 +157,7 @@ namespace CookComputing.XmlRpc
         mthdInfo.ReturnDoc = ((XmlRpcReturnValueAttribute)orattrs[0]).Description;
       }
 
-      if (methods[mthdInfo.XmlRpcName] != null)
+      if (methods.ContainsKey(mthdInfo.XmlRpcName))
       {
         throw new XmlRpcDupXmlRpcMethodNames(String.Format("Method "
           + "{0} in type {1} has duplicate XmlRpc method name {2}",

@@ -116,6 +116,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DateTime8601.cs" />
+    <Compile Include="EncodingStreamWriter.cs" />
     <Compile Include="GuidEx.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -173,6 +174,7 @@
     <Compile Include="XmlRpcParameterInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcParser.cs" />
     <Compile Include="XmlRpcProxyGen.cs">
       <SubType>Code</SubType>
     </Compile>

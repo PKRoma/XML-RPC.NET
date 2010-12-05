@@ -445,8 +445,9 @@ namespace CookComputing.XmlRpc
 #if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
       webReq.ConnectionGroupName = this._connectionGroupName;
 #endif
+#if (!SILVERLIGHT)
       webReq.Credentials = Credentials;
-
+#endif
 #if (!COMPACT_FRAMEWORK && !FX1_0 &&!SILVERLIGHT)
       if (_enableCompression)
         webReq.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
@@ -846,7 +847,7 @@ namespace CookComputing.XmlRpc
           throw new Exception("dup call to EndSend");
         clientResult.EndSendCalled = true;
         HttpWebResponse webResp = (HttpWebResponse)clientResult.WaitForResponse();
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
         clientResult._responseCookies = webResp.Cookies;
         clientResult._responseHeaders = webResp.Headers;
 #endif

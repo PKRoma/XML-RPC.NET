@@ -45,11 +45,10 @@ namespace CookComputing.XmlRpc
     public static object Create(Type itf)
     {
       // create transient assembly
-      Type proxyType;
+      Type proxyType = null;
       lock (typeof(XmlRpcProxyGen))
       {
-        proxyType = (Type)_types[itf];
-        if (proxyType == null)
+        if (!_types.ContainsKey(itf))
         {
           Guid guid = Guid.NewGuid();
           string assemblyName = "XmlRpcProxy" + guid.ToString();
@@ -60,6 +59,7 @@ namespace CookComputing.XmlRpc
           proxyType = assBldr.GetType(typeName);
           _types.Add(itf, proxyType);
         }
+        proxyType = _types[itf]; 
       }
       object ret = Activator.CreateInstance(proxyType);
       return ret;
