@@ -30,7 +30,8 @@ namespace CookComputing.XmlRpc
   public enum MappingAction 
   {
     Ignore,
-    Error
+    Error,
+    Nil
   }
 
   [AttributeUsage(AttributeTargets.Field | AttributeTargets.Struct

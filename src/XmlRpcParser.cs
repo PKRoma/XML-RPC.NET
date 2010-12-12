@@ -161,6 +161,8 @@ namespace CookComputing.XmlRpc
       {
         MoveToChild(rdr, "name", true);
         string name = rdr.ReadElementContentAsString();
+        if (name == "")
+          throw new XmlRpcInvalidXmlRpcException("Struct contains member with empty name element.");
         yield return new StructMember(name);
         MoveOverWhiteSpace(rdr);
         if (!(rdr.NodeType == XmlNodeType.Element && rdr.Name == "value"))
@@ -365,12 +367,12 @@ namespace CookComputing.XmlRpc
   {
   }
 
-  public class StructValue : Node
+  public class StructValue : ValueNode
   {
 
   }
 
-  public class ArrayValue : Node
+  public class ArrayValue : ValueNode
   {
 
   }

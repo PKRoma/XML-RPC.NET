@@ -399,12 +399,11 @@ namespace CookComputing.XmlRpc
         CheckImplictString(valType, parseStack);
 
       Type parsedType;
-      Type parsedArrayType;
 
       object retObj = null;
       if (iter.Current is ArrayValue)
         retObj = ParseArray(iter, valType, parseStack, mappingAction,
-          out parsedType, out parsedArrayType);
+          out parsedType);
       else if (iter.Current is StructValue)
       {
         // if we don't know the expected struct type then we must
@@ -413,7 +412,7 @@ namespace CookComputing.XmlRpc
           && !valType.IsSubclassOf(typeof(XmlRpcStruct)))
         {
           retObj = ParseStruct(iter, valType, parseStack, mappingAction,
-            out parsedType, out parsedArrayType);
+            out parsedType);
         }
         else
         {
@@ -421,52 +420,59 @@ namespace CookComputing.XmlRpc
             valType = typeof(XmlRpcStruct);
           // TODO: do we need to validate type here?
           retObj = ParseHashtable(iter, valType, parseStack, mappingAction,
-            out parsedType, out parsedArrayType);
+            out parsedType);
         }
       }
       else if (iter.Current is Base64Value)
         retObj = ParseBase64(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType, out parsedArrayType);
+          out parsedType);
       else if (iter.Current is IntValue)
       {
         retObj = ParseInt(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType, out parsedArrayType);
+          out parsedType);
       }
       else if (iter.Current is LongValue)
       {
         retObj = ParseLong(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType, out parsedArrayType);
+          out parsedType);
       }
       else if (iter.Current is StringValue)
       {
         retObj = ParseString(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType, out parsedArrayType);
+          out parsedType);
       }
       else if (iter.Current is BooleanValue)
       {
         retObj = ParseBoolean(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType, out parsedArrayType);
+          out parsedType);
       }
       else if (iter.Current is DoubleValue)
       {
         retObj = ParseDouble(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType, out parsedArrayType);
+          out parsedType);
       }
       else if (iter.Current is DateTimeValue)
       {
         retObj = ParseDateTime(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType, out parsedArrayType);
+          out parsedType);
       }
+      else if (iter.Current is NilValue)
+      {
+        retObj = ParseNilValue(valueNode.Value, valType, parseStack, mappingAction,
+          out parsedType);
+      }
+
       return retObj;
     }
 
-    private object ParseDateTime(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType, out Type parsedArrayType)
+    private object ParseDateTime(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
     {
       CheckExpectedType(valType, typeof(DateTime), parseStack);
       parsedType = typeof(DateTime);
-      parsedArrayType = typeof(DateTime[]);
       return OnStack("dateTime", parseStack, delegate()
       {
+        if (value == "" && MapEmptyDateTimeToMinValue)
+          return DateTime.MinValue;
         DateTime retVal;
         if (!DateTime8601.TryParseDateTime8601(value, out retVal))
         {
@@ -483,11 +489,10 @@ namespace CookComputing.XmlRpc
       });
     }
 
-    private object ParseDouble(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType, out Type parsedArrayType)
+    private object ParseDouble(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
     {
       CheckExpectedType(valType, typeof(double), parseStack);
       parsedType = typeof(double);
-      parsedArrayType = typeof(double[]);
       return OnStack("double", parseStack, delegate()
       {
         try
@@ -503,11 +508,10 @@ namespace CookComputing.XmlRpc
       });
     }
 
-    private object ParseBoolean(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType, out Type parsedArrayType)
+    private object ParseBoolean(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
     {
       CheckExpectedType(valType, typeof(bool), parseStack);
       parsedType = typeof(bool);
-      parsedArrayType = typeof(bool[]);
       return OnStack("boolean", parseStack, delegate()
       {
         if (value == "1")
@@ -521,20 +525,18 @@ namespace CookComputing.XmlRpc
       });
     }
 
-    private object ParseString(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType, out Type parsedArrayType)
+    private object ParseString(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
     {
       CheckExpectedType(valType, typeof(string), parseStack);
       parsedType = typeof(string);
-      parsedArrayType = typeof(string[]);
       return OnStack("string", parseStack, delegate()
       { return value; });
     }
 
-    private object ParseLong(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType, out Type parsedArrayType)
+    private object ParseLong(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
     {
       CheckExpectedType(valType, typeof(long), parseStack);
       parsedType = typeof(long);
-      parsedArrayType = typeof(long[]);
       return OnStack("i8", parseStack, delegate()
       {
         long ret;
@@ -545,11 +547,10 @@ namespace CookComputing.XmlRpc
       });
     }
 
-    private object ParseInt(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType, out Type parsedArrayType)
+    private object ParseInt(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
     {
       CheckExpectedType(valType, typeof(int), parseStack);
       parsedType = typeof(int);
-      parsedArrayType = typeof(int[]);
       return OnStack("integer", parseStack, delegate()
       { 
         int ret;
@@ -560,11 +561,10 @@ namespace CookComputing.XmlRpc
       });
     }
 
-    private object ParseBase64(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType, out Type parsedArrayType)
+    private object ParseBase64(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
     {
       CheckExpectedType(valType, typeof(byte[]), parseStack);
       parsedType = typeof(int);
-      parsedArrayType = typeof(int[]);
       return OnStack("base64", parseStack, delegate()
       { 
         if (value == "")
@@ -586,10 +586,28 @@ namespace CookComputing.XmlRpc
       });
     }
 
-    private object ParseHashtable(IEnumerator<Node> iter, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType, out Type parsedArrayType)
+    private object ParseNilValue(string p, Type type, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
+    {
+      if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+      {
+        parsedType = type;
+        return null;
+      }
+      else if (!type.IsPrimitive || !type.IsValueType)
+      {
+        parsedType = type;
+        return null;
+      }
+      else
+      {
+        parsedType = null;
+        throw new NotImplementedException(); // TODO: fix
+      }
+    }
+
+    private object ParseHashtable(IEnumerator<Node> iter, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
     {
       parsedType = null;
-      parsedArrayType = null;
       XmlRpcStruct retObj = new XmlRpcStruct();
       parseStack.Push("struct mapped to XmlRpcStruct");
       try
@@ -622,10 +640,9 @@ namespace CookComputing.XmlRpc
     }
 
     private object ParseStruct(IEnumerator<Node> iter, Type valueType, ParseStack parseStack, 
-      MappingAction mappingAction, out Type parsedType, out Type parsedArrayType)
+      MappingAction mappingAction, out Type parsedType)
     {
       parsedType = null;
-      parsedArrayType = null;
 
       if (valueType.IsPrimitive)
       {
@@ -685,9 +702,9 @@ namespace CookComputing.XmlRpc
 
           string name = GetStructName(valueType, rpcName) ?? rpcName;
           MemberInfo mi = valueType.GetField(name);
-          if (mi == null) valueType.GetProperty(name);
-          //if (mi == null)
-          //    continue;
+          if (mi == null) mi = valueType.GetProperty(name);
+          if (mi == null)
+            continue;
           if (names.Contains(name))
               names.Remove(name);
           else
@@ -729,10 +746,11 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    private object ParseArray(IEnumerator<Node> iter, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType, out Type parsedArrayType)
+    private object ParseArray(IEnumerator<Node> iter, Type valType, 
+      ParseStack parseStack, MappingAction mappingAction, 
+      out Type parsedType)
     {
       parsedType = null;
-      parsedArrayType = null;
       // required type must be an array
       if (valType != null
         && !(valType.IsArray == true
@@ -775,16 +793,16 @@ namespace CookComputing.XmlRpc
 
       foreach (object value in values)
       {
-        //if (bGotType == false)
-        //{
-        //  useType = parsedArrayType;
-        //  bGotType = true;
-        //}
-        //else
-        //{
-        //  if (useType != parsedArrayType)
-        //    useType = null;
-        //}
+        if (bGotType == false)
+        {
+          useType = value.GetType();
+          bGotType = true;
+        }
+        else
+        {
+          if (useType != value.GetType())
+            useType = null;
+        }
       }
 
       Object[] args = new Object[1];
@@ -801,7 +819,7 @@ namespace CookComputing.XmlRpc
         if (useType == null)
           retObj = CreateArrayInstance(typeof(object[]), args);
         else
-          retObj = CreateArrayInstance(useType, args);
+          retObj = Array.CreateInstance(useType, (int)args[0]); ;
       }
       for (int j = 0; j < values.Count; j++)
       {

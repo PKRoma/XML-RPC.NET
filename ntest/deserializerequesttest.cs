@@ -29,7 +29,7 @@ namespace ntest
   
       Assert.AreEqual(request.method, "TestString", "method is TestString");
       Assert.AreEqual(request.args[0].GetType(),  typeof(string),
-		    "argument is string");
+        "argument is string");
       Assert.AreEqual((string)request.args[0], "test string", 
         "argument is 'test string'");
     }
