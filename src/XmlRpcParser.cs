@@ -38,22 +38,42 @@ namespace CookComputing.XmlRpc
 
     public static IEnumerable<Node> ParseResponse(XmlReader rdr)
     {
-      // TODO: handle fault response
-      yield return new ResponseNode();
       rdr.MoveToContent();
-      //Assert(rdr, "methodCall");
-      // TODO: check is methodCall
+      // TODO: check is methodResponse
+
+
       int mrDepth = rdr.Depth;
-      MoveToChild(rdr, "params", true);
-      int psDepth = rdr.Depth;
-      bool gotP = MoveToChild(rdr, "param");
-      if (gotP)
+      MoveToChild(rdr, "params", "fault");
+      if (rdr.Name == "params")
       {
-        foreach (Node node in ParseParam(rdr))
-          yield return node;
+        yield return new ResponseNode();
+        int psDepth = rdr.Depth;
+        bool gotP = MoveToChild(rdr, "param");
+        if (gotP)
+        {
+          foreach (Node node in ParseParam(rdr))
+            yield return node;
+        }
+        MoveToEndElement(rdr, psDepth);
       }
-      MoveToEndElement(rdr, psDepth);
+      else
+      {
+        int fltDepth = rdr.Depth;
+        foreach (Node node in ParseFault(rdr))
+          yield return node;
+        MoveToEndElement(rdr, fltDepth);
+      }
       MoveToEndElement(rdr, mrDepth);
+    }
+
+    private static IEnumerable<Node> ParseFault(XmlReader rdr)
+    {
+      int fDepth = rdr.Depth;
+      yield return new FaultNode();
+      MoveToChild(rdr, "value", true);
+      foreach (Node node in ParseValue(rdr))
+        yield return node;
+      MoveToEndElement(rdr, fDepth);
     }
 
     private static IEnumerable<Node> ParseParam(XmlReader rdr)
@@ -219,26 +239,44 @@ namespace CookComputing.XmlRpc
       return MoveToChild(rdr, nodeName, false);
     }
 
+    private static bool MoveToChild(XmlReader rdr, string nodeName1, string nodeName2)
+    {
+      return MoveToChild(rdr, nodeName1, nodeName2, false);
+    }
+
     private static bool MoveToChild(XmlReader rdr, string nodeName, bool required)
+    {
+      return MoveToChild(rdr, nodeName, null, true);
+    }
+
+    private static bool MoveToChild(XmlReader rdr, string nodeName1, string nodeName2,
+      bool required)
     {
       int depth = rdr.Depth;
       if (rdr.IsEmptyElement)
       {
         if (required)
-          throw new XmlRpcInvalidXmlRpcException(string.Format("Missing element {0}", nodeName));
+          throw new XmlRpcInvalidXmlRpcException(MakeMissingChildMessage(nodeName1, nodeName2));
         return false;
       }
       rdr.Read();
       while (rdr.Depth > depth)
       {
         if (rdr.Depth == (depth + 1) && rdr.NodeType == XmlNodeType.Element
-            && rdr.Name == nodeName)
+            && (rdr.Name == nodeName1 || (nodeName2 != null && rdr.Name == nodeName2)))
           return true;
         rdr.Read();
       }
       if (required)
-        throw new XmlRpcInvalidXmlRpcException(string.Format("Missing element {0}", nodeName));
+        throw new XmlRpcInvalidXmlRpcException(MakeMissingChildMessage(nodeName1, nodeName2));
       return false;
+    }
+
+    static string MakeMissingChildMessage(string nodeName1, string nodeName2)
+    {
+      return nodeName2 == null
+        ? string.Format("Missing element:  {0}", nodeName1)
+        : string.Format("Missing element: {0} or {1}", nodeName1, nodeName2);
     }
 
     private static void MoveOverWhiteSpace(XmlReader rdr)

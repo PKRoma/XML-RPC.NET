@@ -353,8 +353,8 @@ namespace CookComputing.XmlRpc
         iter.MoveNext();
         if (iter.Current is FaultNode)
         {
-          // TODO: implement fault mapping
-          throw new NotImplementedException();
+          var xmlRpcException = DeserializeFault(iter);
+          throw xmlRpcException;
         }
         if (returnType == typeof(void) || !iter.MoveNext())
           return new XmlRpcResponse { retVal = null }; 
@@ -370,16 +370,15 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    private void DeserializeFault(XmlReader rdr)
+    private XmlRpcException DeserializeFault(IEnumerator<Node> iter)
     {
       ParseStack faultStack = new ParseStack("fault response");
       // TODO: use global action setting
       MappingAction mappingAction = MappingAction.Error;
-      XmlRpcFaultException faultEx = ParseFault(rdr, faultStack, // TODO: fix
+      XmlRpcFaultException faultEx = ParseFault(iter, faultStack, // TODO: fix
         mappingAction);
       throw faultEx;
     }
-
 
     public Object ParseValueNode(
       IEnumerator<Node> iter,
@@ -1170,44 +1169,24 @@ namespace CookComputing.XmlRpc
     }
 
     XmlRpcFaultException ParseFault(
-    XmlReader rdr,
+    IEnumerator<Node> iter,
     ParseStack parseStack,
     MappingAction mappingAction)
     {
-      throw new NotImplementedException();
-      //XmlNode valueNode = SelectSingleNode(faultNode, "value");
-      //XmlNode structNode = SelectSingleNode(valueNode, "struct");
-      //if (structNode == null)
-      //{
-      //  throw new XmlRpcInvalidXmlRpcException(
-      //    "struct element missing from fault response.");
-      //}
-      //Fault fault;
-      //try
-      //{
-      //  fault = (Fault)ParseValue(structNode, typeof(Fault), parseStack,
-      //    mappingAction);
-      //}
-      //catch (Exception ex)
-      //{
-      //  // some servers incorrectly return fault code in a string
-      //  // ignore AllowStringFaultCode setting because existing applications
-      //  // may rely on incorrect handling of this setting
-      //  FaultStructStringCode faultStrCode;
-      //  try
-      //  {
-      //    faultStrCode = (FaultStructStringCode)ParseValue(structNode,
-      //      typeof(FaultStructStringCode), parseStack, mappingAction);
-      //    fault.faultCode = Convert.ToInt32(faultStrCode.faultCode);
-      //    fault.faultString = faultStrCode.faultString;
-      //  }
-      //  catch (Exception)
-      //  {
-      //    // use exception from when attempting to parse code as integer
-      //    throw ex;
-      //  }
-      //}
-      //return new XmlRpcFaultException(fault.faultCode, fault.faultString);
+      iter.MoveNext();  // move to StructValue
+      Type parsedType;
+      var faultStruct = ParseHashtable(iter, null, parseStack, mappingAction,
+        out parsedType) as XmlRpcStruct;
+      object faultCode = faultStruct["faultCode"];
+      object faultString = faultStruct["faultString"];
+      if (faultCode is string)
+      {
+        int value;
+        if (!Int32.TryParse(faultCode as string, out value))
+          throw new XmlRpcInvalidXmlRpcException("faultCode not int or string");
+        faultCode = value;
+      }
+      return new XmlRpcFaultException((int)faultCode, (string)faultString);
     }
 
     struct FaultStruct
