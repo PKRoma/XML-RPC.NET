@@ -638,7 +638,7 @@ namespace ntest
     [Test]
     public void ISO_8859_1()
     {
-      using(Stream stm = new FileStream("../iso-8859-1_request.xml", 
+      using (Stream stm = new FileStream("testdocuments/iso-8859-1_request.xml", 
               FileMode.Open, FileAccess.Read))
       {
         XmlRpcDeserializer serializer = new XmlRpcDeserializer();
@@ -1099,6 +1099,7 @@ AQIDBAUGBwg=</base64>
     }
 
     [Test]
+    [ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
     public void Blakemore()
     {
       string xml = @"<?xml version=""1.0""?>
@@ -1120,12 +1121,6 @@ AQIDBAUGBwg=</base64>
       StringReader sr = new StringReader(xml);
       XmlRpcDeserializer serializer = new XmlRpcDeserializer();
       XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
-
-      Assert.AreEqual(request.args[0].GetType(), typeof(simple[]),
-        "argument is simple[]");
-      Assert.IsTrue((request.args[0] as simple[]).Length == 1,
-        "argument is simple[] of length 1");
-
     }
 
     [XmlRpcMethod("rtx.EchoString")]

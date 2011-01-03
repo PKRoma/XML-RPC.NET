@@ -31,7 +31,6 @@ namespace CookComputing.XmlRpc
   {
     Ignore,
     Error,
-    Nil
   }
 
   [AttributeUsage(AttributeTargets.Field | AttributeTargets.Struct

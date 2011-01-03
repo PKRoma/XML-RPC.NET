@@ -14,7 +14,7 @@ namespace ntest
       string testName,
       object obj, 
       Encoding encoding,
-      MappingAction action)
+      NullMappingAction action)
     {
       Stream stm = new MemoryStream();
       XmlTextWriter xtw = new XmlTextWriter(stm, Encoding.UTF8);
@@ -43,7 +43,7 @@ namespace ntest
     public static string SerializeToString(
       string testName,
       object obj, 
-      MappingAction action)
+      NullMappingAction action)
     {
       StringWriter strwrtr = new StringWriter();
       XmlTextWriter xtw = new XmlTextWriter(strwrtr);

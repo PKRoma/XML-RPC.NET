@@ -7,6 +7,18 @@ namespace CookComputing.XmlRpc
 {
   public static class XmlRpcParser
   {
+    static List<string> _xmlRpcMembers = new List<string>();
+
+    static XmlRpcParser()
+    {
+      _xmlRpcMembers.AddRange(new string[]
+        {
+          "name",          
+          "value",          
+
+        });
+    }
+
     public static IEnumerable<Node> ParseRequest(XmlReader rdr)
     {
       rdr.MoveToContent();
@@ -24,7 +36,7 @@ namespace CookComputing.XmlRpc
       {
         yield return new ParamsNode();
         int psDepth = rdr.Depth;
-        bool gotP = MoveToChild(rdr, "param");
+        bool gotP = MoveToChild(rdr, "param", false);
         while (gotP)
         {
           foreach (Node node in ParseParam(rdr))
@@ -169,6 +181,7 @@ namespace CookComputing.XmlRpc
           yield return node;
         gotV = MovetoSibling(rdr, "value");
       }
+      yield return new EndArrayValue();
     }
 
     private static IEnumerable<Node> ParseStruct(XmlReader rdr)
@@ -193,6 +206,7 @@ namespace CookComputing.XmlRpc
         gotM = MovetoSibling(rdr, "member");
       }
       MoveToEndElement(rdr, sDepth);
+      yield return new EndStructValue();
     }
 
     private static bool MovetoSibling(XmlReader rdr, string p)
@@ -221,6 +235,7 @@ namespace CookComputing.XmlRpc
 
     private static bool MoveToEndElement(XmlReader rdr, int mcDepth)
     {
+      // TODO: better error reporting required, i.e. include end element node type expected
       if (rdr.Depth == mcDepth && rdr.IsEmptyElement)
         return true;
       if (rdr.Depth == mcDepth && rdr.NodeType == XmlNodeType.EndElement)
@@ -228,10 +243,18 @@ namespace CookComputing.XmlRpc
       while (rdr.Depth >= mcDepth)
       {
         rdr.Read();
+        if (rdr.NodeType == XmlNodeType.Element && IsXmlRpcElement(rdr.Name))
+          throw new XmlRpcInvalidXmlRpcException(string.Format("Unexpected element {0}", 
+            rdr.Name));
         if (rdr.Depth == mcDepth && rdr.NodeType == XmlNodeType.EndElement)
           return true;
       }
       return false;
+    }
+
+    private static bool IsXmlRpcElement(string elementName)
+    {
+      return _xmlRpcMembers.Contains(elementName);
     }
 
     private static bool MoveToChild(XmlReader rdr, string nodeName)
@@ -246,7 +269,7 @@ namespace CookComputing.XmlRpc
 
     private static bool MoveToChild(XmlReader rdr, string nodeName, bool required)
     {
-      return MoveToChild(rdr, nodeName, null, true);
+      return MoveToChild(rdr, nodeName, null, required);
     }
 
     private static bool MoveToChild(XmlReader rdr, string nodeName1, string nodeName2,
@@ -410,7 +433,17 @@ namespace CookComputing.XmlRpc
 
   }
 
+  public class EndStructValue : Node
+  {
+
+  }
+
   public class ArrayValue : ValueNode
+  {
+
+  }
+
+  public class EndArrayValue : Node
   {
 
   }

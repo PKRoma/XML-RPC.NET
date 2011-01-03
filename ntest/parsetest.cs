@@ -941,7 +941,7 @@ namespace ntest
       object obj = Utils.Parse(xml, null, MappingAction.Error, 
         out parsedType, out parsedArrayType);
 
-      Assert.AreEqual(obj.GetType(), typeof(object[]));
+      Assert.AreEqual(obj.GetType(), typeof(XmlRpcStruct[]));
       object[] objarray = (object[])obj;
       Assert.AreEqual(objarray[0].GetType(), typeof(XmlRpcStruct));
       Assert.AreEqual(objarray[1].GetType(), typeof(XmlRpcStruct));

@@ -808,7 +808,7 @@ namespace ntest
     [Test]
     public void ISO_8869_1()
     {
-      using(Stream stm = new FileStream("../iso-8859-1_response.xml",
+      using(Stream stm = new FileStream("testdocuments/iso-8859-1_response.xml",
                FileMode.Open, FileAccess.Read))
       {
         XmlRpcDeserializer serializer = new XmlRpcDeserializer();
@@ -1001,7 +1001,7 @@ namespace ntest
       StringReader sr2 = new StringReader(xml);
       XmlRpcResponse response2 = serializer.DeserializeResponse(sr2, typeof(DupMem));
       DupMem dupMem = (DupMem)response2.retVal;
-      Assert.AreEqual(dupMem.foo, "this is a test");
+      Assert.AreEqual( "this is a test", dupMem.foo);
     }
 
     [Test]

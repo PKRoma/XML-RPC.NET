@@ -92,7 +92,7 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartElement("", "methodCall", "");
       {
         // TODO: use global action setting
-        MappingAction mappingAction = MappingAction.Error; 
+        NullMappingAction mappingAction = NullMappingAction.Error; 
         if (request.xmlRpcMethod == null)
           xtw.WriteElementString("methodName", request.method);
         else
@@ -122,7 +122,7 @@ namespace CookComputing.XmlRpc
     }
 
     void SerializeParams(XmlWriter xtw, XmlRpcRequest request,
-      MappingAction mappingAction)
+      NullMappingAction mappingAction)
     {
       ParameterInfo[] pis = null;
       if (request.mi != null)
@@ -142,9 +142,9 @@ namespace CookComputing.XmlRpc
             Array ary = (Array)request.args[i];
             foreach (object o in ary)
             {
-              if (o == null)
-                throw new XmlRpcNullParameterException(
-                  "Null parameter in params array");
+              //if (o == null)
+              //  throw new XmlRpcNullParameterException(
+              //    "Null parameter in params array");
               xtw.WriteStartElement("", "param", "");
               Serialize(xtw, o, mappingAction);
               xtw.WriteEndElement();
@@ -152,11 +152,11 @@ namespace CookComputing.XmlRpc
             break;
           }
         }
-        if (request.args[i] == null)
-        {
-          throw new XmlRpcNullParameterException(String.Format(
-            "Null method parameter #{0}", i + 1));
-        }
+        //if (request.args[i] == null)
+        //{
+        //  throw new XmlRpcNullParameterException(String.Format(
+        //    "Null method parameter #{0}", i + 1));
+        //}
         xtw.WriteStartElement("", "param", "");
         Serialize(xtw, request.args[i], mappingAction);
         xtw.WriteEndElement();
@@ -164,7 +164,7 @@ namespace CookComputing.XmlRpc
     }
 
     void SerializeStructParams(XmlWriter xtw, XmlRpcRequest request,
-      MappingAction mappingAction)
+      NullMappingAction mappingAction)
     {
       ParameterInfo[] pis = request.mi.GetParameters();
       if (request.args.Length > pis.Length)
@@ -217,7 +217,7 @@ namespace CookComputing.XmlRpc
       }
       xtw.WriteStartElement("", "param", "");
       // TODO: use global action setting
-      MappingAction mappingAction = MappingAction.Error;
+      NullMappingAction mappingAction = NullMappingAction.Error;
       try
       {
         Serialize(xtw, ret, mappingAction);
@@ -241,7 +241,7 @@ namespace CookComputing.XmlRpc
     void Serialize(
       XmlWriter xtw,
       Object o,
-      MappingAction mappingAction)
+      NullMappingAction mappingAction)
     {
       Serialize(xtw, o, mappingAction, new List<object>());
     }
@@ -252,7 +252,7 @@ namespace CookComputing.XmlRpc
     void Serialize(
       XmlWriter xtw,
       Object o,
-      MappingAction mappingAction,
+      NullMappingAction mappingAction,
       List<object> nestedObjs)
     {
       if (nestedObjs.Contains(o))
@@ -262,7 +262,7 @@ namespace CookComputing.XmlRpc
       try
       {
         xtw.WriteStartElement("", "value", "");
-        XmlRpcType xType = XmlRpcServiceInfo.GetXmlRpcType(o.GetType());
+        XmlRpcType xType = XmlRpcServiceInfo.GetXmlRpcType(o);
         if (xType == XmlRpcType.tArray)
         {
           xtw.WriteStartElement("", "array", "");
@@ -270,10 +270,10 @@ namespace CookComputing.XmlRpc
           Array a = (Array)o;
           foreach (Object aobj in a)
           {
-            if (aobj == null)
-              throw new XmlRpcMappingSerializeException(String.Format(
-                "Items in array cannot be null ({0}[]).",
-            o.GetType().GetElementType()));
+            //if (aobj == null)
+            //  throw new XmlRpcMappingSerializeException(String.Format(
+            //    "Items in array cannot be null ({0}[]).",
+            //o.GetType().GetElementType()));
             Serialize(xtw, aobj, mappingAction, nestedObjs);
           }
           xtw.WriteEndElement();
@@ -347,7 +347,7 @@ namespace CookComputing.XmlRpc
         }
         else if (xType == XmlRpcType.tStruct)
         {
-          MappingAction structAction
+          NullMappingAction structAction
             = StructMappingAction(o.GetType(), mappingAction);
           xtw.WriteStartElement("", "struct", "");
           MemberInfo[] mis = o.GetType().GetMembers();
@@ -369,12 +369,13 @@ namespace CookComputing.XmlRpc
               }
               if (fi.GetValue(o) == null)
               {
-                MappingAction memberAction = MemberMappingAction(o.GetType(),
+                NullMappingAction memberAction = MemberNullMappingAction(o.GetType(),
                   fi.Name, structAction);
-                if (memberAction == MappingAction.Ignore)
+                if (memberAction == NullMappingAction.Ignore)
                   continue;
-                throw new XmlRpcMappingSerializeException(@"Member """ + member +
-                  @""" of struct """ + o.GetType().Name + @""" cannot be null.");
+                else if (memberAction == NullMappingAction.Error)
+                  throw new XmlRpcMappingSerializeException(@"Member """ + member +
+                    @""" of struct """ + o.GetType().Name + @""" cannot be null.");
               }
               xtw.WriteStartElement("", "member", "");
               xtw.WriteElementString("name", member);
@@ -395,10 +396,13 @@ namespace CookComputing.XmlRpc
               }
               if (pi.GetValue(o, null) == null)
               {
-                MappingAction memberAction = MemberMappingAction(o.GetType(),
+                NullMappingAction memberAction = MemberNullMappingAction(o.GetType(),
                   pi.Name, structAction);
-                if (memberAction == MappingAction.Ignore)
+                if (memberAction == NullMappingAction.Ignore)
                   continue;
+                else if (memberAction == NullMappingAction.Error)
+                  throw new XmlRpcMappingSerializeException(@"Member """ + member +
+                    @""" of struct """ + o.GetType().Name + @""" cannot be null.");
               }
               xtw.WriteStartElement("", "member", "");
               xtw.WriteElementString("name", member);
@@ -410,6 +414,11 @@ namespace CookComputing.XmlRpc
         }
         else if (xType == XmlRpcType.tVoid)
           xtw.WriteElementString("string", "");
+        else if (xType == XmlRpcType.tNil)
+        {
+          xtw.WriteStartElement("nil");
+          xtw.WriteEndElement();
+        }
         else
           throw new XmlRpcUnsupportedTypeException(o.GetType());
         xtw.WriteEndElement();
@@ -430,7 +439,7 @@ namespace CookComputing.XmlRpc
       Array ary,
       int CurRank,
       int[] indices,
-      MappingAction mappingAction,
+      NullMappingAction mappingAction,
       List<object> nestedObjs)
     {
       xtw.WriteStartElement("", "array", "");
@@ -481,7 +490,7 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "fault", "");
-      Serialize(xtw, fs, MappingAction.Error);
+      Serialize(xtw, fs, NullMappingAction.Error);
       xtw.WriteEndElement();
       xtw.WriteEndElement();
       xtw.Flush();
@@ -538,46 +547,58 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
-    MappingAction StructMappingAction(
+    NullMappingAction StructMappingAction(
       Type type,
-      MappingAction currentAction)
+      NullMappingAction currentAction)
     {
       // if struct member has mapping action attribute, override the current
       // mapping action else just return the current action
       if (type == null)
         return currentAction;
-      Attribute attr = Attribute.GetCustomAttribute(type,
-        typeof(XmlRpcMissingMappingAttribute));
+      Attribute attr = Attribute.GetCustomAttribute(type, typeof(XmlRpcNullMappingAttribute));
       if (attr != null)
-        return ((XmlRpcMissingMappingAttribute)attr).Action;
+        return ((XmlRpcNullMappingAttribute)attr).Action;
+      attr = Attribute.GetCustomAttribute(type, typeof(XmlRpcMissingMappingAttribute));
+      if (attr != null)
+        return MapToNullMappingAction(((XmlRpcMissingMappingAttribute)attr).Action);
       return currentAction;
     }
 
-    MappingAction MemberMappingAction(
+    NullMappingAction MemberNullMappingAction(
       Type type,
       string memberName,
-      MappingAction currentAction)
+      NullMappingAction currentAction)
     {
       // if struct member has mapping action attribute, override the current
       // mapping action else just return the current action
       if (type == null)
         return currentAction;
       Attribute attr = null;
-      FieldInfo fi = type.GetField(memberName);
-      if (fi != null)
-        attr = Attribute.GetCustomAttribute(fi,
-          typeof(XmlRpcMissingMappingAttribute));
-      else
+      MemberInfo[] mis = type.GetMember(memberName);
+      if (mis.Length > 0 && mis != null)
       {
-        PropertyInfo pi = type.GetProperty(memberName);
-        attr = Attribute.GetCustomAttribute(pi,
-          typeof(XmlRpcMissingMappingAttribute));
+        attr = Attribute.GetCustomAttribute(mis[0], typeof(XmlRpcNullMappingAttribute));
+        if (attr != null)
+          return ((XmlRpcNullMappingAttribute)attr).Action;
+        // check for missing mapping attribute for backwards compatibility
+        attr = Attribute.GetCustomAttribute(mis[0], typeof(XmlRpcMissingMappingAttribute));
+        if (attr != null)
+          return MapToNullMappingAction(((XmlRpcMissingMappingAttribute)attr).Action);
       }
-      if (attr != null)
-        return ((XmlRpcMissingMappingAttribute)attr).Action;
       return currentAction;
     }
+
+    private static NullMappingAction MapToNullMappingAction(MappingAction missingMappingAction)
+    {
+      switch (missingMappingAction)
+      {
+        case MappingAction.Error:
+          return NullMappingAction.Error;
+        case MappingAction.Ignore:
+          return NullMappingAction.Ignore;
+        default:
+          throw new XmlRpcException("Unexpected missingMappingAction in MapToNullMappingAction");
+      }
+    }
   }
-
-
 }

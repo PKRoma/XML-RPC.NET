@@ -45,7 +45,8 @@ namespace CookComputing.XmlRpc
     tHashtable,
     tArray,
     tMultiDimArray,
-    tVoid
+    tVoid,
+    tNil
   }
 
   public class XmlRpcServiceInfo
@@ -249,6 +250,11 @@ namespace CookComputing.XmlRpc
 
     private XmlRpcServiceInfo()
     {
+    }
+
+    public static XmlRpcType GetXmlRpcType(object o)
+    {
+      return o == null ? XmlRpcType.tNil : GetXmlRpcType(o.GetType());
     }
 
     public static XmlRpcType GetXmlRpcType(Type t)

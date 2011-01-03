@@ -693,11 +693,17 @@ namespace CookComputing.XmlRpc
         {
           string rpcName = (iter.Current as StructMember).Value;
           if (rpcNames.Contains(rpcName))
-            throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
-              + " contains struct value with duplicate member "
-              + rpcName
-              + " " + StackDump(parseStack));
-          rpcNames.Add(rpcName);
+          {
+            if (!IgnoreDuplicateMembers)
+              throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
+                + " contains struct value with duplicate member "
+                + rpcName
+                + " " + StackDump(parseStack));
+            else
+              continue;
+          }
+          else
+            rpcNames.Add(rpcName);
 
           string name = GetStructName(valueType, rpcName) ?? rpcName;
           MemberInfo mi = valueType.GetField(name);
@@ -792,6 +798,8 @@ namespace CookComputing.XmlRpc
 
       foreach (object value in values)
       {
+        if (value == null)
+          continue;
         if (bGotType == false)
         {
           useType = value.GetType();
@@ -868,10 +876,93 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    private object ParseMultiDimArray(IEnumerator<Node> iter, Type valType, ParseStack parseStack, MappingAction mappingAction)
+    Object ParseMultiDimArray(IEnumerator<Node> iter, Type ValueType,
+      ParseStack parseStack, MappingAction mappingAction)
     {
-      throw new NotImplementedException();
+      // parse the type name to get element type and array rank
+#if (!COMPACT_FRAMEWORK)
+      Type elemType = ValueType.GetElementType();
+      int rank = ValueType.GetArrayRank();
+#else
+      string[] checkMultiDim = Regex.Split(ValueType.FullName, 
+        "\\[,[,]*\\]$");
+      Type elemType = Type.GetType(checkMultiDim[0]);
+      string commas = ValueType.FullName.Substring(checkMultiDim[0].Length+1, 
+        ValueType.FullName.Length-checkMultiDim[0].Length-2);
+      int rank = commas.Length+1;
+#endif
+      // elements will be stored sequentially as nested arrays are parsed
+      var elements = new List<object>();
+      // create array to store length of each dimension - initialize to 
+      // all zeroes so that when parsing we can determine if an array for 
+      // that dimension has been parsed already
+      int[] dimLengths = new int[rank];
+      dimLengths.Initialize();
+      ParseMultiDimElements(iter, rank, 0, elemType, elements, dimLengths,
+        parseStack, mappingAction);
+      // build arguments to define array dimensions and create the array
+      Object[] args = new Object[dimLengths.Length];
+      for (int argi = 0; argi < dimLengths.Length; argi++)
+      {
+        args[argi] = dimLengths[argi];
+      }
+      Array ret = (Array)CreateArrayInstance(ValueType, args);
+      // copy elements into new multi-dim array
+      //!! make more efficient
+      int length = ret.Length;
+      for (int e = 0; e < length; e++)
+      {
+        int[] indices = new int[dimLengths.Length];
+        int div = 1;
+        for (int f = (indices.Length - 1); f >= 0; f--)
+        {
+          indices[f] = (e / div) % dimLengths[f];
+          div *= dimLengths[f];
+        }
+        ret.SetValue(elements[e], indices);
+      }
+      return ret;
     }
+
+    void ParseMultiDimElements(IEnumerator<Node> iter, int Rank, int CurRank,
+      Type elemType, List<object> elements, int[] dimLengths,
+      ParseStack parseStack, MappingAction mappingAction)
+    {
+      //XmlNode dataNode = SelectSingleNode(node, "data");
+      //XmlNode[] childNodes = SelectNodes(dataNode, "value");
+      //int nodeCount = childNodes.Length;
+      ////!! check that multi dim array is not jagged
+      //if (dimLengths[CurRank] != 0 && nodeCount != dimLengths[CurRank])
+      //{
+      //  throw new XmlRpcNonRegularArrayException(
+      //    "Multi-dimensional array must not be jagged.");
+      //}
+      //dimLengths[CurRank] = nodeCount;  // in case first array at this rank
+      int nodeCount = 0;
+      if (CurRank < (Rank - 1))
+      {
+        while (iter.MoveNext() && iter.Current is ArrayValue)
+        {
+          nodeCount++;
+          ParseMultiDimElements(iter, Rank, CurRank + 1, elemType,
+            elements, dimLengths, parseStack, mappingAction);
+        }
+      }
+      else
+      {
+        while (iter.MoveNext() && iter.Current is ValueNode)
+        {
+          nodeCount++;
+          object value = ParseValueNode(iter, elemType, parseStack, mappingAction);
+          elements.Add(value);
+        }
+      }
+      dimLengths[CurRank] = nodeCount;
+    }
+
+
+
+
 
 
     public Object ParseValueElement(

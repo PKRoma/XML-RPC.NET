@@ -17,6 +17,7 @@
     <SilverlightApplication>false</SilverlightApplication>
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,7 +30,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -131,6 +131,9 @@
     </Compile>
     <Compile Include="..\src\XmlRpcNonStandard.cs">
       <Link>XmlRpcNonStandard.cs</Link>
+    </Compile>
+    <Compile Include="..\src\XmlRpcNullMappingAttribute.cs">
+      <Link>XmlRpcNullMappingAttribute.cs</Link>
     </Compile>
     <Compile Include="..\src\XmlRpcParameterAttribute.cs">
       <Link>XmlRpcParameterAttribute.cs</Link>
