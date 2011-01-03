@@ -15,9 +15,11 @@ For more information about XML-RPC refer to http://www.xmlrpc.com/
 
 PREQUISITES
 -----------
-Assembly CookComputing.XmlRpcV2.dll requires 2.0 .NET runtime 
-and runs on all later versions.
+Assemblies CookComputing.XmlRpcV3.dll and CookComputying.XmlRpcServerV3.dll 
+require 2.0 .NET runtime and run on all later versions.
 
+Assembly CookComputing.XmlRpcSilverlightV3.dll requires Silverlight 3 runtime and runs on 
+later versions.
 
 DOCUMENTATION
 -------------
