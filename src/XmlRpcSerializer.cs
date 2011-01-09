@@ -93,10 +93,7 @@ namespace CookComputing.XmlRpc
       {
         // TODO: use global action setting
         NullMappingAction mappingAction = NullMappingAction.Error; 
-        if (request.xmlRpcMethod == null)
-          xtw.WriteElementString("methodName", request.method);
-        else
-          xtw.WriteElementString("methodName", request.xmlRpcMethod);
+        xtw.WriteElementString("methodName", request.method);
         if (request.args.Length > 0 || UseEmptyParamsTag)
         {
           xtw.WriteStartElement("", "params", "");

@@ -22,9 +22,10 @@ namespace CookComputing.XmlRpc
     public static IEnumerable<Node> ParseRequest(XmlReader rdr)
     {
       rdr.MoveToContent();
-      //Assert(rdr, "methodCall");
+      if (rdr.Name != "methodCall")
+        throw new XmlRpcInvalidXmlRpcException(
+          "Request XML not valid XML-RPC - root element not methodCall.");
       int mcDepth = rdr.Depth;
-
       MoveToChild(rdr, "methodName", true);
       int mnDepth = rdr.Depth;
       string methodName = rdr.ReadElementContentAsString();
@@ -51,9 +52,9 @@ namespace CookComputing.XmlRpc
     public static IEnumerable<Node> ParseResponse(XmlReader rdr)
     {
       rdr.MoveToContent();
-      // TODO: check is methodResponse
-
-
+      if (rdr.Name != "methodResponse")
+        throw new XmlRpcInvalidXmlRpcException(
+          "Response XML not valid XML-RPC - root element not methodResponse.");
       int mrDepth = rdr.Depth;
       MoveToChild(rdr, "params", "fault");
       if (rdr.Name == "params")
