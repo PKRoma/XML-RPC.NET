@@ -177,6 +177,7 @@
     <Compile Include="..\src\XmlRpcUrlAttribute.cs">
       <Link>XmlRpcUrlAttribute.cs</Link>
     </Compile>
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="BrowsableAttribute.cs" />
     <Compile Include="NonSerializedAttribute.cs" />
     <Compile Include="SerializableAttribute.cs" />
