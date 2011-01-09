@@ -2,8 +2,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("XML-RPC.NET for Windows Phone")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("XML-RPC.NET for Silverlight")]
+[assembly: AssemblyDescription("For Silverlight 3 and 4")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cook Computing")]
 [assembly: AssemblyProduct("")]
