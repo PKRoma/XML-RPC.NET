@@ -213,7 +213,7 @@ namespace CookComputing.XmlRpc
 #endif
           try
           {
-            XmlRpcResponse resp = ReadResponse(req, webResp, deserStream, null);
+            XmlRpcResponse resp = ReadResponse(req, webResp, deserStream);
             reto = resp.retVal;
           }
           finally
@@ -492,8 +492,7 @@ namespace CookComputing.XmlRpc
     XmlRpcResponse ReadResponse(
       XmlRpcRequest req,
       WebResponse webResp,
-      Stream respStm,
-      Type returnType)
+      Stream respStm)
     {
       HttpWebResponse httpResp = (HttpWebResponse)webResp;
       if (httpResp.StatusCode != HttpStatusCode.OK)
@@ -508,9 +507,7 @@ namespace CookComputing.XmlRpc
       }
       XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
       deserializer.NonStandard = _nonStandard;
-      Type retType = returnType;
-      if (retType == null)
-        retType = req.mi.ReturnType;
+      Type retType = req.mi.ReturnType;
       XmlRpcResponse xmlRpcResp
         = deserializer.DeserializeResponse(respStm, retType);
       return xmlRpcResp;
@@ -832,9 +829,7 @@ namespace CookComputing.XmlRpc
       return EndInvoke(asr, null);
     }
 
-    public object EndInvoke(
-      IAsyncResult asr,
-      Type returnType)
+    public object EndInvoke(IAsyncResult asr, Type returnType)
     {
       object reto = null;
       Stream responseStream = null;
@@ -846,6 +841,8 @@ namespace CookComputing.XmlRpc
         if (clientResult.EndSendCalled)
           throw new Exception("dup call to EndSend");
         clientResult.EndSendCalled = true;
+        if (clientResult.XmlRpcRequest != null && returnType != null)
+          clientResult.XmlRpcRequest.ReturnType = returnType;
         HttpWebResponse webResp = (HttpWebResponse)clientResult.WaitForResponse();
 #if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
         clientResult._responseCookies = webResp.Cookies;
@@ -865,7 +862,7 @@ namespace CookComputing.XmlRpc
           responseStream);
 #endif
         XmlRpcResponse resp = ReadResponse(clientResult.XmlRpcRequest,
-          webResp, responseStream, returnType);
+          webResp, responseStream);
         reto = resp.retVal;
       }
       finally

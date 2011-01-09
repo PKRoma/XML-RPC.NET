@@ -50,6 +50,7 @@
   <ItemGroup>
     <Reference Include="CookComputing.XmlRpcServerV3, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\bin\CookComputing.XmlRpcServerV3.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="CookComputing.XmlRpcV3, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

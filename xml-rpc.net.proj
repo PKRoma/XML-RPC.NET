@@ -91,19 +91,21 @@
     <ZipFiles Include="README.txt" />
     <ZipFiles Include="xml-rpc.net.proj" />
 
-    <ZipFiles Include="$(BuildDir)/BettyApp.exe" />
-    <ZipFiles Include="$(BuildDir)/BettyAsyncApp.exe" />
-    <ZipFiles Include="$(BuildDir)/LoggingExample.exe" />
-    <ZipFiles Include="$(BuildDir)/MathApp.exe" />
-    <ZipFiles Include="$(BuildDir)/StateNameClient.exe" />
-    <ZipFiles Include="$(BuildDir)/StateNameServer.exe" />
-    <ZipFiles Include="$(BuildDir)/StateNameServer.exe.config" />
-    <ZipFiles Include="$(BuildDir)/StateNameSilverlightClient.xap" />
-    <ZipFiles Include="$(BuildDir)/StateNameSilverlightClientTestPage.html" />
-    
-    <ZipFiles Include="$(BuildDir)/CookComputing.XmlRpc.CF.dll" />
-    <ZipFiles Include="$(BuildDir)/CookComputing.XmlRpcV2.dll" />
-    <ZipFiles Include="$(BuildDir)/IStateName.dll" />
+    <ZipFiles Include="bin/BettyApp.exe" />
+    <ZipFiles Include="bin/BettyAsyncApp.exe" />
+    <ZipFiles Include="bin/LoggingExample.exe" />
+    <ZipFiles Include="bin/MathApp.exe" />
+    <ZipFiles Include="bin/StateNameClient.exe" />
+    <ZipFiles Include="bin/StateNameServer.exe" />
+    <ZipFiles Include="bin/StateNameServer.exe.config" />
+    <ZipFiles Include="bin/StateNameSilverlightClient.xap" />
+    <ZipFiles Include="bin/StateNameSilverlightClientTestPage.html" />
+    <ZipFiles Include="bin/IStateName.dll" />
+
+    <ZipFiles Include="bin/CookComputing.XmlRpcV3.dll" />
+    <ZipFiles Include="bin/CookComputing.XmlRpcServerV3.dll" />
+    <ZipFiles Include="bin/CookComputing.XmlRpcSilverlightV3.dll" />
+    <ZipFiles Include="bin/CookComputing.XmlRpcPhoneV3.dll" />
 
     <ZipFiles Include="xrpgen/AssemblyInfo.vb" />
     <ZipFiles Include="xrpgen/Main.vb" />

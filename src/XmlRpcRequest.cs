@@ -51,6 +51,8 @@ namespace CookComputing.XmlRpc
       if (XmlRpcMethod != null)
         method = XmlRpcMethod;
       proxyId = proxyGuid;
+      if (mi != null)
+        ReturnType = mi.ReturnType;
     }
 
     public XmlRpcRequest(string methodName, Object[] parameters)
@@ -65,5 +67,6 @@ namespace CookComputing.XmlRpc
     public Guid proxyId;
     static int _created;
     public int number = System.Threading.Interlocked.Increment(ref _created);
+    public Type ReturnType;
   }    
 }
