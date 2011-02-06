@@ -92,7 +92,7 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartElement("", "methodCall", "");
       {
         // TODO: use global action setting
-        NullMappingAction mappingAction = NullMappingAction.Error; 
+        NullMappingAction mappingAction = NullMappingAction.Nil; 
         xtw.WriteElementString("methodName", request.method);
         if (request.args.Length > 0 || UseEmptyParamsTag)
         {
@@ -207,14 +207,9 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "params", "");
-      // "void" methods actually return an empty string value
-      if (ret == null)
-      {
-        ret = "";
-      }
       xtw.WriteStartElement("", "param", "");
       // TODO: use global action setting
-      NullMappingAction mappingAction = NullMappingAction.Error;
+      NullMappingAction mappingAction = NullMappingAction.Nil;
       try
       {
         Serialize(xtw, ret, mappingAction);
