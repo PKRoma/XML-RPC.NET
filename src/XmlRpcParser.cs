@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace CookComputing.XmlRpc
 {
-  public static class XmlRpcParser
+  public class XmlRpcParser
   {
     static List<string> _xmlRpcMembers = new List<string>();
 
@@ -19,7 +19,7 @@ namespace CookComputing.XmlRpc
         });
     }
 
-    public static IEnumerable<Node> ParseRequest(XmlReader rdr)
+    public IEnumerable<Node> ParseRequest(XmlReader rdr)
     {
       rdr.MoveToContent();
       if (rdr.Name != "methodCall")
@@ -49,7 +49,7 @@ namespace CookComputing.XmlRpc
       MoveToEndElement(rdr, mcDepth);
     }
 
-    public static IEnumerable<Node> ParseResponse(XmlReader rdr)
+    public IEnumerable<Node> ParseResponse(XmlReader rdr)
     {
       rdr.MoveToContent();
       if (rdr.Name != "methodResponse")

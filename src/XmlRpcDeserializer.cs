@@ -154,7 +154,7 @@ namespace CookComputing.XmlRpc
       try
       {
         XmlRpcRequest request = new XmlRpcRequest();
-        IEnumerator<Node> iter = XmlRpcParser.ParseRequest(rdr).GetEnumerator();
+        IEnumerator<Node> iter = new XmlRpcParser().ParseRequest(rdr).GetEnumerator();
 
         iter.MoveNext();
         string methodName = (iter.Current as MethodName).Name;
@@ -349,7 +349,7 @@ namespace CookComputing.XmlRpc
       try
       {
 
-        IEnumerator<Node> iter = XmlRpcParser.ParseResponse(rdr).GetEnumerator();
+        IEnumerator<Node> iter = new XmlRpcParser().ParseResponse(rdr).GetEnumerator();
         iter.MoveNext();
         if (iter.Current is FaultNode)
         {
