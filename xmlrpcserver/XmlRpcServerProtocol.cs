@@ -102,6 +102,11 @@ namespace CookComputing.XmlRpc
           throw ex.InnerException;
         throw ex;
       }
+      // methods which have void return type always return integer 0
+      // because XML-RPC doesn't support no return type (could use nil
+      // but want to maintain backwards compatibility in this area)
+      if (mi != null && mi.ReturnType == typeof(void))
+        reto = 0;
       XmlRpcResponse response = new XmlRpcResponse(reto);
       return response;
     }
