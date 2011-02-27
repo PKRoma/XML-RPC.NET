@@ -38,8 +38,8 @@ namespace CookComputing.XmlRpc
     {
       try
       {
-        var serializer = new XmlRpcSerializer();
-        var deserializer = new XmlRpcDeserializer();
+        var serializer = new XmlRpcResponseSerializer();
+        var deserializer = new XmlRpcRequestDeserializer();
         Type type = this.GetType();
         XmlRpcServiceAttribute serviceAttr = (XmlRpcServiceAttribute)
           Attribute.GetCustomAttribute(this.GetType(),

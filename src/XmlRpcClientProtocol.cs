@@ -160,7 +160,7 @@ namespace CookComputing.XmlRpc
           serStream = new MemoryStream(2000);
         try
         {
-          XmlRpcSerializer serializer = new XmlRpcSerializer();
+          var serializer = new XmlRpcRequestSerializer();
           if (_xmlEncoding != null)
             serializer.XmlEncoding = _xmlEncoding;
           serializer.UseIndentation = _useIndentation;
@@ -211,20 +211,14 @@ namespace CookComputing.XmlRpc
           deserStream = MaybeDecompressStream((HttpWebResponse)webResp, 
             deserStream);          
 #endif
-          try
+          if (logging)
           {
-            XmlRpcResponse resp = ReadResponse(req, webResp, deserStream);
-            reto = resp.retVal;
+            OnResponse(new XmlRpcResponseEventArgs(req.proxyId, req.number,
+              deserStream));
+            deserStream.Position = 0;
           }
-          finally
-          {
-            if (logging)
-            {
-              deserStream.Position = 0;
-              OnResponse(new XmlRpcResponseEventArgs(req.proxyId, req.number,
-                deserStream));
-            }
-          }
+          XmlRpcResponse resp = ReadResponse(req, webResp, deserStream);
+          reto = resp.retVal;
         }
         finally
         {
@@ -505,7 +499,7 @@ namespace CookComputing.XmlRpc
         else
           throw new XmlRpcServerException(httpResp.StatusDescription);
       }
-      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       deserializer.NonStandard = _nonStandard;
       Type retType = req.mi.ReturnType;
       XmlRpcResponse xmlRpcResp
@@ -665,7 +659,7 @@ namespace CookComputing.XmlRpc
         try
         {
           XmlRpcRequest req = clientResult.XmlRpcRequest;
-          XmlRpcSerializer serializer = new XmlRpcSerializer();
+          var serializer = new XmlRpcRequestSerializer();
           if (clientResult.XmlEncoding != null)
             serializer.XmlEncoding = clientResult.XmlEncoding;
           serializer.UseEmptyParamsTag = clientResult.UseEmptyParamsTag;

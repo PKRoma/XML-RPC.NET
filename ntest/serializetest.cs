@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading;
 using  NUnit.Framework;
 using CookComputing.XmlRpc;
+using System.Runtime.InteropServices;
 namespace ntest
 
 // TODO: test any culture dependencies
@@ -257,6 +258,10 @@ namespace ntest
       [XmlRpcMember("member_3")]
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public int? member3;
+
+      [XmlRpcMember("member_4")]
+      public int member4 { get; set; }
+
     }
 
     [Test]
@@ -264,9 +269,9 @@ namespace ntest
     {
       Stream stm = new MemoryStream();
       XmlRpcRequest req = new XmlRpcRequest();
-      req.args = new Object[] { new Struct2() };
+      req.args = new Object[] { new Struct2 { member1 = 1, member4 = 4 } };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -281,9 +286,15 @@ namespace ntest
       <value>
         <struct>
           <member>
+            <name>member_4</name>
+            <value>
+              <i4>4</i4>
+            </value>
+          </member>
+          <member>
             <name>member_1</name>
             <value>
-              <i4>0</i4>
+              <i4>1</i4>
             </value>
           </member>
         </struct>
@@ -318,7 +329,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { new Struct3() };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -379,7 +390,7 @@ namespace ntest
       arg._string = "Test Class";
       req.args = new Object[] { arg };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -435,7 +446,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { new Struct4() };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -478,7 +489,7 @@ namespace ntest
         new Struct5 { ds = new System.Data.DataSet(), y = 1234 } 
       };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -511,7 +522,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { new Class4() };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -563,7 +574,7 @@ namespace ntest
       };
       req.args = new Object[] { example };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.UseStringTag = false;
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
@@ -672,7 +683,7 @@ namespace ntest
       };
       req.args = new Object[] { example };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.UseStringTag = false;
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
@@ -928,7 +939,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { null };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -956,7 +967,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { 1234567 };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -983,7 +994,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { 1234567 };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.Indentation = 4;
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
@@ -1011,7 +1022,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { 1234567 };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.UseIndentation = false;
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
@@ -1046,7 +1057,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { str1 };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -1066,7 +1077,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { "string no string tag" };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.UseStringTag = false;
       ser.Indentation = 4;
       ser.SerializeRequest(stm, req);
@@ -1093,7 +1104,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { "string string tag" };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.UseStringTag = true;
       ser.Indentation = 4;
       ser.SerializeRequest(stm, req);
@@ -1122,7 +1133,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { "string default tag" };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.Indentation = 4;
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
@@ -1150,7 +1161,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { 1234 };
       req.method = "Foo";
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.Indentation = 4;
       ser.UseIntTag = true;
       ser.SerializeRequest(stm, req);
@@ -1187,7 +1198,7 @@ namespace ntest
       req.args = new Object[] { 1234, "test", 10.1 };
       req.method = "Foo";
       req.mi = this.GetType().GetMethod("Foo");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.Indentation = 2;
       ser.UseIntTag = true;
       ser.SerializeRequest(stm, req);
@@ -1243,7 +1254,7 @@ namespace ntest
       req.args = new Object[] { 1234, "test", new double[] { 10.1 } };
       req.method = "FooWithParams";
       req.mi = this.GetType().GetMethod("FooWithParams");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.Indentation = 2;
       ser.UseIntTag = true;
       ser.SerializeRequest(stm, req);
@@ -1258,7 +1269,7 @@ namespace ntest
       req.args = new Object[] { 1234, "test", 10.1, "lopol" };
       req.method = "Foo";
       req.mi = this.GetType().GetMethod("Foo");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.Indentation = 2;
       ser.UseIntTag = true;
       ser.SerializeRequest(stm, req);
@@ -1279,7 +1290,7 @@ namespace ntest
       req.args = new Object[] { "Bob Dylan", "abcd1234" };
       req.method = "artist.getInfo";
       req.mi = this.GetType().GetMethod("getInfo");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.Indentation = 2;
       ser.UseIntTag = true;
       ser.SerializeRequest(stm, req);
@@ -1313,6 +1324,61 @@ namespace ntest
   </params>
 </methodCall>", reqstr);
     }
-  }
-}
 
+    [XmlRpcMethod("system.pid")]
+    public string getPid()
+    {
+      return "1234";
+    }
+
+    [Test]
+    public void NoParams()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[0];
+      req.method = "system.pid";
+      req.mi = this.GetType().GetMethod("getPid");
+      var ser = new XmlRpcRequestSerializer();
+      ser.Indentation = 2;
+      ser.UseIntTag = true;
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>system.pid</methodName>
+  <params />
+</methodCall>", reqstr);
+    }
+
+        [Test]
+    public void NoParams2()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[0];
+      req.method = "system.pid";
+      req.mi = this.GetType().GetMethod("getPid");
+      var ser = new XmlRpcRequestSerializer();
+      ser.Indentation = 2;
+      ser.UseIntTag = true;
+      ser.UseEmptyParamsTag = false;
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>system.pid</methodName>
+</methodCall>", reqstr);
+    }
+
+  }
+
+}

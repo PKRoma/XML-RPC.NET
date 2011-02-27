@@ -1,6 +1,6 @@
 ﻿/* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2011, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -39,13 +39,6 @@ namespace CookComputing.XmlRpc
   using System.Diagnostics;
   using System.Collections.Generic;
 
-
-  struct Fault
-  {
-    public int faultCode;
-    public string faultString;
-  }
-
   public class XmlRpcDeserializer
   {
     public XmlRpcNonStandard NonStandard
@@ -56,47 +49,37 @@ namespace CookComputing.XmlRpc
     XmlRpcNonStandard m_nonStandard = XmlRpcNonStandard.None;
 
     // private properties
-    bool AllowInvalidHTTPContent
+    protected bool AllowInvalidHTTPContent
     {
       get { return (m_nonStandard & XmlRpcNonStandard.AllowInvalidHTTPContent) != 0; }
     }
 
-    bool AllowNonStandardDateTime
+    protected bool AllowNonStandardDateTime
     {
       get { return (m_nonStandard & XmlRpcNonStandard.AllowNonStandardDateTime) != 0; }
     }
 
-    bool AllowStringFaultCode
+    protected bool AllowStringFaultCode
     {
       get { return (m_nonStandard & XmlRpcNonStandard.AllowStringFaultCode) != 0; }
     }
 
-    bool IgnoreDuplicateMembers
+    protected bool IgnoreDuplicateMembers
     {
       get { return (m_nonStandard & XmlRpcNonStandard.IgnoreDuplicateMembers) != 0; }
     }
 
-    bool MapEmptyDateTimeToMinValue
+    protected bool MapEmptyDateTimeToMinValue
     {
       get { return (m_nonStandard & XmlRpcNonStandard.MapEmptyDateTimeToMinValue) != 0; }
     }
 
-    bool MapZerosDateTimeToMinValue
+    protected bool MapZerosDateTimeToMinValue
     {
       get { return (m_nonStandard & XmlRpcNonStandard.MapZerosDateTimeToMinValue) != 0; }
     }
 
-#if (!COMPACT_FRAMEWORK)
-    public XmlRpcRequest DeserializeRequest(Stream stm, Type svcType)
-    {
-      if (stm == null)
-        throw new ArgumentNullException("stm",
-          "XmlRpcSerializer.DeserializeRequest");
-      XmlReader xmlRdr = CreateXmlReader(stm);
-      return DeserializeRequest(xmlRdr, svcType);
-    }
-
-    private static XmlReader CreateXmlReader(Stream stm)
+    protected static XmlReader CreateXmlReader(Stream stm)
     {
 #if (!SILVERLIGHT)
       XmlTextReader xmlRdr = new XmlTextReader(stm);
@@ -108,7 +91,7 @@ namespace CookComputing.XmlRpc
 #endif
     }
 
-    private static XmlReader CreateXmlReader(TextReader txtrdr)
+    protected static XmlReader CreateXmlReader(TextReader txtrdr)
     {
 #if (!SILVERLIGHT)
       XmlTextReader xmlRdr = new XmlTextReader(txtrdr);
@@ -139,246 +122,6 @@ namespace CookComputing.XmlRpc
       return settings;
     }
 #endif
-
-    public XmlRpcRequest DeserializeRequest(TextReader txtrdr, Type svcType)
-    {
-      if (txtrdr == null)
-        throw new ArgumentNullException("txtrdr",
-          "XmlRpcSerializer.DeserializeRequest");
-      XmlReader xmlRdr = CreateXmlReader(txtrdr);
-      return DeserializeRequest(xmlRdr, svcType);
-    }
-
-    public XmlRpcRequest DeserializeRequest(XmlReader rdr, Type svcType)
-    {
-      try
-      {
-        XmlRpcRequest request = new XmlRpcRequest();
-        IEnumerator<Node> iter = new XmlRpcParser().ParseRequest(rdr).GetEnumerator();
-
-        iter.MoveNext();
-        string methodName = (iter.Current as MethodName).Name;
-        request.method = methodName;
-
-        request.mi = null;
-        ParameterInfo[] pis = null;
-        if (svcType != null)
-        {
-          // retrieve info for the method which handles this XML-RPC method
-          XmlRpcServiceInfo svcInfo
-            = XmlRpcServiceInfo.CreateServiceInfo(svcType);
-          request.mi = svcInfo.GetMethodInfo(request.method);
-          // if a service type has been specified and we cannot find the requested
-          // method then we must throw an exception
-          if (request.mi == null)
-          {
-            string msg = String.Format("unsupported method called: {0}",
-                                        request.method);
-            throw new XmlRpcUnsupportedMethodException(msg);
-          }
-          // method must be marked with XmlRpcMethod attribute
-          Attribute attr = Attribute.GetCustomAttribute(request.mi,
-            typeof(XmlRpcMethodAttribute));
-          if (attr == null)
-          {
-            throw new XmlRpcMethodAttributeException(
-              "Method must be marked with the XmlRpcMethod attribute.");
-          }
-          pis = request.mi.GetParameters();
-        }
-
-        bool gotParams = iter.MoveNext();
-        if (!gotParams)
-        {
-          if (svcType != null)
-          {
-            if (pis.Length == 0)
-            {
-              request.args = new object[0];
-              return request;
-            }
-            else
-            {
-              throw new XmlRpcInvalidParametersException(
-                "Method takes parameters and params element is missing.");
-            }
-          }
-          else
-          {
-            request.args = new object[0];
-            return request;
-          }
-        }
-
-        int paramsPos = pis != null ? GetParamsPos(pis) : -1;
-        Type paramsType = null;
-        if (paramsPos != -1)
-          paramsType = pis[paramsPos].ParameterType.GetElementType();
-        int minParamCount = pis == null ? int.MaxValue 
-          : (paramsPos == -1 ? pis.Length : paramsPos);
-        ParseStack parseStack = new ParseStack("request");
-        MappingAction mappingAction = MappingAction.Error;
-        var objs = new List<object>();
-        var paramsObjs = new List<object>();
-        int paramCount = 0;
-
-
-        while (iter.MoveNext())
-        {
-          paramCount++;
-          if (svcType != null && paramCount > minParamCount && paramsPos == -1)
-            throw new XmlRpcInvalidParametersException(
-              "Request contains too many param elements based on method signature.");
-          if (paramCount <= minParamCount)
-          {
-            if (svcType != null)
-            {
-              parseStack.Push(String.Format("parameter {0}", paramCount));
-              // TODO: why following commented out?
-              //          parseStack.Push(String.Format("parameter {0} mapped to type {1}", 
-              //            i, pis[i].ParameterType.Name));
-              var obj = ParseValueNode(iter,
-                pis[paramCount - 1].ParameterType, parseStack, mappingAction);
-              objs.Add(obj);
-            }
-            else
-            {
-              parseStack.Push(String.Format("parameter {0}", paramCount));
-              var obj = ParseValueNode(iter, null, parseStack, mappingAction);
-              objs.Add(obj);
-            }
-            parseStack.Pop();
-          }
-          else
-          {
-            parseStack.Push(String.Format("parameter {0}", paramCount + 1));
-            var paramsObj = ParseValueNode(iter, paramsType, parseStack, mappingAction);
-            paramsObjs.Add(paramsObj);
-            parseStack.Pop();
-          }
-        }
-
-        if (svcType != null && paramCount < minParamCount)
-          throw new XmlRpcInvalidParametersException(
-            "Request contains too few param elements based on method signature.");
-
-        if (paramsPos != -1)
-        {
-          Object[] args = new Object[1];
-          args[0] = paramCount - minParamCount;
-          Array varargs = (Array)CreateArrayInstance(pis[paramsPos].ParameterType,
-            args);
-          for (int i = 0; i < paramsObjs.Count; i++)
-            varargs.SetValue(paramsObjs[i], i);
-          objs.Add(varargs);
-        }
-        request.args = objs.ToArray();
-        return request;
-      }
-      catch (XmlException ex)
-      {
-        throw new XmlRpcIllFormedXmlException("Request contains invalid XML", ex);
-      }
-    }
-
-    int GetParamsPos(ParameterInfo[] pis)
-    {
-      if (pis.Length == 0)
-        return -1;
-      if (Attribute.IsDefined(pis[pis.Length - 1], typeof(ParamArrayAttribute)))
-      {
-        return pis.Length - 1;
-      }
-      else
-        return -1;
-    }
-#endif
-
-    public XmlRpcResponse DeserializeResponse(Stream stm, Type svcType)
-    {
-      if (stm == null)
-        throw new ArgumentNullException("stm",
-          "XmlRpcSerializer.DeserializeResponse");
-      if (AllowInvalidHTTPContent)
-      {
-        Stream newStm = new MemoryStream();
-        Util.CopyStream(stm, newStm);
-        stm = newStm;
-        stm.Position = 0;
-        while (true)
-        {
-          // for now just strip off any leading CR-LF characters
-          int byt = stm.ReadByte();
-          if (byt == -1)
-            throw new XmlRpcIllFormedXmlException(
-              "Response from server does not contain valid XML.");
-          if (byt != 0x0d && byt != 0x0a && byt != ' ' && byt != '\t')
-          {
-            stm.Position = stm.Position - 1;
-            break;
-          }
-        }
-      }
-      var settings = new XmlReaderSettings
-      {
-        IgnoreComments = true,
-        IgnoreProcessingInstructions = true,
-        IgnoreWhitespace = false,
-      };
-      XmlReader xmlRdr = XmlReader.Create(stm, settings);
-      return DeserializeResponse(xmlRdr, svcType);
-    }
-
-    public XmlRpcResponse DeserializeResponse(TextReader txtrdr, Type svcType)
-    {
-      if (txtrdr == null)
-        throw new ArgumentNullException("txtrdr",
-          "XmlRpcSerializer.DeserializeResponse");
-      var settings = new XmlReaderSettings
-      {
-        IgnoreComments = true,
-        IgnoreProcessingInstructions = true,
-        IgnoreWhitespace = false,
-      };
-      XmlReader xmlRdr = XmlReader.Create(txtrdr, settings);
-      return DeserializeResponse(xmlRdr, svcType);
-    }
-
-    public XmlRpcResponse DeserializeResponse(XmlReader rdr, Type returnType)
-    {
-      try
-      {
-
-        IEnumerator<Node> iter = new XmlRpcParser().ParseResponse(rdr).GetEnumerator();
-        iter.MoveNext();
-        if (iter.Current is FaultNode)
-        {
-          var xmlRpcException = DeserializeFault(iter);
-          throw xmlRpcException;
-        }
-        if (returnType == typeof(void) || !iter.MoveNext())
-          return new XmlRpcResponse { retVal = null }; 
-        var valueNode = iter.Current as ValueNode;
-        object retObj = ParseValueNode(iter, returnType, new ParseStack("response"),
-          MappingAction.Error);
-        var response = new XmlRpcResponse { retVal = retObj };
-        return response;
-      }
-      catch (XmlException ex)
-      {
-        throw new XmlRpcIllFormedXmlException("Response contains invalid XML", ex);
-      }
-    }
-
-    private XmlRpcException DeserializeFault(IEnumerator<Node> iter)
-    {
-      ParseStack faultStack = new ParseStack("fault response");
-      // TODO: use global action setting
-      MappingAction mappingAction = MappingAction.Error;
-      XmlRpcFaultException faultEx = ParseFault(iter, faultStack, // TODO: fix
-        mappingAction);
-      throw faultEx;
-    }
 
     public Object ParseValueNode(
       IEnumerator<Node> iter,
@@ -604,7 +347,7 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    private object ParseHashtable(IEnumerator<Node> iter, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
+    protected object ParseHashtable(IEnumerator<Node> iter, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
     {
       parsedType = null;
       XmlRpcStruct retObj = new XmlRpcStruct();
@@ -1257,39 +1000,6 @@ namespace CookComputing.XmlRpc
       if (attr != null)
         return ((XmlRpcMissingMappingAttribute)attr).Action;
       return currentAction;
-    }
-
-    XmlRpcFaultException ParseFault(
-    IEnumerator<Node> iter,
-    ParseStack parseStack,
-    MappingAction mappingAction)
-    {
-      iter.MoveNext();  // move to StructValue
-      Type parsedType;
-      var faultStruct = ParseHashtable(iter, null, parseStack, mappingAction,
-        out parsedType) as XmlRpcStruct;
-      object faultCode = faultStruct["faultCode"];
-      object faultString = faultStruct["faultString"];
-      if (faultCode is string)
-      {
-        int value;
-        if (!Int32.TryParse(faultCode as string, out value))
-          throw new XmlRpcInvalidXmlRpcException("faultCode not int or string");
-        faultCode = value;
-      }
-      return new XmlRpcFaultException((int)faultCode, (string)faultString);
-    }
-
-    struct FaultStruct
-    {
-      public int faultCode;
-      public string faultString;
-    }
-
-    struct FaultStructStringCode
-    {
-      public string faultCode;
-      public string faultString;
     }
 
     string StackDump(ParseStack parseStack)

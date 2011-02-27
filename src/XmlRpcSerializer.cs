@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2011, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -83,149 +83,6 @@ namespace CookComputing.XmlRpc
       set { m_encoding = value; }
     }
     Encoding m_encoding = null;
-
-    public void SerializeRequest(Stream stm, XmlRpcRequest request) 
-    {
-      var stmWriter = new EncodingStreamWriter(stm, XmlEncoding);
-      XmlWriter xtw = XmlWriter.Create(stmWriter, ConfigureXmlFormat());
-      xtw.WriteStartDocument();
-      xtw.WriteStartElement("", "methodCall", "");
-      {
-        // TODO: use global action setting
-        NullMappingAction mappingAction = NullMappingAction.Nil; 
-        xtw.WriteElementString("methodName", request.method);
-        if (request.args.Length > 0 || UseEmptyParamsTag)
-        {
-          xtw.WriteStartElement("", "params", "");
-          try
-          {
-            if (!IsStructParamsMethod(request.mi))
-              SerializeParams(xtw, request, mappingAction);
-            else
-              SerializeStructParams(xtw, request, mappingAction);
-          }
-          catch (XmlRpcUnsupportedTypeException ex)
-          {
-            throw new XmlRpcUnsupportedTypeException(ex.UnsupportedType,
-              String.Format("A parameter is of, or contains an instance of, "
-              + "type {0} which cannot be mapped to an XML-RPC type",
-              ex.UnsupportedType));
-          }
-          xtw.WriteEndElement();
-        }
-      }
-      xtw.WriteEndElement();
-      xtw.Flush();
-    }
-
-    void SerializeParams(XmlWriter xtw, XmlRpcRequest request,
-      NullMappingAction mappingAction)
-    {
-      ParameterInfo[] pis = null;
-      if (request.mi != null)
-      {
-        pis = request.mi.GetParameters();
-      }
-      for (int i = 0; i < request.args.Length; i++)
-      {
-        if (pis != null)
-        {
-          if (i >= pis.Length)
-            throw new XmlRpcInvalidParametersException("Number of request "
-              + "parameters greater than number of proxy method parameters.");
-          if (i == pis.Length - 1 
-            && Attribute.IsDefined(pis[i], typeof(ParamArrayAttribute)))
-          {
-            Array ary = (Array)request.args[i];
-            foreach (object o in ary)
-            {
-              //if (o == null)
-              //  throw new XmlRpcNullParameterException(
-              //    "Null parameter in params array");
-              xtw.WriteStartElement("", "param", "");
-              Serialize(xtw, o, mappingAction);
-              xtw.WriteEndElement();
-            }
-            break;
-          }
-        }
-        //if (request.args[i] == null)
-        //{
-        //  throw new XmlRpcNullParameterException(String.Format(
-        //    "Null method parameter #{0}", i + 1));
-        //}
-        xtw.WriteStartElement("", "param", "");
-        Serialize(xtw, request.args[i], mappingAction);
-        xtw.WriteEndElement();
-      }
-    }
-
-    void SerializeStructParams(XmlWriter xtw, XmlRpcRequest request,
-      NullMappingAction mappingAction)
-    {
-      ParameterInfo[] pis = request.mi.GetParameters();
-      if (request.args.Length > pis.Length)
-        throw new XmlRpcInvalidParametersException("Number of request "
-          + "parameters greater than number of proxy method parameters.");
-      if (Attribute.IsDefined(pis[request.args.Length - 1],
-        typeof(ParamArrayAttribute)))
-      {
-        throw new XmlRpcInvalidParametersException("params parameter cannot "
-          + "be used with StructParams.");
-      }
-      xtw.WriteStartElement("", "param", "");
-      xtw.WriteStartElement("", "value", "");
-      xtw.WriteStartElement("", "struct", "");
-      for (int i = 0; i < request.args.Length; i++)
-      {
-        if (request.args[i] == null)
-        {
-          throw new XmlRpcNullParameterException(String.Format(
-            "Null method parameter #{0}", i + 1));
-        }
-        xtw.WriteStartElement("", "member", "");
-        xtw.WriteElementString("name", pis[i].Name);
-        Serialize(xtw, request.args[i], mappingAction);
-        xtw.WriteEndElement();
-      }
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
-    }
-
-#if (!COMPACT_FRAMEWORK)
-    public void SerializeResponse(Stream stm, XmlRpcResponse response)
-    {
-      Object ret = response.retVal;
-      if (ret is XmlRpcFaultException)
-      {
-        SerializeFaultResponse(stm, (XmlRpcFaultException)ret);
-        return;
-      }
-      var stmWriter = new EncodingStreamWriter(stm, XmlEncoding);
-      XmlWriter xtw = XmlWriter.Create(stmWriter, ConfigureXmlFormat());
-      xtw.WriteStartDocument();
-      xtw.WriteStartElement("", "methodResponse", "");
-      xtw.WriteStartElement("", "params", "");
-      xtw.WriteStartElement("", "param", "");
-      // TODO: use global action setting
-      NullMappingAction mappingAction = NullMappingAction.Nil;
-      try
-      {
-        Serialize(xtw, ret, mappingAction);
-      }
-      catch (XmlRpcUnsupportedTypeException ex)
-      {
-        throw new XmlRpcInvalidReturnType(string.Format(
-          "Return value is of, or contains an instance of, type {0} which "
-          + "cannot be mapped to an XML-RPC type", ex.UnsupportedType));
-      }
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
-      xtw.Flush();
-    }
-#endif
 
     //#if (DEBUG)
     public
@@ -488,7 +345,7 @@ namespace CookComputing.XmlRpc
       xtw.Flush();
     }
 
-    XmlWriterSettings ConfigureXmlFormat()
+    protected XmlWriterSettings ConfigureXmlFormat()
     {
       if (m_bUseIndentation)
       {
@@ -524,7 +381,7 @@ namespace CookComputing.XmlRpc
       return sb.ToString();
     }
 
-    bool IsStructParamsMethod(MethodInfo mi)
+    public bool IsStructParamsMethod(MethodInfo mi)
     {
       if (mi == null)
         return false;

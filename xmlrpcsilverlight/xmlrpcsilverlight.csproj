@@ -153,8 +153,14 @@
     <Compile Include="..\src\XmlRpcRequestEventArgs.cs">
       <Link>XmlRpcRequestEventArgs.cs</Link>
     </Compile>
+    <Compile Include="..\src\XmlRpcRequestSerializer.cs">
+      <Link>XmlRpcRequestSerializer.cs</Link>
+    </Compile>
     <Compile Include="..\src\XmlRpcResponse.cs">
       <Link>XmlRpcResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\src\XmlRpcResponseDeserializer.cs">
+      <Link>XmlRpcResponseDeserializer.cs</Link>
     </Compile>
     <Compile Include="..\src\XmlRpcResponseEventArgs.cs">
       <Link>XmlRpcResponseEventArgs.cs</Link>

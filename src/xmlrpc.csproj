@@ -184,9 +184,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XmlRpcRequestEventArgs.cs" />
+    <Compile Include="XmlRpcRequestSerializer.cs" />
     <Compile Include="XmlRpcResponse.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcResponseDeserializer.cs" />
     <Compile Include="XmlRpcResponseEventArgs.cs" />
     <Compile Include="XmlRpcReturnValueAttribute.cs">
       <SubType>Code</SubType>

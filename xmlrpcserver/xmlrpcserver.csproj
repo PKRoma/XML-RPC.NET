@@ -68,9 +68,11 @@
     <Compile Include="XmlRpcListenerRequest.cs" />
     <Compile Include="XmlRpcListenerResponse.cs" />
     <Compile Include="XmlRpcListenerService.cs" />
+    <Compile Include="XmlRpcRequestDeserializer.cs" />
     <Compile Include="XmlRpcServerFormatterSink.cs" />
     <Compile Include="XmlRpcServerFormatterSinkProvider.cs" />
     <Compile Include="XmlRpcServerProtocol.cs" />
+    <Compile Include="XmlRpcResponseSerializer.cs" />
     <Compile Include="XmlRpcService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -98,10 +100,10 @@
     <CreateItem Include="..\src\AssemblyBuildNumber.cs" Condition="'$(BuildingInsideVisualStudio)' == ''">
       <Output TaskParameter="Include" ItemName="Compile" />
     </CreateItem>
-    <CreateItem Include="..\src\AssemblyDesc.cs" >
+    <CreateItem Include="..\src\AssemblyDesc.cs">
       <Output TaskParameter="Include" ItemName="Compile" />
     </CreateItem>
-  </Target>  
+  </Target>
   <Target Name="AfterBuild">
   </Target>
 </Project>

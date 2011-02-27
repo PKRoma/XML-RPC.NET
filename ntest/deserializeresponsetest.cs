@@ -24,8 +24,8 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, null);
 
       Object o = response.retVal;
       Assert.IsTrue(o != null, "retval not null");
@@ -45,8 +45,8 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(int));
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(int));
 
       Object o = response.retVal;
       Assert.IsTrue(o != null, "retval not null");
@@ -66,8 +66,8 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, null);
 
       Object o = response.retVal;
       Assert.IsTrue(o != null, "retval not null");
@@ -87,8 +87,8 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(int));
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(int));
 
       Object o = response.retVal;
       Assert.IsTrue(o != null, "retval not null");
@@ -110,8 +110,8 @@ namespace ntest
   </params>
 </methodResponse>";
         StringReader sr = new StringReader(xml);
-        XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-        XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(string));
+        var deserializer = new XmlRpcResponseDeserializer();
+        XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(string));
         Assert.Fail("Should throw XmlRpcTypeMismatchException");
       }
       catch (XmlRpcTypeMismatchException)
@@ -136,8 +136,8 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, null);
 
       Object o = response.retVal;
       Assert.IsTrue(o != null, "retval not null");
@@ -157,8 +157,8 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, null);
 
       Object o = response.retVal;
       Assert.IsTrue(o != null, "retval not null");
@@ -178,8 +178,8 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(string));
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(string));
 
       Object o = response.retVal;
       Assert.IsTrue(o != null, "retval not null");
@@ -199,8 +199,8 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(string));
+      var deserializer = new XmlRpcResponseDeserializer(); 
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(string));
 
       Object o = response.retVal;
       Assert.IsTrue(o != null, "retval not null");
@@ -223,7 +223,8 @@ namespace ntest
 </methodResponse>";
         StringReader sr = new StringReader(xml);
         XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-        XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(int));
+        var deserializer = new XmlRpcResponseDeserializer();
+        XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(int));
         Assert.Fail("Should throw XmlRpcTypeMismatchException");
       }
       catch(XmlRpcTypeMismatchException)
@@ -243,8 +244,8 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(string));
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(string));
 
       Object o = response.retVal;
       Assert.IsTrue(o != null, "retval not null");
@@ -268,9 +269,9 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(DateTime));
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(DateTime));
       Object o = response.retVal;
       Assert.IsTrue(o is DateTime, "retval is string");
       Assert.AreEqual((DateTime)o, DateTime.MinValue, "DateTime.MinValue");
@@ -288,9 +289,9 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(DateTime));
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(DateTime));
 
       Object o = response.retVal;
       Assert.IsTrue(o is DateTime, "retval is string");
@@ -309,9 +310,9 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(DateTime));
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(DateTime));
 
       Object o = response.retVal;
       Assert.IsTrue(o is DateTime, "retval is string");
@@ -330,9 +331,9 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(DateTime));
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(DateTime));
 
       Object o = response.retVal;
       Assert.IsTrue(o is DateTime, "retval is string");
@@ -351,11 +352,11 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
       try
       {
-        XmlRpcResponse response = serializer.DeserializeResponse(sr, 
+        XmlRpcResponse response = deserializer.DeserializeResponse(sr, 
           typeof(DateTime));
         Assert.Fail("dateTime 00000000T00:00:00 invalid when strict");
       }
@@ -401,9 +402,9 @@ namespace ntest
 </methodResponse>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       XmlRpcResponse response 
-        = serializer.DeserializeResponse(sr, typeof(object));
+        = deserializer.DeserializeResponse(sr, typeof(object));
       
       Object o = response.retVal;
       string ret = (string)((XmlRpcStruct)o)["key3"];
@@ -435,9 +436,9 @@ namespace ntest
 </methodResponse>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       XmlRpcResponse response 
-        = serializer.DeserializeResponse(sr, typeof(XmlRpcStruct));
+        = deserializer.DeserializeResponse(sr, typeof(XmlRpcStruct));
       
       Object o = response.retVal;
       string ret = (string)((XmlRpcStruct)o)["key3"];
@@ -473,8 +474,8 @@ namespace ntest
 </methodResponse>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, null);
       
       Object o = response.retVal;
       Assert.IsTrue(o is XmlRpcStruct, "retval is XmlRpcStruct");
@@ -521,8 +522,8 @@ namespace ntest
 </methodResponse>";      
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, null);
       Object o = response.retVal;
 
     }
@@ -575,9 +576,9 @@ namespace ntest
 </methodResponse>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       XmlRpcResponse response 
-        = serializer.DeserializeResponse(sr, typeof(MyStruct));
+        = deserializer.DeserializeResponse(sr, typeof(MyStruct));
       
       Object o = response.retVal;
       Assert.IsTrue(o is MyStruct, "retval is MyStruct");
@@ -601,9 +602,9 @@ namespace ntest
 
 </methodResponse>"; 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       XmlRpcResponse response 
-        = serializer.DeserializeResponse(sr, typeof(int));
+        = deserializer.DeserializeResponse(sr, typeof(int));
       
       Object o = response.retVal;
       Assert.IsTrue(o is int, "retval is int");
@@ -638,11 +639,11 @@ namespace ntest
   </params> 
 </methodResponse>"; 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       try
       {
         XmlRpcResponse response 
-          = serializer.DeserializeResponse(sr, typeof(BillStruct));
+          = deserializer.DeserializeResponse(sr, typeof(BillStruct));
         Assert.Fail("Should detect missing struct member");
       } 
       catch(AssertionException)
@@ -687,9 +688,9 @@ namespace ntest
   </params> 
 </methodResponse>"; 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       XmlRpcResponse response 
-        = serializer.DeserializeResponse(sr, typeof(BillStruct));
+        = deserializer.DeserializeResponse(sr, typeof(BillStruct));
       
       Object o = response.retVal;
       Assert.IsTrue(o is BillStruct, "retval is BillStruct");
@@ -718,11 +719,11 @@ namespace ntest
 </params>
 </methodResponse>"; 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       try 
       {
         XmlRpcResponse response 
-          = serializer.DeserializeResponse(sr, null);
+          = deserializer.DeserializeResponse(sr, null);
         Object o = response.retVal;
         Assert.Fail("should have thrown XmlRpcInvalidXmlRpcException");
       }    
@@ -743,8 +744,8 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(void));
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(void));
       Assert.IsTrue(response.retVal == null, "retval is null");
     }
 
@@ -760,8 +761,8 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(string));
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(string));
       string s = (string)response.retVal;
       Assert.IsTrue(s == "", "retval is empty string");
     }
@@ -811,9 +812,9 @@ namespace ntest
       using(Stream stm = new FileStream("testdocuments/iso-8859-1_response.xml",
                FileMode.Open, FileAccess.Read))
       {
-        XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+        var deserializer = new XmlRpcResponseDeserializer();
         XmlRpcResponse response 
-          = serializer.DeserializeResponse(stm, typeof(String));
+          = deserializer.DeserializeResponse(stm, typeof(String));
         String ret = (String)response.retVal;
         int nnn  = ret.Length;
         Assert.IsTrue(ret == "hæ hvað segirðu þá", 
@@ -842,10 +843,10 @@ namespace ntest
   </fault>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       try
       {
-        XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(void));
+        XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(void));
       }
       catch (XmlRpcFaultException fex)
       {
@@ -877,10 +878,10 @@ namespace ntest
   </fault>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       try
       {
-        XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(void));
+        XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(void));
         Assert.Fail("Expected fault exception to be thrown");
       }
       catch (XmlRpcFaultException fex)
@@ -913,11 +914,11 @@ namespace ntest
   </fault>
 </methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.AllowStringFaultCode;
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.AllowStringFaultCode;
       try
       {
-        XmlRpcResponse response = serializer.DeserializeResponse(sr, typeof(void));
+        XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(void));
         Assert.Fail("Expected fault exception to be thrown");
       }
       catch (XmlRpcFaultException fex)
@@ -932,8 +933,8 @@ namespace ntest
     {
       string xml = @"<?xml version=""1.0"" encoding=""ISO-8859-1""?><methodResponse><params><param><value><array><data><value>addressbook</value><value>system</value></data></array></value></param></params></methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, null);
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, null);
 
       Object o = response.retVal;
     }
@@ -946,8 +947,8 @@ namespace ntest
 + "</double></value></member><member><name>scalebar</name><value><int>1</int></value></member><member><name>content</name><value><string>http://mapserv.where2getit.net/maptools/mapserv.cgi/a5955239d080dfbb7002fd063aa7b47e0d.png</string></value></member><member><name>scale</name><value><int>26000</int></value></member><member><name>map_style</name><value><string>default</string></value></member><member><name>size</name><value><array><data><value><int>600</int></value><value><int>400</int></value></data></array></value></member><member><name>content_type</name><value><string>text/uri-list</string></value></member><member><name>buffer</name><value><double>0.01</double></value></member><member><name>center</name><value><struct><member><name>georesult</name><value><string>AUTOBBOX</string></value></member><member><name>latitude</name><value><double>39.74147878</double></value></member><member><name>longitude</name><value><double>-104.9874159</double></value></member></struct></value></member></struct></value></member><member><name>result_count</name><value><int>1</int></value></member><member><name>image_map</name><value><boolean>1</boolean></value></member><member><name>result_total_count</name><value><int>1</int></value></member></struct></value></member><member><name>times</name><value><struct><member><name>csys</name><value><int>0</int></value></member><member><name>cusr</name><value><int>0</int></value></member><member><name>sys</name><value><int>0</int></value></member><member><name>usr</name><value><double>0.0200000000000005"
         + "</double></value></member><member><name>wallclock</name><value><double>2.547471</double></value></member></struct></value></member><member><name>request</name><value><struct><member><name>state</name><value><string>CO</string></value></member><member><name>%sort</name><value><array><data /></array></value></member><member><name>%id</name><value><string>4669b341d87be7f450b4bf0dc4cd0a1e</string></value></member><member><name>city</name><value><string>denver</string></value></member><member><name>%limit</name><value><int>10</int></value></member><member><name>%offset</name><value><int>0</int></value></member></struct></value></member></struct></value></param></params></methodResponse>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr, 
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr, 
         typeof(XmlRpcStruct));
 
       XmlRpcStruct response_struct = (XmlRpcStruct)response.retVal;
@@ -988,18 +989,18 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       try
       {
-        XmlRpcResponse response1 = serializer.DeserializeResponse(sr1, typeof(DupMem));
+        XmlRpcResponse response1 = deserializer.DeserializeResponse(sr1, typeof(DupMem));
         Assert.Fail("Ignored duplicate member");
       }
       catch (XmlRpcInvalidXmlRpcException)
       {
       }
-      serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
+      deserializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
       StringReader sr2 = new StringReader(xml);
-      XmlRpcResponse response2 = serializer.DeserializeResponse(sr2, typeof(DupMem));
+      XmlRpcResponse response2 = deserializer.DeserializeResponse(sr2, typeof(DupMem));
       DupMem dupMem = (DupMem)response2.retVal;
       Assert.AreEqual( "this is a test", dupMem.foo);
     }
@@ -1031,19 +1032,19 @@ namespace ntest
   </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       try
       {
-        XmlRpcResponse response1 = serializer.DeserializeResponse(sr1, typeof(XmlRpcStruct));
+        XmlRpcResponse response1 = deserializer.DeserializeResponse(sr1, typeof(XmlRpcStruct));
         Assert.Fail("Ignored duplicate member");
       }
       catch (XmlRpcInvalidXmlRpcException)
       {
 
       }
-      serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
+      deserializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
       StringReader sr2 = new StringReader(xml);
-      XmlRpcResponse response2 = serializer.DeserializeResponse(sr2, typeof(XmlRpcStruct));
+      XmlRpcResponse response2 = deserializer.DeserializeResponse(sr2, typeof(XmlRpcStruct));
       XmlRpcStruct dupMem = (XmlRpcStruct)response2.retVal;
       Assert.IsTrue((string)dupMem["foo"] == "this is a test");
     }
@@ -1069,8 +1070,8 @@ namespace ntest
       wrtr.Write(xml);
       wrtr.Flush();
       stm.Position = 0;
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(stm, typeof(int));
     }
 
     [Test]
@@ -1092,9 +1093,9 @@ namespace ntest
       wrtr.Write(xml);
       wrtr.Flush();
       stm.Position = 0;
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
-      XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
+      XmlRpcResponse response = deserializer.DeserializeResponse(stm, typeof(int));
 
       Object o = response.retVal;
       Assert.IsTrue(o != null, "retval not null");
@@ -1123,9 +1124,9 @@ namespace ntest
       wrtr.Flush();
       stm.Position = 0;
 
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
-      XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
+      XmlRpcResponse response = deserializer.DeserializeResponse(stm, typeof(int));
 
       Object o = response.retVal;
       Assert.IsTrue(o != null, "retval not null");
@@ -1143,8 +1144,8 @@ namespace ntest
       wrtr.Write(xml);
       wrtr.Flush();
       stm.Position = 0;
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(stm, typeof(int));
     }
 
     [Test]
@@ -1157,9 +1158,9 @@ namespace ntest
       wrtr.Write(xml);
       wrtr.Flush();
       stm.Position = 0;
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
-      XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
+      XmlRpcResponse response = deserializer.DeserializeResponse(stm, typeof(int));
     }
 
     [Test]
@@ -1172,9 +1173,9 @@ namespace ntest
       wrtr.Write(xml);
       wrtr.Flush();
       stm.Position = 0;
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
-      XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
+      XmlRpcResponse response = deserializer.DeserializeResponse(stm, typeof(int));
     }
 
     [Test]
@@ -1187,9 +1188,9 @@ namespace ntest
       wrtr.Write(xml);
       wrtr.Flush();
       stm.Position = 0;
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
-      XmlRpcResponse response = serializer.DeserializeResponse(stm, typeof(int));
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
+      XmlRpcResponse response = deserializer.DeserializeResponse(stm, typeof(int));
     }
 
 
@@ -1218,9 +1219,9 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-      XmlRpcResponse response = serializer.DeserializeResponse(sr1,
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr1,
         typeof(XmlRpcStruct));
       XmlRpcStruct ret = (XmlRpcStruct)response.retVal;
       Assert.AreEqual(ret.Count,1);
@@ -1247,9 +1248,9 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-      XmlRpcResponse response = serializer.DeserializeResponse(sr1, 
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr1, 
         typeof(XmlRpcStruct));
       XmlRpcStruct ret = (XmlRpcStruct)response.retVal;
     }
@@ -1275,9 +1276,9 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-      XmlRpcResponse response = serializer.DeserializeResponse(sr1, 
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr1, 
         typeof(XmlRpcStruct));
       XmlRpcStruct ret = (XmlRpcStruct)response.retVal;
     }
@@ -1312,9 +1313,9 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-      XmlRpcResponse response = serializer.DeserializeResponse(sr1,
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr1,
         typeof(Donhrobjartz));
       Donhrobjartz ret = (Donhrobjartz)response.retVal;
       Assert.AreEqual("1w", ret.period);
@@ -1341,9 +1342,9 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-      XmlRpcResponse response = serializer.DeserializeResponse(sr1,
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr1,
         typeof(Donhrobjartz));
       Donhrobjartz ret = (Donhrobjartz)response.retVal;
     }
@@ -1369,9 +1370,9 @@ This should be ignored.
 </params>
 </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-      XmlRpcResponse response = serializer.DeserializeResponse(sr1,
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr1,
         typeof(Donhrobjartz));
       Donhrobjartz ret = (Donhrobjartz)response.retVal;
     }
@@ -1439,9 +1440,9 @@ This should be ignored.
  </params>
  </methodResponse>";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-      XmlRpcResponse response = serializer.DeserializeResponse(sr1,
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr1,
         typeof(Category[]));
     }
 
@@ -1454,8 +1455,8 @@ This should be ignored.
 </methodResponse>
 ";
       StringReader sr1 = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcResponse response = serializer.DeserializeResponse(sr1,
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr1,
         typeof(void));
       Assert.IsNull(response.retVal);
     }

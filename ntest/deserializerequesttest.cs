@@ -24,7 +24,7 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
   
       Assert.AreEqual(request.method, "TestString", "method is TestString");
@@ -47,7 +47,7 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
  
       Assert.AreEqual(request.method, "TestString", "method is TestString");
@@ -70,7 +70,7 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
  
       Assert.AreEqual(request.method, "TestString", "method is TestString");
@@ -92,7 +92,7 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
  
       Assert.AreEqual(request.method, "TestString", "method is TestString");
@@ -106,8 +106,8 @@ namespace ntest
     {
       string xml = @"<?xml version=""1.0"" ?><methodCall><methodName>TestString</methodName><params><param><value>test string</value></param></params></methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
 
       Assert.AreEqual(request.method, "TestString", "method is TestString");
       Assert.AreEqual(request.args[0].GetType(),  typeof(string),
@@ -120,9 +120,9 @@ namespace ntest
     [ExpectedException(typeof(ArgumentNullException))]
     public void NullRequestStream()
     {
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcRequestDeserializer();
       Stream stm = null;
-      XmlRpcRequest request = serializer.DeserializeRequest(stm, null);
+      XmlRpcRequest request = deserializer.DeserializeRequest(stm, null);
     }
 
     [Test]
@@ -130,7 +130,7 @@ namespace ntest
     public void EmptyRequestStream()
     {
       StringReader sr = new StringReader("");
-      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
     
@@ -141,7 +141,7 @@ namespace ntest
       string xml = @"<?xml version=""1.0"" ?> 
 <methodCall> </duffMmethodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
@@ -152,8 +152,8 @@ namespace ntest
     {
       string xml = @"<?xml version=""1.0"" ?> <elem/>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
     // test handling of methodName element
@@ -170,8 +170,8 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
     [Test]
@@ -188,8 +188,8 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
     [Test]
@@ -206,7 +206,7 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
@@ -219,8 +219,8 @@ namespace ntest
 <methodName>TestString</methodName> 
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
 
@@ -240,7 +240,7 @@ namespace ntest
 <params/>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var serializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
     }
 
@@ -255,8 +255,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, this.GetType());
       //Console.WriteLine("");
     }
 
@@ -272,7 +272,7 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var serializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
     }
 
@@ -289,7 +289,7 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var serializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
     }
 
@@ -309,7 +309,7 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var serializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
 
       Assert.IsTrue(request.method == "TestInt", "method is TestInt");
@@ -331,7 +331,7 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var serializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
 
       Assert.IsTrue(request.method == "TestInt", "method is TestInt");
@@ -353,8 +353,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
 
       Assert.IsTrue(request.method == "TestInt", "method is TestInt");
       Assert.AreEqual(request.args[0].GetType(), typeof(int),
@@ -375,7 +375,7 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var serializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
 
       Assert.IsTrue(request.method == "TestInt", "method is TestInt");
@@ -398,7 +398,7 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
+      var serializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
     }
 
@@ -416,8 +416,8 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
       Assert.Fail("Invalid integer should cause exception");
     }
 
@@ -435,8 +435,8 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
     [Test]
@@ -452,8 +452,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
 
       Assert.IsTrue(request.method == "TestInt", "method is TestInt");
       Assert.AreEqual(request.args[0].GetType(), typeof(int),
@@ -475,8 +475,8 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
     // test handling i8 values
@@ -495,8 +495,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
       Assert.AreEqual(request.args[0].GetType(), typeof(long),
         "argument is long");
       Assert.AreEqual((long)request.args[0], 123456789012, "argument is 123456789012");
@@ -515,8 +515,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
       Assert.AreEqual(request.args[0].GetType(), typeof(long),
         "argument is long");
       Assert.AreEqual((long)request.args[0], 123456789012, "argument is 123456789012");
@@ -535,8 +535,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
       Assert.AreEqual(request.args[0].GetType(), typeof(long),
         "argument is long");
       Assert.AreEqual((long)request.args[0], -123456789012, "argument is -123456789012");
@@ -556,8 +556,8 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
     [Test]
@@ -574,8 +574,8 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
     [Test]
@@ -592,8 +592,8 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
     [Test]
@@ -609,8 +609,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
       Assert.AreEqual(request.args[0].GetType(), typeof(long),
         "argument is long");
       Assert.AreEqual((long)request.args[0], 0, "argument is 0");
@@ -630,8 +630,8 @@ namespace ntest
 </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
     }
 
 
@@ -641,8 +641,8 @@ namespace ntest
       using (Stream stm = new FileStream("testdocuments/iso-8859-1_request.xml", 
               FileMode.Open, FileAccess.Read))
       {
-        XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-        XmlRpcRequest request = serializer.DeserializeRequest(stm, null);
+        var deserializer = new XmlRpcRequestDeserializer();
+        XmlRpcRequest request = deserializer.DeserializeRequest(stm, null);
         Assert.AreEqual(request.args[0].GetType(), typeof(string), 
           "argument is string");
         Assert.AreEqual((string)request.args[0], "hæ hvað segirðu þá",
@@ -708,8 +708,8 @@ namespace ntest
 </methodCall>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
 
       Assert.AreEqual(request.args[0].GetType(), typeof(XmlRpcStruct),
         "argument is XmlRpcStruct");
@@ -754,9 +754,9 @@ namespace ntest
 </methodCall>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      deserializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
 
       Assert.IsTrue(request.args[0] is DateTime, "argument is DateTime");
       DateTime dt0 = (DateTime)request.args[0];
@@ -795,12 +795,12 @@ namespace ntest
               XmlRpcRequest req = new XmlRpcRequest();
               req.args = new Object[] { dt };
               req.method = "Foo";
-              XmlRpcSerializer ser = new XmlRpcSerializer();
+              var ser = new XmlRpcRequestSerializer();
               ser.SerializeRequest(stm, req);
               stm.Position = 0;
 
-              XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-              XmlRpcRequest request = serializer.DeserializeRequest(stm, null);
+              var deserializer = new XmlRpcRequestDeserializer();
+              XmlRpcRequest request = deserializer.DeserializeRequest(stm, null);
 
               Assert.IsTrue(request.args[0] is DateTime,
                 "argument is DateTime");
@@ -849,8 +849,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
  
       Assert.AreEqual(request.args[0].GetType(),  typeof(byte[]),
         "argument is byte[]");
@@ -873,8 +873,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
 
       Assert.AreEqual(request.args[0].GetType(), typeof(byte[]),
         "argument is byte[]");
@@ -900,8 +900,8 @@ AQIDBAUGBwg=</base64>
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, null);
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, null);
 
       Assert.AreEqual(request.args[0].GetType(), typeof(byte[]),
         "argument is byte[]");
@@ -1067,8 +1067,8 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, GetType());
 
       Assert.AreEqual(request.args[0].GetType(), typeof(TestClass),
         "argument is TestClass");
@@ -1119,8 +1119,8 @@ AQIDBAUGBwg=</base64>
 </params></methodCall>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, GetType());
     }
 
     [XmlRpcMethod("rtx.EchoString")]
@@ -1139,8 +1139,8 @@ AQIDBAUGBwg=</base64>
 </params></methodCall>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, GetType());
 
       Assert.AreEqual(request.args[0].GetType(), typeof(string),
         "argument is string");
@@ -1158,8 +1158,8 @@ AQIDBAUGBwg=</base64>
 </params></methodCall>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, GetType());
 
       Assert.AreEqual(request.args[0].GetType(), typeof(string),
         "argument is string");
@@ -1177,8 +1177,8 @@ AQIDBAUGBwg=</base64>
 </params></methodCall>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, GetType());
 
       Assert.AreEqual(request.args[0].GetType(), typeof(string),
         "argument is string");
@@ -1195,8 +1195,8 @@ AQIDBAUGBwg=</base64>
 </params></methodCall>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, GetType());
 
       Assert.AreEqual(request.args[0].GetType(), typeof(string),
         "argument is string");
@@ -1214,8 +1214,8 @@ AQIDBAUGBwg=</base64>
 </params></methodCall>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, GetType());
 
       Assert.AreEqual(request.args[0].GetType(), typeof(string),
         "argument is string");
@@ -1257,8 +1257,8 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
 </methodCall>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, GetType());
     }
 
     [Test]
@@ -1278,8 +1278,8 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
 </methodCall>";
 
       StringReader sr = new StringReader(xml);
-      XmlRpcDeserializer serializer = new XmlRpcDeserializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, GetType());
     }
   }
 }

@@ -109,6 +109,20 @@ namespace ntest
     }
 
     [Test]
+    public void OrderingKeys2()
+    {
+      var xps = new XmlRpcStruct();
+      xps.Add("member_1", "a");
+      xps.Add("member_4", "c");
+
+      IEnumerator enumerator = xps.Keys.GetEnumerator();
+      enumerator.MoveNext();
+      Assert.AreEqual("member_1", enumerator.Current);
+      enumerator.MoveNext();
+      Assert.AreEqual("member_4", enumerator.Current);
+    }
+
+    [Test]
     public void OrderingValues()
     {
       var xps = new XmlRpcStruct();

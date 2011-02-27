@@ -149,7 +149,7 @@ namespace CookComputing.XmlRpc
       // TODO: possibly call GetRequestStream from next sink in chain?
       // TODO: SoapClientFormatter sink uses ChunkedStream - check why?
       Stream stm = new MemoryStream();
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      var serializer = new XmlRpcRequestSerializer();
       serializer.SerializeRequest(stm, xmlRpcReq);
       stm.Position = 0;
 
@@ -162,7 +162,7 @@ namespace CookComputing.XmlRpc
       ITransportHeaders headers,
       Stream stream)
     {
-      XmlRpcDeserializer deserializer = new XmlRpcDeserializer();
+      var deserializer = new XmlRpcResponseDeserializer();
       object tp = mcm.MethodBase;           
       System.Reflection.MethodInfo mi = (System.Reflection.MethodInfo)tp;
       System.Type t = mi.ReturnType;
