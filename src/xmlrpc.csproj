@@ -196,15 +196,10 @@
     <Compile Include="XmlRpcSerializer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XmlRpcServiceAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcServiceInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="XmlRpcStruct.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcTypeInfo.cs" />
     <Compile Include="XmlRpcUrlAttribute.cs">
       <SubType>Code</SubType>
     </Compile>

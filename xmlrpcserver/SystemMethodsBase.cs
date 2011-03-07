@@ -46,10 +46,10 @@ namespace CookComputing.XmlRpc
       }
       //XmlRpcTypes.CheckIsXmlRpcMethod(mi);
       ArrayList alist = new ArrayList();
-      alist.Add(XmlRpcServiceInfo.GetXmlRpcTypeString(mthdInfo.ReturnType));
+      alist.Add(XmlRpcTypeInfo.GetXmlRpcTypeString(mthdInfo.ReturnType));
       foreach (XmlRpcParameterInfo paramInfo in mthdInfo.Parameters)
       {
-        alist.Add(XmlRpcServiceInfo.GetXmlRpcTypeString(paramInfo.Type));
+        alist.Add(XmlRpcTypeInfo.GetXmlRpcTypeString(paramInfo.Type));
       }
       string[] types = (string[])alist.ToArray(typeof(string));
       ArrayList retalist = new ArrayList();

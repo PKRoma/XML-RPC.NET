@@ -390,7 +390,7 @@ namespace CookComputing.XmlRpc
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType
           + " contains struct value where "
-          + XmlRpcServiceInfo.GetXmlRpcTypeString(valueType)
+          + XmlRpcTypeInfo.GetXmlRpcTypeString(valueType)
           + " expected " + StackDump(parseStack));
       }
       if (valueType.IsGenericType
@@ -407,7 +407,7 @@ namespace CookComputing.XmlRpc
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType
           + " contains struct value where "
-          + XmlRpcServiceInfo.GetXmlRpcTypeString(valueType)
+          + XmlRpcTypeInfo.GetXmlRpcTypeString(valueType)
           + " expected (as type " + valueType.Name + ") "
           + StackDump(parseStack));
       }
@@ -507,12 +507,12 @@ namespace CookComputing.XmlRpc
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType
           + " contains array value where "
-          + XmlRpcServiceInfo.GetXmlRpcTypeString(valType)
+          + XmlRpcTypeInfo.GetXmlRpcTypeString(valType)
           + " expected " + StackDump(parseStack));
       }
       if (valType != null)
       {
-        XmlRpcType xmlRpcType = XmlRpcServiceInfo.GetXmlRpcType(valType);
+        XmlRpcType xmlRpcType = XmlRpcTypeInfo.GetXmlRpcType(valType);
         if (xmlRpcType == XmlRpcType.tMultiDimArray)
         {
           parseStack.Push("array mapped to type " + valType.Name);
@@ -614,7 +614,7 @@ namespace CookComputing.XmlRpc
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType
           + " contains implicit string value where "
-          + XmlRpcServiceInfo.GetXmlRpcTypeString(valType)
+          + XmlRpcTypeInfo.GetXmlRpcTypeString(valType)
           + " expected " + StackDump(parseStack));
       }
     }
@@ -875,9 +875,9 @@ namespace CookComputing.XmlRpc
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType +
           " contains "
-          + XmlRpcServiceInfo.GetXmlRpcTypeString(expectedType)
+          + XmlRpcTypeInfo.GetXmlRpcTypeString(expectedType)
           + "value where "
-          + XmlRpcServiceInfo.GetXmlRpcTypeString(actualType)
+          + XmlRpcTypeInfo.GetXmlRpcTypeString(actualType)
           + " expected " + StackDump(parseStack));
       }
     }

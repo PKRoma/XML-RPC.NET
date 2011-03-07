@@ -74,6 +74,8 @@
     <Compile Include="XmlRpcServerProtocol.cs" />
     <Compile Include="XmlRpcResponseSerializer.cs" />
     <Compile Include="XmlRpcService.cs" />
+    <Compile Include="XmlRpcServiceAttribute.cs" />
+    <Compile Include="XmlRpcServiceInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

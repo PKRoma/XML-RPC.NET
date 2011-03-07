@@ -111,7 +111,7 @@ namespace CookComputing.XmlRpc
       try
       {
         xtw.WriteStartElement("", "value", "");
-        XmlRpcType xType = XmlRpcServiceInfo.GetXmlRpcType(o);
+        XmlRpcType xType = XmlRpcTypeInfo.GetXmlRpcType(o);
         if (xType == XmlRpcType.tArray)
         {
           xtw.WriteStartElement("", "array", "");
@@ -190,7 +190,11 @@ namespace CookComputing.XmlRpc
         else if (xType == XmlRpcType.tString)
         {
           if (UseStringTag)
-            xtw.WriteElementString("string", (string)o);
+          {
+            xtw.WriteStartElement("string");
+            xtw.WriteString((string)o);
+            xtw.WriteEndElement();
+          }
           else
             xtw.WriteString((string)o);
         }

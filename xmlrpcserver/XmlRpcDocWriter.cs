@@ -426,7 +426,7 @@ namespace CookComputing.XmlRpc
       if (!isparams)
       {
         if (type != typeof(Object))
-          xmlRpcType = XmlRpcServiceInfo.GetXmlRpcTypeString(type);
+          xmlRpcType = XmlRpcTypeInfo.GetXmlRpcTypeString(type);
         else
           xmlRpcType = "any";
       }
@@ -452,7 +452,7 @@ namespace CookComputing.XmlRpc
           Type elemType = type.GetElementType();
           string elemXmlRpcType;
           if (elemType != typeof(Object))
-            elemXmlRpcType = XmlRpcServiceInfo.GetXmlRpcTypeString(elemType);
+            elemXmlRpcType = XmlRpcTypeInfo.GetXmlRpcTypeString(elemType);
           else
             elemXmlRpcType = "any";
           wrtr.Write(elemXmlRpcType);            

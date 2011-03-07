@@ -1379,6 +1379,224 @@ namespace ntest
 </methodCall>", reqstr);
     }
 
+     public void EmptyStringTag()
+     {
+         Stream stm = new MemoryStream();
+         XmlRpcRequest req = new XmlRpcRequest();
+         req.args = new Object[] { "" };
+         req.method = "Foo";
+         var ser = new XmlRpcRequestSerializer();
+         ser.UseStringTag = true;
+         ser.Indentation = 4;
+         ser.SerializeRequest(stm, req);
+         stm.Position = 0;
+         TextReader tr = new StreamReader(stm);
+         string reqstr = tr.ReadToEnd();
+ 
+         Assert.AreEqual(
+           @"<?xml version=""1.0""?>
+ <methodCall>
+     <methodName>Foo</methodName>
+     <params>
+         <param>
+             <value>
+                 <string />
+             </value>
+         </param>
+     </params>
+ </methodCall>", reqstr);
+     }
+ 
+     [Test]
+     public void EmptyStringTagNoEmptyTag()
+     {
+         Stream stm = new MemoryStream();
+         XmlRpcRequest req = new XmlRpcRequest();
+         req.args = new Object[] { "" };
+         req.method = "Foo";
+         var ser = new XmlRpcRequestSerializer();
+         ser.UseStringTag = true;
+         ser.Indentation = 4;
+         ser.SerializeRequest(stm, req);
+         stm.Position = 0;
+         TextReader tr = new StreamReader(stm);
+         string reqstr = tr.ReadToEnd();
+ 
+         Assert.AreEqual(
+           @"<?xml version=""1.0""?>
+<methodCall>
+    <methodName>Foo</methodName>
+    <params>
+        <param>
+            <value>
+                <string></string>
+            </value>
+        </param>
+    </params>
+</methodCall>", reqstr);
+     }
+ 
+     [Test]
+     public void EmptyStringTagNoEmptyTagNoIndentation()
+     {
+         Stream stm = new MemoryStream();
+         XmlRpcRequest req = new XmlRpcRequest();
+         req.args = new Object[] { "" };
+         req.method = "Foo";
+         var ser = new XmlRpcRequestSerializer();
+         ser.UseStringTag = true;
+         ser.UseIndentation = false;
+         ser.SerializeRequest(stm, req);
+         stm.Position = 0;
+         TextReader tr = new StreamReader(stm);
+         string reqstr = tr.ReadToEnd();
+ 
+         Assert.AreEqual(
+           "<?xml version=\"1.0\"?><methodCall><methodName>Foo</methodName>"+
+           "<params><param><value><string></string></value></param></params>"+
+           "</methodCall>", reqstr);
+     }
+
+     [Test]
+     public void EmptyValueTagNoEmptyTag()
+     {
+       Stream stm = new MemoryStream();
+       XmlRpcRequest req = new XmlRpcRequest();
+       req.args = new Object[] { "" };
+       req.method = "Foo";
+       var ser = new XmlRpcRequestSerializer();
+       ser.UseStringTag = false;
+       ser.Indentation = 4;
+       ser.SerializeRequest(stm, req);
+       stm.Position = 0;
+       TextReader tr = new StreamReader(stm);
+       string reqstr = tr.ReadToEnd();
+
+       Assert.AreEqual(
+         @"<?xml version=""1.0""?>
+<methodCall>
+    <methodName>Foo</methodName>
+    <params>
+        <param>
+            <value></value>
+        </param>
+    </params>
+</methodCall>", reqstr);
+     }
+
+     [Test]
+     public void CRLFValue()
+     {
+       Stream stm = new MemoryStream();
+       XmlRpcRequest req = new XmlRpcRequest();
+       req.args = new Object[] { "\r\n" };
+       req.method = "Foo";
+       var ser = new XmlRpcRequestSerializer();
+       ser.UseStringTag = false;
+       ser.Indentation = 4;
+       ser.SerializeRequest(stm, req);
+       stm.Position = 0;
+       TextReader tr = new StreamReader(stm);
+       string reqstr = tr.ReadToEnd();
+
+       Assert.AreEqual(
+         @"<?xml version=""1.0""?>
+<methodCall>
+    <methodName>Foo</methodName>
+    <params>
+        <param>
+            " + "<value>\r\n</value>"+ @"
+        </param>
+    </params>
+</methodCall>", reqstr);
+     }
+
+     [Test]
+     public void CRLFString()
+     {
+       Stream stm = new MemoryStream();
+       XmlRpcRequest req = new XmlRpcRequest();
+       req.args = new Object[] { "\r\n" };
+       req.method = "Foo";
+       var ser = new XmlRpcRequestSerializer();
+       ser.UseStringTag = true;
+       ser.Indentation = 4;
+       ser.SerializeRequest(stm, req);
+       stm.Position = 0;
+       TextReader tr = new StreamReader(stm);
+       string reqstr = tr.ReadToEnd();
+
+       Assert.AreEqual(
+         @"<?xml version=""1.0""?>
+<methodCall>
+    <methodName>Foo</methodName>
+    <params>
+        <param>
+            <value>
+                " + "<string>\r\n</string>" + @"
+            </value>
+        </param>
+    </params>
+</methodCall>", reqstr);
+     }
+
+     [Test]
+     public void CRString()
+     {
+       Stream stm = new MemoryStream();
+       XmlRpcRequest req = new XmlRpcRequest();
+       req.args = new Object[] { "\r" };
+       req.method = "Foo";
+       var ser = new XmlRpcRequestSerializer();
+       ser.UseStringTag = true;
+       ser.Indentation = 4;
+       ser.SerializeRequest(stm, req);
+       stm.Position = 0;
+       TextReader tr = new StreamReader(stm);
+       string reqstr = tr.ReadToEnd();
+
+       Assert.AreEqual(
+         @"<?xml version=""1.0""?>
+<methodCall>
+    <methodName>Foo</methodName>
+    <params>
+        <param>
+            <value>
+                " + "<string>\r</string>" + @"
+            </value>
+        </param>
+    </params>
+</methodCall>", reqstr);
+     }
+
+     [Test]
+     public void LFString()
+     {
+       Stream stm = new MemoryStream();
+       XmlRpcRequest req = new XmlRpcRequest();
+       req.args = new Object[] { "\n" };
+       req.method = "Foo";
+       var ser = new XmlRpcRequestSerializer();
+       ser.UseStringTag = true;
+       ser.Indentation = 4;
+       ser.SerializeRequest(stm, req);
+       stm.Position = 0;
+       TextReader tr = new StreamReader(stm);
+       string reqstr = tr.ReadToEnd();
+
+       Assert.AreEqual(
+         @"<?xml version=""1.0""?>
+<methodCall>
+    <methodName>Foo</methodName>
+    <params>
+        <param>
+            <value>
+                " + "<string>\n</string>" + @"
+            </value>
+        </param>
+    </params>
+</methodCall>", reqstr);
+     }
   }
 
 }
