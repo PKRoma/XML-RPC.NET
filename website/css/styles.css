@@ -5,12 +5,12 @@ html
 
 #googlead
 {
-	position:absolute;
-	overflow:hidden;
-	top:10px; 
-	left:20px; 
-	width:140px; 
-	height: 750px;
+    position:absolute;
+    overflow:hidden;
+    top:10px; 
+    left:20px; 
+    width:140px; 
+    height: 750px;
 }
 
 #googlink
@@ -26,40 +26,37 @@ html
 
 #content
 {
-	position:absolute; 
-	overflow:auto; 
-	top:10px; 
-	left:160px; 
-	padding-right: 10px;
-	right:20px;
-	bottom:10px; 
+    position:absolute; 
+    overflow:auto; 
+    top:10px; 
+    left:160px; 
+    padding-right: 10px;
+    right:20px;
+    bottom:10px; 
 }  
     
 
-H1 { font-size: 150%; }
-
 pre 
 {
-	font-family:monospace, arial, verdana;
-	font-size: 85%;
-	color:black;
-    background: #d9e3e9;
+    font:13px Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace;
+    color:black;
+    background: #F8F8F8;
     border: 1px black solid ;
     padding: 5px;
 }
 
 body 
 {
-	font-size: 0.8em; /* for IE/Win */
-	font-family:verdana, arial, sans-serif;
+    font-size: 14px;
+    font-family:helvetica, arial, freesans, clean, sans-serif;
 }
 
 
 H1, H2, H3, H4 {
-	font-family:verdana, arial, sans-serif;
+    font-family:verdana, arial, sans-serif;
 }
 H1 {
-  font-size: 120%;
+  font-size: 200%;
 }
 H2 {
   font-size: 110%;
@@ -69,22 +66,32 @@ H3, H4 {
 }
 
 
+.toc
+{
+}
+
+.toc a:link { text-decoration:none; }
+
+.toc a:visited { text-decoration:none; }
+
+.toc a:hover { text-decoration:underline;  }
+
 @media print 
 {
    #content
    {
-		position: relative;
-		overflow: visible;
-		left: 0px;
+        position: relative;
+        overflow: visible;
+        left: 0px;
    }
    
    #headermenu
    {
-		display:none;
+        display:none;
    }
    
    #googlead
    {
-		display:none;
+        display:none;
    }
 }

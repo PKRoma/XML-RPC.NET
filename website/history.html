@@ -50,6 +50,87 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <h1>XML-RPC.NET - History</h1>
 
 
+<h3>2.5.0</h3>
+
+<p>
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.5.0.zip">xml-rpc.net.2.5.0.zip</a> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="./faq/xmlrpcnetfaq-2-5-0.html">FAQ</a> 
+</p>
+
+<p>New features, changes, and fixed issues:</p>
+
+<ul>
+
+<li>
+Added &lt;i8&gt; to support 64-bit long integer values. 
+</li>
+
+<li>
+Added support for more ISO8601 date formats. AllowNonStandardDateTime flag is now
+deprecated. The following formats are now accepted by default, with the '-' 
+and ':' separators being optional. 
+<ul>
+<li>
+yyyy-mm-ddThh:mm:ss 
+</li>
+<li>
+yyyy-mm-ddThh:mm:ssZ 
+</li>
+<li>
+yyyy-mm-ddThh:mm:ss±hh 
+</li>
+<li>
+yyyy-mm-ddThh:mm:ss±hh:mm 
+</li>
+</ul>
+Note: the XML-RPC spec describes the format as 19980717T14:08:55.
+</li>
+
+<li>
+Added AllowAutoRedirect property to IXmlRpcProxy. Default behaviour remains 
+the same (property set to true).
+</li>
+
+<li>
+Moved to Visual Studio 2008. 
+</li>
+
+<li>
+Discontinued support for .NET 1.0 and 1.1. 
+</li>
+
+<li> Fixed issues:
+
+<ul>
+
+<li>
+Issue 55 : change XmlRpcProxyGen so that FileIOPermission is not required for
+calls to Create.
+</li>
+
+<li>
+Issue 56: Maintain XML-RPC struct member ordering in XmlRpcStruct after
+deserialization.
+</li>
+
+<li>
+Issue 65: When deserializing request, check that the number of parameters is
+consistent with the method signature.
+</li>
+
+<li>
+Issue 70: Allow structs/classes to have members or arrays of the same type as
+the parent type.
+</li>
+
+</ul>
+
+</li>
+
+</ul>
+
+
 <h3>2.4.0</h3>
 
 <a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.4.0.zip">xml-rpc.net.2.4.0.zip</a> 

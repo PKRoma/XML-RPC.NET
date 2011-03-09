@@ -50,10 +50,10 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br />
 <br />
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="4630719">
-<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
-<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+<input type="hidden" name="cmd" value="_s-xclick"/>
+<input type="hidden" name="hosted_button_id" value="4630719"/>
+<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online."/>
+<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1" />
 </form>
 </div>
 
@@ -61,10 +61,9 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h2>Latest News</h2>
 
-<h3>5th September 2010</h3>
-<p>Version 2.5.0 has been released:
-<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.5.0.zip">xml-rpc.net.2.5.0.zip</a> 
-
+<h3>6th March 2011</h3>
+<p>Version 3.0.0 beta has been released: 
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.3.0.0-beta.zip">xml-rpc.net.3.0.0-beta.zip</a>
 </p>
 
 <p>New features, changes, and fixed issues:</p>
@@ -72,42 +71,25 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <ul>
 
 <li>
-Added &lt;i8&gt; to support 64-bit long integer values. 
+Support for &lt;nil&gt; XML-RPC extension. 
 </li>
 
 <li>
-Added support for more ISO8601 date formats. AllowNonStandardDateTime flag is now
-deprecated. The following formats are now accepted by default, with the '-' 
-and ':' separators being optional. 
-<ul>
-<li>
-yyyy-mm-ddThh:mm:ss 
-</li>
-<li>
-yyyy-mm-ddThh:mm:ssZ 
-</li>
-<li>
-yyyy-mm-ddThh:mm:ss±hh 
-</li>
-<li>
-yyyy-mm-ddThh:mm:ss±hh:mm 
-</li>
-</ul>
-Note: the XML-RPC spec describes the format as 19980717T14:08:55.
+Support for Silverlight 3 and 4.
 </li>
 
 <li>
-Added AllowAutoRedirect property to IXmlRpcProxy. Default behaviour remains 
-the same (property set to true).
+Support for Windows Phone 7.
 </li>
 
 <li>
-Moved to Visual Studio 2008. 
+Separate client and server assemblies — client assembly compatible with .NET Client Profile. 
 </li>
 
 <li>
-Discontinued support for .NET 1.0 and 1.1. 
+Moved to Visual Studio 2010.
 </li>
+
 
 <li> Fixed issues:
 
@@ -137,13 +119,16 @@ the parent type.
 
 </li>
 
-
-
 </ul>
 
+
+
+
+
+
+
 <p>
-Note: if you use the built-in compressed folders feature of Windows 
-Explorer in Windows XP to extract file from the distribution, 
+Note: if you use Windows Explorer in Windows XP to extract file from the distribution, 
 you may find that the contents of the bin directories are not visible. 
 Use a utility such as WinZip instead.
 </p>
@@ -155,16 +140,32 @@ XML-RPC.NET is a library for implementing <a href="http://www.xmlrpc.com">XML-RP
   Services and clients in the .NET environment, supporting versions 2.0 and upwards 
   of the .NET runtime. The library has been in development 
   since March 2001 and is used in many open-source and business applications. 
+</p>
+
+
+<blockquote> <i>
+<p>
+Charles Cook created an amazing and elegant library called XML-RPC.NET and has given it to the 
+community. He's kept it working nicely such that I was able to get it working in my .NET 4.0 
+application without any modification even though I was using an older 1.0.0.8 version for .NET 
+1.0 in my first version. That's a testament to Charles' work.
+</p>
+<p>
+Scott Hanselman — <a href="http://www.hanselman.com/blog/TheWeeklySourceCode55NotABlogALocalXMLRPCMetaWebLogEndpointThatLiesToWindowsLiveWriter.aspx">The Weekly Source Code 55</a>
+</p>
+</i>
+</blockquote>
+
   Its features include:
 </p>
 <ul>
   <li>interface based definition of XML-RPC servers and clients</li>
   <li>code generation of type-safe client proxies</li>
-  <li>support for .NET Remoting on both client and server</li>
+  <li>Silverlight and Windows Phone 7</li>
   <li>ASP.NET Web Services which support both XML-RPC and SOAP</li>
   <li>client support for asynchronous calls</li>
   <li>client support for various XML encodings and XML indentation styles
-  (some other XML-RPC server implementations incorrectly only accept 
+  (some other XML-RPC server implementations only accept 
   certain indentation styles)</li>
   <li>built-in support for XML-RPC Introspection API on server</li>
   <li>dynamic generation of documentation page at URL of XML-RPC end-point</li>
@@ -173,16 +174,15 @@ XML-RPC.NET is a library for implementing <a href="http://www.xmlrpc.com">XML-RP
   <li>support for Unicode XML-RPC strings in both client and server</li>
   <li>support for optional struct members when mapping between .NET and XML-RPC 
   types</li>
+  <li>&lt;i8&gt; XML-RPC extension</li>
+  <li>&lt;nil&gt; XML-RPC extension</li>
+  <li>support for .NET Remoting on both client and server</li>
 </ul>
 
 <p>
-The XML-RPC.NET library is CLS-compliant and so can be called from any CLS-compliant 
-language, the main examples being C# and VB.NET.
-</p>
-
-<p>
 The <a href="faq/xmlrpcnetfaq.html">FAQ</a> provides 
-more information and the mailing list - the <a href="http://groups.yahoo.com/group/XMLRPCNET/">XMLRPCNET</a> 
+more information and the mailing list - the 
+<a href="http://groups.yahoo.com/group/XMLRPCNET/">XMLRPCNET</a> 
 Yahoo group - contains discussion, peer support, code example, and announcements 
 relating to XML-RPC.NET.
 </p>
@@ -204,7 +204,7 @@ then use the XmlRpcProxyGen class to automatically generate the code for the
 proxy. 
 </p>
 
-<pre>[XmlRpcUrl(&quot;http://betty.userland.com/RPC2&quot;)]
+<pre>[XmlRpcUrl(&quot;http://www.cookcomputing.com/xmlrpcsamples/RPC2.ashx&quot;)]
 public interface IStateName : IXmlRpcProxy
 {
     [XmlRpcMethod(&quot;examples.getStateName&quot;)]
@@ -340,7 +340,7 @@ provides the documentation for XML-RPC.NET.
 
 <h3>Google Code Project</h3>
 <p>
-As of version 2.2.0, XML-RPC.NET is hosted at Google Code:
+XML-RPC.NET is hosted at Google Code:
 </p>
 
 <ul>
@@ -391,7 +391,7 @@ document.write('<a href="mailto:' + '&#99;&#104;&#97;&#115;' +'&#99;&#111;&#111;
 
 <p>&nbsp;</p>
 <p style="font-size: x-small;">
-Charles Cook, 2001-2010 All Rights Reserved. 5th September 2010
+Charles Cook, 2001-2011 All Rights Reserved. 6th March 2011
 </p>
 
 </div>
