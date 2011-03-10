@@ -48,8 +48,7 @@ namespace CookComputing.XmlRpc
         SerializeFaultResponse(stm, (XmlRpcFaultException)ret);
         return;
       }
-      var stmWriter = new EncodingStreamWriter(stm, XmlEncoding);
-      XmlWriter xtw = XmlWriter.Create(stmWriter, ConfigureXmlFormat());
+      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, XmlEncoding, UseIndentation, Indentation); 
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "params", "");

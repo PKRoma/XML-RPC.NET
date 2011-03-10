@@ -75,9 +75,6 @@
     <Compile Include="..\src\DateTime8601.cs">
       <Link>DateTime8601.cs</Link>
     </Compile>
-    <Compile Include="..\src\EncodingStreamWriter.cs">
-      <Link>EncodingStreamWriter.cs</Link>
-    </Compile>
     <Compile Include="..\src\GuidEx.cs">
       <Link>GuidEx.cs</Link>
     </Compile>
@@ -179,6 +176,9 @@
     </Compile>
     <Compile Include="..\src\XmlRpcUrlAttribute.cs">
       <Link>XmlRpcUrlAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\src\XmlRpcXmlWriter.cs">
+      <Link>XmlRpcXmlWriter.cs</Link>
     </Compile>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="BrowsableAttribute.cs" />

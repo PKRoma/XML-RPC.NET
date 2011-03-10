@@ -116,7 +116,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DateTime8601.cs" />
-    <Compile Include="EncodingStreamWriter.cs" />
     <Compile Include="GuidEx.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -203,6 +202,7 @@
     <Compile Include="XmlRpcUrlAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcXmlWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -338,8 +338,7 @@ namespace CookComputing.XmlRpc
       FaultStruct fs;
       fs.faultCode = faultEx.FaultCode;
       fs.faultString = faultEx.FaultString;
-      var stmWriter = new EncodingStreamWriter(stm, XmlEncoding);
-      XmlWriter xtw = XmlWriter.Create(stmWriter, ConfigureXmlFormat());
+      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, XmlEncoding, UseIndentation, Indentation);
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "fault", "");

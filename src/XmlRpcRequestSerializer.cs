@@ -42,8 +42,7 @@ namespace CookComputing.XmlRpc
   {
     public void SerializeRequest(Stream stm, XmlRpcRequest request)
     {
-      var stmWriter = new EncodingStreamWriter(stm, XmlEncoding);
-      XmlWriter xtw = XmlWriter.Create(stmWriter, ConfigureXmlFormat());
+      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, XmlEncoding, UseIndentation, Indentation);
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodCall", "");
       {
