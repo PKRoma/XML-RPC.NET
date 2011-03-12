@@ -70,7 +70,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateNameSilverlightClient"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xmlrpcwp", "..\xmlrpcwp\xmlrpcwp.csproj", "{7238D157-41BC-4F51-B3FA-AB250CA35BFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateNameWindowsPhoneClient", "StateNameWindowsPhoneClient\StateNameWindowsPhoneClient.csproj", "{2D19F19E-D441-4D4C-A938-D84FB6523C31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateNameWindowsPhoneClient", "..\samples\StateNameWindowsPhoneClient\StateNameWindowsPhoneClient.csproj", "{2D19F19E-D441-4D4C-A938-D84FB6523C31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -170,14 +170,17 @@ Global
 		{7238D157-41BC-4F51-B3FA-AB250CA35BFF}.WindowsPhone|Any CPU.ActiveCfg = Debug|Any CPU
 		{7238D157-41BC-4F51-B3FA-AB250CA35BFF}.WindowsPhone|Any CPU.Build.0 = Debug|Any CPU
 		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.Development|Any CPU.ActiveCfg = Debug|Any CPU
 		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.Development|Any CPU.Build.0 = Debug|Any CPU
 		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.Development|Any CPU.Deploy.0 = Debug|Any CPU
 		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.WindowsPhone|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.WindowsPhone|Any CPU.Build.0 = Debug|Any CPU
-		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.WindowsPhone|Any CPU.Deploy.0 = Debug|Any CPU
+		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.WindowsPhone|Any CPU.ActiveCfg = Release|Any CPU
+		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.WindowsPhone|Any CPU.Build.0 = Release|Any CPU
+		{2D19F19E-D441-4D4C-A938-D84FB6523C31}.WindowsPhone|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
