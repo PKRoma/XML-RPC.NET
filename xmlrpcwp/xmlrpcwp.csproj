@@ -132,12 +132,6 @@
     <Compile Include="..\src\XmlRpcSerializer.cs">
       <Link>XmlRpcSerializer.cs</Link>
     </Compile>
-    <Compile Include="..\src\XmlRpcServiceAttribute.cs">
-      <Link>XmlRpcServiceAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\src\XmlRpcServiceInfo.cs">
-      <Link>XmlRpcServiceInfo.cs</Link>
-    </Compile>
     <Compile Include="..\src\XmlRpcStruct.cs">
       <Link>XmlRpcStruct.cs</Link>
     </Compile>
