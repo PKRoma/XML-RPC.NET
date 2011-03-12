@@ -120,8 +120,14 @@
     <Compile Include="..\src\XmlRpcRequestEventArgs.cs">
       <Link>XmlRpcRequestEventArgs.cs</Link>
     </Compile>
+    <Compile Include="..\src\XmlRpcRequestSerializer.cs">
+      <Link>XmlRpcRequestSerializer.cs</Link>
+    </Compile>
     <Compile Include="..\src\XmlRpcResponse.cs">
       <Link>XmlRpcResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\src\XmlRpcResponseDeserializer.cs">
+      <Link>XmlRpcResponseDeserializer.cs</Link>
     </Compile>
     <Compile Include="..\src\XmlRpcResponseEventArgs.cs">
       <Link>XmlRpcResponseEventArgs.cs</Link>
@@ -134,6 +140,9 @@
     </Compile>
     <Compile Include="..\src\XmlRpcStruct.cs">
       <Link>XmlRpcStruct.cs</Link>
+    </Compile>
+    <Compile Include="..\src\XmlRpcTypeInfo.cs">
+      <Link>XmlRpcTypeInfo.cs</Link>
     </Compile>
     <Compile Include="..\src\XmlRpcUrlAttribute.cs">
       <Link>XmlRpcUrlAttribute.cs</Link>
