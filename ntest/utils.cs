@@ -10,11 +10,11 @@ namespace ntest
 
   public class Utils
   {
-    public static XmlDocument Serialize(
+    public static XmlReader Serialize(
       string testName,
       object obj, 
       Encoding encoding,
-      MappingAction action)
+      NullMappingAction action)
     {
       Stream stm = new MemoryStream();
       XmlTextWriter xtw = new XmlTextWriter(stm, Encoding.UTF8);
@@ -33,17 +33,17 @@ namespace ntest
         //Console.WriteLine(s);
         s = trdr.ReadLine();
       }            
-      stm.Position = 0;    
-      XmlDocument xdoc = new XmlDocument();
-      xdoc.PreserveWhitespace = true;
-      xdoc.Load(stm);
-      return xdoc;
+      stm.Position = 0;
+      XmlTextReader rdr = new XmlTextReader(stm);
+      rdr.ProhibitDtd = true;
+      rdr.WhitespaceHandling = WhitespaceHandling.All;
+      return rdr;
     }
     	
     public static string SerializeToString(
       string testName,
       object obj, 
-      MappingAction action)
+      NullMappingAction action)
     {
       StringWriter strwrtr = new StringWriter();
       XmlTextWriter xtw = new XmlTextWriter(strwrtr);
@@ -67,26 +67,26 @@ namespace ntest
       out Type parsedArrayType)
     {
       StringReader sr = new StringReader(xml);
-      XmlDocument xdoc = new XmlDocument();
-      xdoc.PreserveWhitespace = true;
-      xdoc.Load(sr);        
-      return Parse(xdoc, valueType, action, 
+      XmlTextReader rdr = new XmlTextReader(sr);
+      rdr.ProhibitDtd = true;
+      rdr.WhitespaceHandling = WhitespaceHandling.All;
+      return Parse(rdr, valueType, action, 
         out parsedType, out parsedArrayType);
     }
     
     public static object Parse(
-      XmlDocument xdoc, 
+      XmlReader rdr, 
       Type valueType, 
       MappingAction action,
       out Type parsedType,
       out Type parsedArrayType)
     {
-      XmlNode node = SelectValueNode(xdoc.SelectSingleNode("value"));               
-      XmlRpcSerializer.ParseStack parseStack 
-        = new XmlRpcSerializer.ParseStack("request");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
-      object obj = ser.ParseValue(node, valueType, parseStack, action,
-        out parsedType, out parsedArrayType);
+      parsedType = parsedArrayType = null;
+      rdr.ReadToDescendant("value");            
+      ParseStack parseStack 
+        = new ParseStack("request");
+      XmlRpcDeserializer ser = new XmlRpcDeserializer();
+      object obj = ser.ParseValueElement(rdr, valueType, parseStack, action);
       return obj;
     }
 
@@ -94,31 +94,30 @@ namespace ntest
       string xml,
       Type valueType,
       MappingAction action,
-      XmlRpcSerializer serializer,
+      XmlRpcDeserializer serializer,
       out Type parsedType,
       out Type parsedArrayType)
     {
       StringReader sr = new StringReader(xml);
-      XmlDocument xdoc = new XmlDocument();
-      xdoc.PreserveWhitespace = true;
-      xdoc.Load(sr);
-      return Parse(xdoc, valueType, action, serializer,
+      XmlTextReader rdr = new XmlTextReader(sr);
+      rdr.ProhibitDtd = true;
+      rdr.WhitespaceHandling = WhitespaceHandling.All;
+      return Parse(rdr, valueType, action, serializer,
         out parsedType, out parsedArrayType);
     }
 
     public static object Parse(
-      XmlDocument xdoc,
+      XmlReader rdr,
       Type valueType,
       MappingAction action,
-      XmlRpcSerializer serializer,
+      XmlRpcDeserializer deserializer,
       out Type parsedType,
       out Type parsedArrayType)
     {
-      XmlNode node = SelectValueNode(xdoc.SelectSingleNode("value"));
-      XmlRpcSerializer.ParseStack parseStack
-        = new XmlRpcSerializer.ParseStack("request");
-      object obj = serializer.ParseValue(node, valueType, parseStack, action,
-        out parsedType, out parsedArrayType);
+      parsedType = parsedArrayType = null;
+      rdr.ReadToDescendant("value");
+      ParseStack parseStack = new ParseStack("request");
+      object obj = deserializer.ParseValueElement(rdr, valueType, parseStack, action);
       return obj;
     }
 

@@ -21,7 +21,7 @@ namespace ntest
       {
         XmlRpcResponse resp = new XmlRpcResponse(new DataSet());
         Stream responseStream = new MemoryStream();
-        XmlRpcSerializer serializer = new XmlRpcSerializer();
+        var serializer = new XmlRpcResponseSerializer();
         serializer.SerializeResponse(responseStream, resp);
       }
       catch(XmlRpcInvalidReturnType ex)

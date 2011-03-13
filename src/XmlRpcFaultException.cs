@@ -32,10 +32,15 @@ namespace CookComputing.XmlRpc
 
   // used to return server-side errors to client code - also can be 
   // thrown by Service implmentation code to return custom Fault Responses
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
   [Serializable]
 #endif
-  public class XmlRpcFaultException : ApplicationException
+  public class XmlRpcFaultException :
+#if (!SILVERLIGHT)
+    ApplicationException
+#else
+    Exception
+#endif
   { 
     // constructors
     //
@@ -46,7 +51,7 @@ namespace CookComputing.XmlRpc
       m_faultCode = TheCode;
       m_faultString = TheString;
     }
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     // deserialization constructor
     protected XmlRpcFaultException(
       SerializationInfo info, 
@@ -68,7 +73,7 @@ namespace CookComputing.XmlRpc
     {
       get { return m_faultString; } 
     }
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     // public methods
     //
     public override void GetObjectData(

@@ -21,10 +21,10 @@ namespace ntest
 
     struct Struct0
     {
-      public XmlRpcInt xi;
-      public XmlRpcBoolean xb;
-      public XmlRpcDouble xd;
-      public XmlRpcDateTime xdt;
+      public int? xi;
+      public bool? xb;
+      public double? xd;
+      public DateTime? xdt;
 #if !FX1_0
       public int? nxi;
       public bool? nxb;
@@ -43,10 +43,10 @@ namespace ntest
       public DateTime mdt;
       public byte[] mb64;
       public int[] ma;
-      public XmlRpcInt xi;
-      public XmlRpcBoolean xb;
-      public XmlRpcDouble xd;
-      public XmlRpcDateTime xdt;
+      public int? xi;
+      public bool? xb;
+      public double? xd;
+      public DateTime? xdt;
       public XmlRpcStruct xstr;
 #if !FX1_0
       public int? nxi;
@@ -67,10 +67,10 @@ namespace ntest
       public DateTime mdt;
       public byte[] mb64;
       public int[] ma;
-      public XmlRpcInt xi;
-      public XmlRpcBoolean xb;
-      public XmlRpcDouble xd;
-      public XmlRpcDateTime xdt;
+      public int? xi;
+      public bool? xb;
+      public double? xd;
+      public DateTime? xdt;
       public XmlRpcStruct xstr;
 #if !FX1_0
       public int? nxi;
@@ -98,13 +98,13 @@ namespace ntest
       [XmlRpcMissingMapping(MappingAction.Error)]
       public int[] ma;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public XmlRpcInt xi;
+      public int? xi;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public XmlRpcBoolean xb;
+      public bool? xb;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public XmlRpcDouble xd;
+      public double? xd;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public XmlRpcDateTime xdt;
+      public DateTime? xdt;
       [XmlRpcMissingMapping(MappingAction.Error)]
       public XmlRpcStruct xstr;
 #if !FX1_0
@@ -139,13 +139,13 @@ namespace ntest
       [XmlRpcMissingMapping(MappingAction.Error)]
       public int[] ma;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public XmlRpcInt xi;
+      public int? xi;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public XmlRpcBoolean xb;
+      public bool? xb;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public XmlRpcDouble xd;
+      public double? xd;
       [XmlRpcMissingMapping(MappingAction.Error)]
-      public XmlRpcDateTime xdt;
+      public DateTime? xdt;
       [XmlRpcMissingMapping(MappingAction.Error)]
       public XmlRpcStruct xstr;
 #if !FX1_0
@@ -172,10 +172,10 @@ namespace ntest
       public DateTime mdt;
       public byte[] mb64;
       public int[] ma;
-      public XmlRpcInt xi;
-      public XmlRpcBoolean xb;
-      public XmlRpcDouble xd;
-      public XmlRpcDateTime xdt;
+      public int? xi;
+      public bool? xb;
+      public double? xd;
+      public DateTime? xdt;
       public XmlRpcStruct xstr;
 #if !FX1_0
       public int? nxi;
@@ -203,13 +203,13 @@ namespace ntest
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public int[] ma;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcInt xi;
+      public int? xi;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcBoolean xb;
+      public bool? xb;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcDouble xd;
+      public double? xd;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcDateTime xdt;
+      public DateTime? xdt;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public XmlRpcStruct xstr;
 #if !FX1_0
@@ -244,13 +244,13 @@ namespace ntest
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public int[] ma;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcInt xi;
+      public int? xi;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcBoolean xb;
+      public bool? xb;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcDouble xd;
+      public double? xd;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
-      public XmlRpcDateTime xdt;
+      public DateTime? xdt;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public XmlRpcStruct xstr;
 #if !FX1_0
@@ -283,8 +283,8 @@ namespace ntest
       strout.nxdt = new DateTime(2007, 9, 10, 11, 12, 14);
       strout.nxstr = new ChildStruct(567);
 #endif
-      XmlDocument xdoc = Utils.Serialize("Struct0_AllExist",
-        strout, Encoding.UTF8, MappingAction.Error);
+      XmlReader xdoc = Utils.Serialize("Struct0_AllExist",
+        strout, Encoding.UTF8, NullMappingAction.Error);
       Type parsedType, parsedArrayType;
       object obj = Utils.Parse(xdoc, typeof(Struct0), MappingAction.Error,
         out parsedType, out parsedArrayType);
@@ -308,17 +308,17 @@ namespace ntest
     [ExpectedException(typeof(XmlRpcMappingSerializeException))]
     public void Struct1_AllMissing_ErrorDefault()
     {
-      XmlDocument xdoc = Utils.Serialize("Struct1_AllMissing_ErrorDefault",
+      XmlReader xdoc = Utils.Serialize("Struct1_AllMissing_ErrorDefault",
         new Struct1(),
-        Encoding.UTF8, MappingAction.Error);
+        Encoding.UTF8, NullMappingAction.Error);
     }
 
     [Test]
     public void Struct1_AllMissing_IgnoreDefault()
     {
-      XmlDocument xdoc = Utils.Serialize("Struct1_AllMissing_IgnoreDefault",
+      XmlReader xdoc = Utils.Serialize("Struct1_AllMissing_IgnoreDefault",
         new Struct1(),
-        Encoding.UTF8, MappingAction.Ignore);
+        Encoding.UTF8, NullMappingAction.Ignore);
     }
 
     //-------------------------------------------------------------------------/
@@ -326,20 +326,20 @@ namespace ntest
     [ExpectedException(typeof(XmlRpcMappingSerializeException))]
     public void Struct2_AllMissing_ErrorError()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct2_AllMissing_ErrorError",
         new Struct2(),
-        Encoding.UTF8, MappingAction.Error);
+        Encoding.UTF8, NullMappingAction.Error);
     }
 
     [Test]
     [ExpectedException(typeof(XmlRpcMappingSerializeException))]
     public void Struct2_AllMissing_IgnoreError()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct2_AllMissing_IgnoreError",
         new Struct2(),
-        Encoding.UTF8, MappingAction.Ignore);
+        Encoding.UTF8, NullMappingAction.Ignore);
     }
 
     //-------------------------------------------------------------------------/
@@ -347,20 +347,20 @@ namespace ntest
     [ExpectedException(typeof(XmlRpcMappingSerializeException))]
     public void Struct3_AllMissing_ErrorDefaultError()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct3_AllMissing_ErrorDefaultError",
         new Struct3(),
-        Encoding.UTF8, MappingAction.Error);
+        Encoding.UTF8, NullMappingAction.Error);
     }
 
     [Test]
     [ExpectedException(typeof(XmlRpcMappingSerializeException))]
     public void Struct3_AllMissing_IgnoreDefaultError()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct3_AllMissing_IgnoreDefaultError",
         new Struct3(),
-        Encoding.UTF8, MappingAction.Ignore);
+        Encoding.UTF8, NullMappingAction.Ignore);
     }
 
     //-------------------------------------------------------------------------/
@@ -368,77 +368,77 @@ namespace ntest
     [ExpectedException(typeof(XmlRpcMappingSerializeException))]
     public void Struct4_AllMissing_ErrorIgnoreError()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct4_AllMissing_ErrorIgnoreError",
         new Struct4(),
-        Encoding.UTF8, MappingAction.Error);
+        Encoding.UTF8, NullMappingAction.Error);
     }
 
     [Test]
     [ExpectedException(typeof(XmlRpcMappingSerializeException))]
     public void Struct4_AllMissing_IgnoreIgnoreError()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct4_AllMissing_IgnoreIgnoreError",
         new Struct4(),
-        Encoding.UTF8, MappingAction.Ignore);
+        Encoding.UTF8, NullMappingAction.Ignore);
     }
 
     //-------------------------------------------------------------------------/
     [Test]
     public void Struct5_AllMissing_ErrorIgnoreDefault()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct5_AllMissing_ErrorIgnoreDefault",
         new Struct5(),
-        Encoding.UTF8, MappingAction.Error);
+        Encoding.UTF8, NullMappingAction.Error);
     }
 
     [Test]
     public void Struct5_AllMissing_IgnoreIgnoreDefault()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct5_AllMissing_IgnoreIgnoreDefault",
         new Struct5(),
-        Encoding.UTF8, MappingAction.Ignore);
+        Encoding.UTF8, NullMappingAction.Ignore);
     }
 
     //-------------------------------------------------------------------------/
     [Test]
     public void Struct6_AllMissing_ErrorDefaultIgnore()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct6_AllMissing_ErrorDefaultIgnore",
         new Struct6(),
-        Encoding.UTF8, MappingAction.Error);
+        Encoding.UTF8, NullMappingAction.Error);
     }
 
     [Test]
     public void Struct6_AllMissing_IgnoreDefaultIgnore()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct6_AllMissing_IgnoreDefaultIgnore",
         new Struct6(),
-        Encoding.UTF8, MappingAction.Ignore);
+        Encoding.UTF8, NullMappingAction.Ignore);
     }
 
     //-------------------------------------------------------------------------/
     [Test]
     public void Struct7_AllMissing_ErrorErrorIgnore()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct7_AllMissing_ErrorErrorIgnore",
         new Struct7(),
-        Encoding.UTF8, MappingAction.Error);
+        Encoding.UTF8, NullMappingAction.Error);
     }
 
     [Test]
     public void Struct7_AllMissing_IgnoreErrorIgnore()
     {
-      XmlDocument xdoc = Utils.Serialize(
+      XmlReader xdoc = Utils.Serialize(
         "Struct7_AllMissing_IgnoreErrorIgnore",
         new Struct7(),
-        Encoding.UTF8, MappingAction.Ignore);
+        Encoding.UTF8, NullMappingAction.Ignore);
     }
   }
 }

@@ -35,7 +35,11 @@ using System.Text;
 
 namespace CookComputing.XmlRpc
 {
-  public class XmlRpcClientProtocol : Component, IXmlRpcProxy
+  public class XmlRpcClientProtocol : 
+#if (!SILVERLIGHT)
+    Component,
+#endif
+    IXmlRpcProxy
   {
     #region Instance Variables
     private bool _allowAutoRedirect = true;
@@ -52,8 +56,10 @@ namespace CookComputing.XmlRpc
     private bool _keepAlive = true;
     private XmlRpcNonStandard _nonStandard = XmlRpcNonStandard.None;
     private bool _preAuthenticate = false;
+#if (!SILVERLIGHT)
     private Version _protocolVersion = HttpVersion.Version11;
     private IWebProxy _proxy = null;
+#endif
 #if (!COMPACT_FRAMEWORK)
     private CookieCollection _responseCookies;
     private WebHeaderCollection _responseHeaders;
@@ -68,7 +74,7 @@ namespace CookComputing.XmlRpc
     private Encoding _xmlEncoding = null;
     private string _xmlRpcMethod = null;
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     private X509CertificateCollection _clientCertificates
       = new X509CertificateCollection();
     private CookieContainer _cookies = new CookieContainer();
@@ -77,7 +83,7 @@ namespace CookComputing.XmlRpc
     private Guid _id = Util.NewGuid();
 
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     public XmlRpcClientProtocol(System.ComponentModel.IContainer container)
     {
       container.Add(this);
@@ -124,6 +130,10 @@ namespace CookComputing.XmlRpc
       MethodInfo mi,
       params object[] parameters)
     {
+#if (SILVERLIGHT)
+      throw new NotSupportedException();
+#else
+
 #if (!COMPACT_FRAMEWORK)
       _responseHeaders = null;
       _responseCookies = null;
@@ -150,12 +160,11 @@ namespace CookComputing.XmlRpc
           serStream = new MemoryStream(2000);
         try
         {
-          XmlRpcSerializer serializer = new XmlRpcSerializer();
+          var serializer = new XmlRpcRequestSerializer();
           if (_xmlEncoding != null)
             serializer.XmlEncoding = _xmlEncoding;
           serializer.UseIndentation = _useIndentation;
           serializer.Indentation = _indentation;
-          serializer.NonStandard = _nonStandard;
           serializer.UseStringTag = _useStringTag;
           serializer.UseIntTag = _useIntTag;
           serializer.UseEmptyParamsTag = _useEmptyParamsTag;
@@ -202,20 +211,14 @@ namespace CookComputing.XmlRpc
           deserStream = MaybeDecompressStream((HttpWebResponse)webResp, 
             deserStream);          
 #endif
-          try
+          if (logging)
           {
-            XmlRpcResponse resp = ReadResponse(req, webResp, deserStream, null);
-            reto = resp.retVal;
+            OnResponse(new XmlRpcResponseEventArgs(req.proxyId, req.number,
+              deserStream));
+            deserStream.Position = 0;
           }
-          finally
-          {
-            if (logging)
-            {
-              deserStream.Position = 0;
-              OnResponse(new XmlRpcResponseEventArgs(req.proxyId, req.number,
-                deserStream));
-            }
-          }
+          XmlRpcResponse resp = ReadResponse(req, webResp, deserStream);
+          reto = resp.retVal;
         }
         finally
         {
@@ -229,6 +232,7 @@ namespace CookComputing.XmlRpc
           webReq = null;
       }
       return reto;
+#endif
     }
 
     #region Properties
@@ -239,7 +243,7 @@ namespace CookComputing.XmlRpc
       set { _allowAutoRedirect = value; }
     }
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     [Browsable(false)]
     public X509CertificateCollection ClientCertificates
     {
@@ -284,7 +288,7 @@ namespace CookComputing.XmlRpc
     }
 #endif
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     public CookieContainer CookieContainer
     {
       get { return _cookies; }
@@ -320,19 +324,23 @@ namespace CookComputing.XmlRpc
       set { _preAuthenticate = value; }
     }
 
+#if (!SILVERLIGHT)
     [Browsable(false)]
     public System.Version ProtocolVersion
     {
       get { return _protocolVersion; }
       set { _protocolVersion = value; }
     }
+#endif
 
+#if (!SILVERLIGHT)
     [Browsable(false)]
     public IWebProxy Proxy
     {
       get { return _proxy; }
       set { _proxy = value; }
     }
+#endif
 
 #if (!COMPACT_FRAMEWORK)
     public CookieCollection ResponseCookies
@@ -407,28 +415,34 @@ namespace CookComputing.XmlRpc
 
     public void SetProperties(WebRequest webReq)
     {
+#if (!SILVERLIGHT)
       if (_proxy != null)
         webReq.Proxy = _proxy;
+#endif
       HttpWebRequest httpReq = (HttpWebRequest)webReq;
+#if (!SILVERLIGHT)
       httpReq.UserAgent = _userAgent;
       httpReq.ProtocolVersion = _protocolVersion;
       httpReq.KeepAlive = _keepAlive;
-#if (!COMPACT_FRAMEWORK)
-      httpReq.CookieContainer = _cookies;
-#endif
-#if (!COMPACT_FRAMEWORK && !FX1_0)
-      httpReq.ServicePoint.Expect100Continue = _expect100Continue;
-#endif
       httpReq.AllowAutoRedirect = _allowAutoRedirect;
-      webReq.Timeout = Timeout;
-#if (!COMPACT_FRAMEWORK)
-      webReq.ConnectionGroupName = this._connectionGroupName;
-#endif
-      webReq.Credentials = Credentials;
       webReq.PreAuthenticate = PreAuthenticate;
+      webReq.Timeout = Timeout;
       // Compact Framework sets this to false by default
       (webReq as HttpWebRequest).AllowWriteStreamBuffering = true;
-#if (!COMPACT_FRAMEWORK && !FX1_0)
+#endif
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+      httpReq.CookieContainer = _cookies;
+#endif
+#if (!COMPACT_FRAMEWORK && !FX1_0&&!SILVERLIGHT)
+      httpReq.ServicePoint.Expect100Continue = _expect100Continue;
+#endif
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
+      webReq.ConnectionGroupName = this._connectionGroupName;
+#endif
+#if (!SILVERLIGHT)
+      webReq.Credentials = Credentials;
+#endif
+#if (!COMPACT_FRAMEWORK && !FX1_0 &&!SILVERLIGHT)
       if (_enableCompression)
         webReq.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
 #endif
@@ -440,10 +454,12 @@ namespace CookComputing.XmlRpc
     {
       foreach (string key in headers)
       {
+#if (!SILVERLIGHT)
         webReq.Headers.Add(key, headers[key]);
+#endif        
       }
     }
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     private void SetClientCertificates(
       X509CertificateCollection certificates,
       WebRequest webReq)
@@ -470,8 +486,7 @@ namespace CookComputing.XmlRpc
     XmlRpcResponse ReadResponse(
       XmlRpcRequest req,
       WebResponse webResp,
-      Stream respStm,
-      Type returnType)
+      Stream respStm)
     {
       HttpWebResponse httpResp = (HttpWebResponse)webResp;
       if (httpResp.StatusCode != HttpStatusCode.OK)
@@ -484,13 +499,11 @@ namespace CookComputing.XmlRpc
         else
           throw new XmlRpcServerException(httpResp.StatusDescription);
       }
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      serializer.NonStandard = _nonStandard;
-      Type retType = returnType;
-      if (retType == null)
-        retType = req.mi.ReturnType;
+      var deserializer = new XmlRpcResponseDeserializer();
+      deserializer.NonStandard = _nonStandard;
+      Type retType = req.mi.ReturnType;
       XmlRpcResponse xmlRpcResp
-        = serializer.DeserializeResponse(respStm, retType);
+        = deserializer.DeserializeResponse(respStm, retType);
       return xmlRpcResp;
     }
 
@@ -610,7 +623,7 @@ namespace CookComputing.XmlRpc
         parameters, clientObj, _xmlRpcMethod, _id);
       SetProperties(webReq);
       SetRequestHeaders(_headers, webReq);
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
       SetClientCertificates(_clientCertificates, webReq);
 #endif
       Encoding useEncoding = null;
@@ -646,7 +659,7 @@ namespace CookComputing.XmlRpc
         try
         {
           XmlRpcRequest req = clientResult.XmlRpcRequest;
-          XmlRpcSerializer serializer = new XmlRpcSerializer();
+          var serializer = new XmlRpcRequestSerializer();
           if (clientResult.XmlEncoding != null)
             serializer.XmlEncoding = clientResult.XmlEncoding;
           serializer.UseEmptyParamsTag = clientResult.UseEmptyParamsTag;
@@ -810,9 +823,7 @@ namespace CookComputing.XmlRpc
       return EndInvoke(asr, null);
     }
 
-    public object EndInvoke(
-      IAsyncResult asr,
-      Type returnType)
+    public object EndInvoke(IAsyncResult asr, Type returnType)
     {
       object reto = null;
       Stream responseStream = null;
@@ -824,8 +835,10 @@ namespace CookComputing.XmlRpc
         if (clientResult.EndSendCalled)
           throw new Exception("dup call to EndSend");
         clientResult.EndSendCalled = true;
+        if (clientResult.XmlRpcRequest != null && returnType != null)
+          clientResult.XmlRpcRequest.ReturnType = returnType;
         HttpWebResponse webResp = (HttpWebResponse)clientResult.WaitForResponse();
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
         clientResult._responseCookies = webResp.Cookies;
         clientResult._responseHeaders = webResp.Headers;
 #endif
@@ -838,12 +851,12 @@ namespace CookComputing.XmlRpc
             responseStream));
           responseStream.Position = 0;
         }
-#if (!COMPACT_FRAMEWORK && !FX1_0)
+#if (!COMPACT_FRAMEWORK && !FX1_0 && !SILVERLIGHT)
         responseStream = MaybeDecompressStream((HttpWebResponse)webResp, 
           responseStream);
 #endif
         XmlRpcResponse resp = ReadResponse(clientResult.XmlRpcRequest,
-          webResp, responseStream, returnType);
+          webResp, responseStream);
         reto = resp.retVal;
       }
       finally
@@ -966,6 +979,9 @@ namespace CookComputing.XmlRpc
 
     protected virtual WebResponse GetWebResponse(WebRequest request)
     {
+#if (SILVERLIGHT)
+      throw new NotSupportedException();
+#else
       WebResponse ret = null;
       try
       {
@@ -978,9 +994,10 @@ namespace CookComputing.XmlRpc
         ret = ex.Response;
       }
       return ret;
+#endif
     }
 
-#if (!COMPACT_FRAMEWORK && !FX1_0)
+#if (!COMPACT_FRAMEWORK && !FX1_0 && !SILVERLIGHT)
     // support for gzip and deflate
     protected Stream MaybeDecompressStream(HttpWebResponse httpWebResp, 
       Stream respStream)

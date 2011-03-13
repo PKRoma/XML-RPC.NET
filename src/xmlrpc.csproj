@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -10,14 +11,14 @@
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>CookComputing.XmlRpcV2</AssemblyName>
+    <AssemblyName>CookComputing.XmlRpcV3</AssemblyName>
     <AssemblyOriginatorKeyFile Condition="'$(BuildingInsideVisualStudio)' == ''">$(KeyFile)</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>xmlrpc</RootNamespace>
+    <RootNamespace>CookComputing.XmlRpc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -26,7 +27,23 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <SignAssembly Condition="'$(BuildingInsideVisualStudio)' == ''">false</SignAssembly>
-    <OldToolsVersion>2.0</OldToolsVersion>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\bin\</OutputPath>
@@ -49,6 +66,7 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\bin\</OutputPath>
@@ -71,6 +89,7 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System">
@@ -100,18 +119,9 @@
     <Compile Include="GuidEx.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IHttpRequest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IHttpRequestHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IHttpResponse.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="IXmlRpcProxy.cs" />
+    <Compile Include="ParseStack.cs" />
     <Compile Include="RequestResponseLogger.cs" />
-    <Compile Include="SystemMethodsBase.cs" />
     <Compile Include="Tracer.cs" />
     <Compile Include="util.cs">
       <SubType>Code</SubType>
@@ -120,9 +130,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XmlRpcBeginAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcBoolean.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XmlRpcClientFormatterSink.cs">
@@ -134,15 +141,7 @@
     <Compile Include="XmlRpcClientProtocol.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="XmlRpcDateTime.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcDocWriter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcDouble.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="XmlRpcDeserializer.cs" />
     <Compile Include="XmlRpcEndAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -152,21 +151,6 @@
     <Compile Include="XmlRpcFaultException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XmlRpcHttpRequest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcHttpResponse.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcHttpServerProtocol.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcInt.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcListenerRequest.cs" />
-    <Compile Include="XmlRpcListenerResponse.cs" />
-    <Compile Include="XmlRpcListenerService.cs" />
     <Compile Include="XmlRpcLogger.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -183,12 +167,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XmlRpcNonStandard.cs" />
+    <Compile Include="XmlRpcNullMappingAttribute.cs" />
     <Compile Include="XmlRpcParameterAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XmlRpcParameterInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcParser.cs" />
     <Compile Include="XmlRpcProxyCodeGen.cs" />
     <Compile Include="XmlRpcProxyGen.cs">
       <SubType>Code</SubType>
@@ -197,9 +183,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XmlRpcRequestEventArgs.cs" />
+    <Compile Include="XmlRpcRequestSerializer.cs" />
     <Compile Include="XmlRpcResponse.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcResponseDeserializer.cs" />
     <Compile Include="XmlRpcResponseEventArgs.cs" />
     <Compile Include="XmlRpcReturnValueAttribute.cs">
       <SubType>Code</SubType>
@@ -207,30 +195,31 @@
     <Compile Include="XmlRpcSerializer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XmlRpcServerFormatterSink.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcServerFormatterSinkProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcServerProtocol.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcServiceAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlRpcServiceInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="XmlRpcStruct.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcTypeInfo.cs" />
     <Compile Include="XmlRpcUrlAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcXmlWriter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

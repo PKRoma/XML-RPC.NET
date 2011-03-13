@@ -59,7 +59,7 @@ namespace CookComputing.XmlRpc
       return mstm;
     }
 
-#if (!COMPACT_FRAMEWORK)
+#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     public static void TraceStream(Stream stm)
     {
       TextReader trdr = new StreamReader(stm, new UTF8Encoding(), true, 4096);

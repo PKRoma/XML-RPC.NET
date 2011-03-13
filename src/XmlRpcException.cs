@@ -27,7 +27,12 @@ namespace CookComputing.XmlRpc
 {
   using System;
 
-  public class XmlRpcException : ApplicationException
+  public class XmlRpcException : 
+#if (!SILVERLIGHT)
+    ApplicationException
+#else
+    Exception
+#endif
   {
     public XmlRpcException() {}
 

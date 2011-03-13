@@ -45,7 +45,7 @@ namespace ntest
       req.args = new Object[] { new object[] { 1, "one" } };
       req.method = "FooNotParams";
       req.mi = typeof(IFoo).GetMethod("FooNotParams");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -81,7 +81,7 @@ namespace ntest
       req.args = new Object[] { new object[] { 1, "one" } };
       req.method = "Foo";
       req.mi = typeof(IFoo).GetMethod("Foo");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -113,7 +113,7 @@ namespace ntest
       req.args = new object[] { new int[] { 1, 2, 3 } };
       req.method = "BarNotParams";
       req.mi = typeof(IFoo).GetMethod("BarNotParams");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -152,7 +152,7 @@ namespace ntest
       req.args = new Object[] { new int[] { 1, 2, 3 } };
       req.method = "Bar";
       req.mi = typeof(IFoo).GetMethod("Bar");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -189,7 +189,7 @@ namespace ntest
       req.args = new Object[0];
       req.method = "FooZeroParameters";
       req.mi = typeof(IFoo).GetMethod("FooZeroParameters");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -210,7 +210,7 @@ namespace ntest
       req.args = new Object[0];
       req.method = "FooZeroParameters";
       req.mi = typeof(IFoo).GetMethod("FooZeroParameters");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.UseEmptyParamsTag = false;
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
@@ -250,8 +250,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, this.GetType());
       Assert.AreEqual(request.method, "Foo", "method is Foo");
       Assert.AreEqual(request.args[0].GetType(),  typeof(object[]),
         "argument is object[]");
@@ -269,7 +269,7 @@ namespace ntest
   <params/>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      var serializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
   
       Assert.AreEqual(request.method, "Foo", "method is Foo");
@@ -295,7 +295,7 @@ namespace ntest
   <params />
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      var serializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = serializer.DeserializeRequest(sr, 
         this.GetType());
       Assert.AreEqual(request.method, "FooZeroParameters", 
@@ -335,7 +335,7 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      var serializer = new XmlRpcRequestDeserializer();
       XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
       Assert.AreEqual(request.method, "Foo1", "method is Foo");
       Assert.AreEqual((int)request.args[0], 5678, "first argument is int");
@@ -372,8 +372,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, this.GetType());
       Assert.AreEqual(request.method, "Bar", "method is Foo");
       Assert.AreEqual(request.args[0].GetType(), typeof(string[]), 
         "argument is string[]");
@@ -402,10 +402,10 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
+      var deserializer = new XmlRpcRequestDeserializer();
       try
       {
-        XmlRpcRequest request = serializer.DeserializeRequest(sr, 
+        XmlRpcRequest request = deserializer.DeserializeRequest(sr, 
           this.GetType());
         Assert.Fail("Should detect invalid type of parameter #2");
       }
@@ -445,8 +445,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, this.GetType());
       Assert.AreEqual(request.method, "Linisgre", "method is Linisgre");
       Assert.AreEqual(request.args[0].GetType(), typeof(object[]),
         "argument is object[]");
@@ -465,8 +465,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, this.GetType());
       Assert.AreEqual(request.method, "Linisgre", "method is Linisgre");
       Assert.AreEqual(request.args[0].GetType(), typeof(object[]),
         "argument is object[]");
@@ -487,8 +487,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, this.GetType());
     }
 
     [Test]
@@ -503,8 +503,8 @@ namespace ntest
   </params>
 </methodCall>";
       StringReader sr = new StringReader(xml);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, this.GetType());
     }
 
     [Test]
@@ -520,7 +520,7 @@ namespace ntest
         new object[] { param1, param2 } };
       req.method = "Send_Param";
       req.mi = this.GetType().GetMethod("Send_Param");
-      XmlRpcSerializer ser = new XmlRpcSerializer();
+      var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -532,8 +532,8 @@ namespace ntest
     public void DeserializeMassimo()
     {
       StringReader sr = new StringReader(massimoRequest);
-      XmlRpcSerializer serializer = new XmlRpcSerializer();
-      XmlRpcRequest request = serializer.DeserializeRequest(sr, this.GetType());
+      var deserializer = new XmlRpcRequestDeserializer();
+      XmlRpcRequest request = deserializer.DeserializeRequest(sr, this.GetType());
       Assert.AreEqual(request.method, "Send_Param", "method is Send_Param");
       Assert.AreEqual(typeof(string), request.args[0].GetType(),  
         "argument is string");
