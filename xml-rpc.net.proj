@@ -6,6 +6,7 @@
     <ProductMajor>3</ProductMajor>
     <ProductMinor>0</ProductMinor>
     <ProductRevision>0</ProductRevision>
+    <ProductSuffix>-beta1</ProductSuffix>
     <BuildDir>$(MSBuildProjectDirectory)\build</BuildDir>
   </PropertyGroup>
 
@@ -94,7 +95,7 @@
       <ZipFiles Include="$(OutputFiles)\**" />
     </ItemGroup>
     <Zip Files="@(ZipFiles)" WorkingDirectory="$(OutputFiles)"
-      ZipFileName="$(BuildDir)\xml-rpc.net.$(ProductMajor).$(ProductMinor).$(ProductRevision).zip">
+      ZipFileName="$(BuildDir)\xml-rpc.net.$(ProductMajor).$(ProductMinor).$(ProductRevision)$(ProductSuffix).zip">
     </Zip>
   </Target>
 
