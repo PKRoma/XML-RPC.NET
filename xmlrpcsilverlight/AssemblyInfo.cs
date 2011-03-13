@@ -24,8 +24,6 @@ DEALINGS IN THE SOFTWARE.
 */
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("XML-RPC.NET for Silverlight")]
 [assembly: AssemblyDescription("For Silverlight 3 and 4")]

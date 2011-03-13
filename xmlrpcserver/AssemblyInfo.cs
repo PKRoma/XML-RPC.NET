@@ -24,12 +24,9 @@ DEALINGS IN THE SOFTWARE.
 */
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Security;
 
 [assembly: AssemblyTitle("XML-RPC.NET Server")]
-[assembly: AssemblyDescription("Use with XmlRpc assembly")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cook Computing")]
 [assembly: AssemblyProduct("XML-RPC.NET")]
