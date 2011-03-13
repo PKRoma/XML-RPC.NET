@@ -23,7 +23,7 @@
   <Target Name="GetFiles">
     <RemoveDir Directories="$(BuildDir)" />
     <SvnExport
-        RepositoryPath="https://xmlrpcnet.googlecode.com/svn/branches/dev"
+        RepositoryPath="https://xmlrpcnet.googlecode.com/svn/trunk"
         LocalPath="$(OutputSrc)"
         ToolPath="C:\Program Files\SlikSvn\bin">
       <Output
@@ -42,14 +42,11 @@
   <Target Name="Version" DependsOnTargets="GetFiles">
     <Error Text="Please supply your own key file CookComputing.key in build directory"
            Condition = "!Exists('$(KeyFile)')"/>
-    <Time Format="MMdd">
-      <Output TaskParameter="FormattedTime" PropertyName="BuildDate" />
-    </Time>
     <AssemblyInfo CodeLanguage="CS"                  
       OutputFile="$(BuildFiles)\src\AssemblyBuildNumber.cs"
       AssemblyVersion="$(ProductMajor).$(ProductMinor).0.0"
       AssemblyInformationalVersion="$(ProductVersion)"         
-      AssemblyFileVersion="$(ProductMajor).$(ProductMinor).$(BuildDate).$(Revision)"
+      AssemblyFileVersion="$(ProductMajor).$(ProductMinor).$(ProductRevision).$(Revision)"
     />
     <Copy
         SourceFiles="README.template"
@@ -68,6 +65,10 @@
     <MSBuild 
         Projects="$(BuildFiles)\xml-rpc.net.sln" 
         Properties="Configuration=Release;SignAssembly=true;AssemblyOriginatorKeyFile=$(MSBuildProjectDirectory)\$(KeyFile)" 
+    />
+    <MSBuild
+        Projects="$(BuildFiles)\xmlrpcwp\xmlrpcwp.sln"
+        Properties="Configuration=Release;SignAssembly=true;AssemblyOriginatorKeyFile=$(MSBuildProjectDirectory)\$(KeyFile)"
     />
   </Target>
 
