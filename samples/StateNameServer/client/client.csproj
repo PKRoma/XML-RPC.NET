@@ -93,13 +93,8 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CookComputing.XmlRpcV3, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="IStateName, Version=1.0.2389.21777, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\IStateName.dll</HintPath>
-    </Reference>
+    <Reference Include="CookComputing.XmlRpc, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="IStateName, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>

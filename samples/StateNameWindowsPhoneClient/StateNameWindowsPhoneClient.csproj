@@ -48,8 +48,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CookComputing.XmlRpcPhoneV3">
-      <HintPath>..\..\bin\CookComputing.XmlRpcPhoneV3.dll</HintPath>
+    <Reference Include="CookComputing.XmlRpcPhone">
+      <HintPath>..\..\bin\CookComputing.XmlRpcPhone.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />

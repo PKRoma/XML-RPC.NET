@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>xmlrpcsilverlight</RootNamespace>
-    <AssemblyName>CookComputing.XmlRpcSilverlightV3</AssemblyName>
+    <AssemblyName>CookComputing.XmlRpcSilverlight</AssemblyName>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
