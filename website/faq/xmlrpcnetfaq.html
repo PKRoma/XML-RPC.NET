@@ -49,7 +49,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h1>XML-RPC.NET FAQ</h1>
 
-<p>Version 3.0.0 6th March 2010. &copy; Charles Cook, 2002-2011.</p>
+<p>Version 3.0.0 12th March 2010. &copy; Charles Cook, 2002-2011.</p>
 <p>Please send feedback, corrections, etc, to xmlrpcfaq@gmail.com.</p>
 <h2>Contents</h2>
 <p>1. Introduction</p>
@@ -94,7 +94,7 @@ if the XML-RPC method name is not valid in my programming language?<br/>
 2.10 <a href="#2.10">How do I receive a callback on completion of an asynchronous call?</a><br/>
 2.11 <a href="#2.11">What is the asyncState parameter used for?</a><br/>
 2.12 <a href="#2.12">How do I implement a client in VB.NET?</a><br/>
-2.13 <a href="#2.13">Why doesn't the following code cause an exception?</a><br/>
+2.13 <a href="#2.13">Why does the following code cause an exception?</a><br/>
 2.14 <a href="#2.14">How do I implement a client in Managed C++?</a><br/>
 2.15 <a href="#2.15">How do I implement a client in JScript.NET?</a><br/>
 2.16 <a href="#2.16">Do proxies support the Introspection API?</a><br/>
@@ -252,16 +252,16 @@ depending on your application:
 
 <ul>
 <li>
-<b>CookComputing.XmlRpcV3.dll</b> — .NET clients (.NET 2.0 upwards, compatible with .NET client profile)
+<b>CookComputing.XmlRpc.dll</b> — .NET clients (.NET 2.0 upwards, compatible with .NET client profile)
 </li>
 <li>
-<b>CookComputing.XmlRpcServerV3.dll</b> — .NET servers ((.NET 2.0 upwards, requires CookComputing.XmlRpcV3.dll)
+<b>CookComputing.XmlRpcServer.dll</b> — .NET servers ((.NET 2.0 upwards, requires CookComputing.XmlRpc.dll)
 </li>
 <li>
-<b>CookComputing.XmlRpcSilverlightV3.dll</b> — Silverlight clients (Silverlight 3 upwards)
+<b>CookComputing.XmlRpcSilverlight.dll</b> — Silverlight clients (Silverlight 3 upwards)
 </li>
 <li>
-<b>CookComputing.XmlRpcPhoneV3.dll</b> — Windows Phone clients
+<b>CookComputing.XmlRpcPhone.dll</b> — Windows Phone clients
 </li>
 </ul>
 
@@ -644,16 +644,16 @@ handled appropriately.
 <h3><a id="1.17"></a>1.17 With which versions of .NET is XML-RPC.NET compatible??</h3>
 
 <p>
-The assemblies CookComputing.XmlRpcV3 and CookComputing.XmlRpcServerV3 are 
+The assemblies CookComputing.XmlRpc and CookComputing.XmlRpcServer are 
 built for .NET 2.0 and so are compatible with this and later versions of .NET.
 </p>
 
 <p>
-The assembly CookComputing.XmlRpcSilverlightV3 is compatible with Silverlight 3 and later versions.
+The assembly CookComputing.XmlRpcSilverlight is compatible with Silverlight 3 and later versions.
 </p>
 
 <p>
-The assembly CookComputing.XmlRpcPhoneV3 is compatible with Windows Phone 7.
+The assembly CookComputing.XmlRpcPhone is compatible with Windows Phone 7.
 </p>
 
 

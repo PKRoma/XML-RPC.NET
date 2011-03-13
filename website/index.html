@@ -61,9 +61,11 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h2>Latest News</h2>
 
-<h3>6th March 2011</h3>
+<h3>12th March 2011</h3>
 <p>Version 3.0.0 beta has been released: 
-<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.3.0.0-beta.zip">xml-rpc.net.3.0.0-beta.zip</a>
+</p>
+<p>
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.3.0.0-beta1.zip">xml-rpc.net.3.0.0-beta1.zip</a>
 </p>
 
 <p>New features, changes, and fixed issues:</p>
@@ -119,19 +121,25 @@ the parent type.
 
 </li>
 
+<li> Breaking changes:
+
+<ul>
+
+<li>
+Custom nullable types — XmlRpcBoolean, XmlRpcDateTime, XmlRpcDouble, XmlRpcInt — have
+been discontinued. Use the standard nullable types bool?, DateTime?, double?, int?.
+</li>
+
+<li>
+A server implementation now needs to reference the CookComputing.XmlRpcServer assembly in 
+addition to the CookComputing.XmlRpc assembly.
+</li>
+
 </ul>
 
+</li>
 
-
-
-
-
-
-<p>
-Note: if you use Windows Explorer in Windows XP to extract file from the distribution, 
-you may find that the contents of the bin directories are not visible. 
-Use a utility such as WinZip instead.
-</p>
+</ul>
 
 
 <h2>Overview</h2>
@@ -391,7 +399,7 @@ document.write('<a href="mailto:' + '&#99;&#104;&#97;&#115;' +'&#99;&#111;&#111;
 
 <p>&nbsp;</p>
 <p style="font-size: x-small;">
-Charles Cook, 2001-2011 All Rights Reserved. 6th March 2011
+Charles Cook, 2001-2011 All Rights Reserved. 12th March 2011
 </p>
 
 </div>
