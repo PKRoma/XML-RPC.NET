@@ -89,6 +89,7 @@ namespace CookComputing.XmlRpc
           XmlRpcDocWriter.WriteDoc(wrtr, this.GetType(), autoDocVersion);
           wrtr.Flush();
           httpResp.ContentType = "text/html";
+          httpResp.StatusCode = 200;
           if (!httpResp.SendChunked)
           {
             httpResp.ContentLength = stm.Length;
@@ -97,7 +98,6 @@ namespace CookComputing.XmlRpc
           Stream respStm = httpResp.OutputStream;
           Util.CopyStream(stm, respStm);
           respStm.Flush();
-          httpResp.StatusCode = 200;
         }
       }
     }
