@@ -66,6 +66,8 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </p>
 <p>
 <a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.3.0.0-beta1.zip">xml-rpc.net.3.0.0-beta1.zip</a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="./faq/xmlrpcnetfaq-3-0-0.html">documentation</a>
 </p>
 
 <p>New features, changes, and fixed issues:</p>
@@ -89,9 +91,14 @@ Separate client and server assemblies — client assembly compatible with .NET Cli
 </li>
 
 <li>
-Moved to Visual Studio 2010.
+Changed directory structure within distribution zip file to avoid problem when opening the file
+in Windows Explorer.
 </li>
 
+
+<li>
+Moved to Visual Studio 2010.
+</li>
 
 <li> Fixed issues:
 
@@ -115,6 +122,32 @@ consistent with the method signature.
 <li>
 Issue 70: Allow structs/classes to have members or arrays of the same type as
 the parent type.
+</li>
+
+<li>
+Issue 74: Fixed case where if a proxy call is made with a ResponseEvent assigned, 
+the call crashes with a "Stream Closed" error.
+</li>
+
+<li>
+Issue 77: Fixed exception when AllowStringFaultCode is set to true. Now string fault
+codes are handled as well as integer fault code by default.
+</li>
+
+<li>
+Issue 78: XmlRpcServiceInfo.GetXmlRpcType now handles case of NonSerializedAttribute 
+on all types.
+</li>
+
+<li>
+Issue 82: Empty string values are now always serialized as &lt;string&gt;&lt;/string&gt; 
+instead of &lt;string /&gt; or &lt;value&gt;&lt;/value&gt;  (for compatibility with XmlRpc++, 
+which doesn't support empty element tags).
+</li>
+
+<li>
+Issue 83: Change to prevent internal server error when viewing auto-generated help on
+Mono based servers.
 </li>
 
 </ul>
@@ -141,6 +174,15 @@ addition to the CookComputing.XmlRpc assembly.
 
 </ul>
 
+
+<p>
+The current stable release is available here: 
+</p>
+<p>
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.5.0.zip">xml-rpc.net.2.5.0.zip</a> 
+&nbsp;&nbsp;&nbsp;&nbsp;
+(<a href="./faq/xmlrpcnetfaq-2-5-0.html">documentation</a>). 
+</p>
 
 <h2>Overview</h2>
 <p>
