@@ -1,12 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- 
+  Project for building a release distribution 
+  - requires Subversion client - configure in ToolPath of SvnExports 
+  -->
+
   <PropertyGroup>
     <ProductVersion>3.0 Beta 1</ProductVersion>
     <ProductMajor>3</ProductMajor>
     <ProductMinor>0</ProductMinor>
     <ProductRevision>0</ProductRevision>
     <ProductSuffix>-beta1</ProductSuffix>
+    <GetFiles>yes</GetFiles>
+    <PhoneBuild>yes</PhoneBuild>
     <BuildDir>$(MSBuildProjectDirectory)\build</BuildDir>
   </PropertyGroup>
 
@@ -21,7 +28,7 @@
 
   <Import Project="tools\CommunityTasks\MSBuild.Community.Tasks.Targets"/>
 
-  <Target Name="GetFiles">
+  <Target Name="GetFiles" Condition="$(GetFiles) == 'yes'">
     <RemoveDir Directories="$(BuildDir)" />
     <SvnExport
         RepositoryPath="https://xmlrpcnet.googlecode.com/svn/trunk"
@@ -38,15 +45,10 @@
       SourceFiles="@(OutputSourceFiles)"
       DestinationFiles="@(OutputSourceFiles->'$(BuildFiles)\%(RecursiveDir)%(Filename)%(Extension)')"
     />
-  </Target>
-  
-  <Target Name="Version" DependsOnTargets="GetFiles">
-    <Error Text="Please supply your own key file CookComputing.key in build directory"
-           Condition = "!Exists('$(KeyFile)')"/>
-    <AssemblyInfo CodeLanguage="CS"                  
+    <AssemblyInfo CodeLanguage="CS"
       OutputFile="$(BuildFiles)\src\AssemblyBuildNumber.cs"
       AssemblyVersion="$(ProductMajor).$(ProductMinor).0.0"
-      AssemblyInformationalVersion="$(ProductVersion)"         
+      AssemblyInformationalVersion="$(ProductVersion)"
       AssemblyFileVersion="$(ProductMajor).$(ProductMinor).$(ProductRevision).$(Revision)"
     />
     <Copy
@@ -59,9 +61,11 @@
         ReplacementText="v$(ProductMajor).$(ProductMinor).$(ProductRevision) Release"
     />
   </Target>
-
-  <Target Name="Build" DependsOnTargets="Version">
+  
+  <Target Name="MainBuild" DependsOnTargets="GetFiles">
     <Message Text="Starting to Build in $(BuildFiles)"/>
+    <Error Text="Please supply your own key file CookComputing.key in build directory"
+       Condition = "!Exists('$(KeyFile)')"/>
     <RemoveDir Directories="$(BuildFiles)\bin" />
     <MSBuild 
         Projects="$(BuildFiles)\xml-rpc.net.sln" 
@@ -73,6 +77,25 @@
     />
   </Target>
 
+  <Target Name="PhoneBuild" DependsOnTargets="GetFiles">
+    <Message Text="Starting to Build in $(BuildFiles)"/>
+    <MSBuild
+        Projects="$(BuildFiles)\xml-rpc.net.sln"
+        Properties="Configuration=Release;SignAssembly=true;AssemblyOriginatorKeyFile=$(MSBuildProjectDirectory)\$(KeyFile)"
+    />
+    <MSBuild
+        Projects="$(BuildFiles)\xmlrpcwp\xmlrpcwp.sln"
+        Properties="Configuration=Release;SignAssembly=true;AssemblyOriginatorKeyFile=$(MSBuildProjectDirectory)\$(KeyFile)"
+    />
+  </Target>
+
+  <Target Name="CleanBuild">
+    <RemoveDir Directories="$(BuildFiles)\bin" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="MainBuild;PhoneBuild">
+  </Target>
+  
   <Target Name="Test" DependsOnTargets="Build">
     <NUnit Assemblies="$(BuildFiles)\bin\ntest.dll" ToolPath="$(NUnitToolPath)" />
   </Target>
