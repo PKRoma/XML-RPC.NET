@@ -91,9 +91,13 @@
 
   <Target Name="CleanBuild">
     <RemoveDir Directories="$(BuildFiles)\bin" />
+    <ItemGroup>
+      <BinFiles Include="$(BuildFiles)\**\obj\**\*.*" />
+    </ItemGroup>
+    <Delete Files="@(BinFiles)" />
   </Target>
 
-  <Target Name="Build" DependsOnTargets="MainBuild;PhoneBuild">
+  <Target Name="Build" DependsOnTargets="CleanBuild;MainBuild;PhoneBuild">
   </Target>
   
   <Target Name="Test" DependsOnTargets="Build">
