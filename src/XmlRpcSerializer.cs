@@ -49,6 +49,13 @@ namespace CookComputing.XmlRpc
     }
     int m_indentation = 2;
 
+    public bool UseEmptyElementTag
+    {
+      get { return m_bUseEmptyElementTag; }
+      set { m_bUseEmptyElementTag = value; }
+    }
+    bool m_bUseEmptyElementTag = false;
+
     public bool UseEmptyParamsTag
     {
       get { return m_bUseEmptyParamsTag; }
@@ -125,8 +132,8 @@ namespace CookComputing.XmlRpc
             //o.GetType().GetElementType()));
             Serialize(xtw, aobj, mappingAction, nestedObjs);
           }
-          xtw.WriteEndElement();
-          xtw.WriteEndElement();
+          WriteFullEndElement(xtw);
+          WriteFullEndElement(xtw);
         }
         else if (xType == XmlRpcType.tMultiDimArray)
         {
@@ -139,27 +146,27 @@ namespace CookComputing.XmlRpc
           byte[] buf = (byte[])o;
           xtw.WriteStartElement("", "base64", "");
           xtw.WriteBase64(buf, 0, buf.Length);
-          xtw.WriteEndElement();
+          WriteFullEndElement(xtw);
         }
         else if (xType == XmlRpcType.tBoolean)
         {
           bool boolVal = (bool)o;
           if (boolVal)
-            xtw.WriteElementString("boolean", "1");
+            WriteFullElementString(xtw, "boolean", "1");
           else
-            xtw.WriteElementString("boolean", "0");
+            WriteFullElementString(xtw, "boolean", "0");
         }
         else if (xType == XmlRpcType.tDateTime)
         {
           DateTime dt = (DateTime)o;
           string sdt = dt.ToString("yyyyMMdd'T'HH':'mm':'ss",
           DateTimeFormatInfo.InvariantInfo);
-          xtw.WriteElementString("dateTime.iso8601", sdt);
+          WriteFullElementString(xtw, "dateTime.iso8601", sdt);
         }
         else if (xType == XmlRpcType.tDouble)
         {
           double doubleVal = (double)o;
-          xtw.WriteElementString("double", doubleVal.ToString(null,
+          WriteFullElementString(xtw, "double", doubleVal.ToString(null,
           CultureInfo.InvariantCulture));
         }
         else if (xType == XmlRpcType.tHashtable)
@@ -170,30 +177,28 @@ namespace CookComputing.XmlRpc
           {
             string skey = obj as string;
             xtw.WriteStartElement("", "member", "");
-            xtw.WriteElementString("name", skey);
+            WriteFullElementString(xtw, "name", skey);
             Serialize(xtw, xrs[skey], mappingAction, nestedObjs);
-            xtw.WriteEndElement();
+            WriteFullEndElement(xtw);
           }
-          xtw.WriteEndElement();
+          WriteFullEndElement(xtw);
         }
         else if (xType == XmlRpcType.tInt32)
         {
           if (UseIntTag)
-            xtw.WriteElementString("int", o.ToString());
+            WriteFullElementString(xtw, "int", o.ToString());
           else
-            xtw.WriteElementString("i4", o.ToString());
+            WriteFullElementString(xtw, "i4", o.ToString());
         }
         else if (xType == XmlRpcType.tInt64)
         {
-          xtw.WriteElementString("i8", o.ToString());
+          WriteFullElementString(xtw, "i8", o.ToString());
         }
         else if (xType == XmlRpcType.tString)
         {
           if (UseStringTag)
           {
-            xtw.WriteStartElement("string");
-            xtw.WriteString((string)o);
-            xtw.WriteEndElement();
+            WriteFullElementString(xtw, "string", (string)o);
           }
           else
             xtw.WriteString((string)o);
@@ -231,9 +236,9 @@ namespace CookComputing.XmlRpc
                     @""" of struct """ + o.GetType().Name + @""" cannot be null.");
               }
               xtw.WriteStartElement("", "member", "");
-              xtw.WriteElementString("name", member);
+              WriteFullElementString(xtw, "name", member);
               Serialize(xtw, fi.GetValue(o), mappingAction, nestedObjs);
-              xtw.WriteEndElement();
+              WriteFullEndElement(xtw);
             }
             else if (mi.MemberType == MemberTypes.Property)
             {
@@ -258,23 +263,23 @@ namespace CookComputing.XmlRpc
                     @""" of struct """ + o.GetType().Name + @""" cannot be null.");
               }
               xtw.WriteStartElement("", "member", "");
-              xtw.WriteElementString("name", member);
+              WriteFullElementString(xtw, "name", member);
               Serialize(xtw, pi.GetValue(o, null), mappingAction, nestedObjs);
-              xtw.WriteEndElement();
+              WriteFullEndElement(xtw);
             }
           }
-          xtw.WriteEndElement();
+          WriteFullEndElement(xtw);
         }
         else if (xType == XmlRpcType.tVoid)
-          xtw.WriteElementString("string", "");
+          WriteFullElementString(xtw, "string", "");
         else if (xType == XmlRpcType.tNil)
         {
           xtw.WriteStartElement("nil");
-          xtw.WriteEndElement();
+          WriteFullEndElement(xtw);
         }
         else
           throw new XmlRpcUnsupportedTypeException(o.GetType());
-        xtw.WriteEndElement();
+        WriteFullEndElement(xtw);
       }
       catch (System.NullReferenceException)
       {
@@ -304,7 +309,7 @@ namespace CookComputing.XmlRpc
           indices[CurRank] = i;
           xtw.WriteStartElement("", "value", "");
           BuildArrayXml(xtw, ary, CurRank + 1, indices, mappingAction, nestedObjs);
-          xtw.WriteEndElement();
+          WriteFullEndElement(xtw);
         }
       }
       else
@@ -315,8 +320,8 @@ namespace CookComputing.XmlRpc
           Serialize(xtw, ary.GetValue(indices), mappingAction, nestedObjs);
         }
       }
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
+      WriteFullEndElement(xtw);
+      WriteFullEndElement(xtw);
     }
 
     struct FaultStruct
@@ -343,8 +348,8 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "fault", "");
       Serialize(xtw, fs, NullMappingAction.Error);
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
+      WriteFullEndElement(xtw);
+      WriteFullEndElement(xtw);
       xtw.Flush();
     }
 
@@ -367,6 +372,23 @@ namespace CookComputing.XmlRpc
           Indent = false,
           Encoding = m_encoding
         };
+      }
+    }
+
+    protected void WriteFullEndElement(XmlWriter xtw)
+    {
+      if (UseEmptyElementTag) { xtw.WriteEndElement(); } else { xtw.WriteFullEndElement(); }
+    }
+
+    protected void WriteFullElementString(XmlWriter xtw, string name, string value)
+    {
+      if (UseEmptyElementTag)
+        xtw.WriteElementString(name, value);
+      else
+      {
+        xtw.WriteStartElement(name);
+        xtw.WriteString(value);
+        xtw.WriteFullEndElement();
       }
     }
 

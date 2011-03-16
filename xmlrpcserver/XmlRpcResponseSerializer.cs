@@ -65,9 +65,9 @@ namespace CookComputing.XmlRpc
           "Return value is of, or contains an instance of, type {0} which "
           + "cannot be mapped to an XML-RPC type", ex.UnsupportedType));
       }
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
+      WriteFullEndElement(xtw);
+      WriteFullEndElement(xtw);
+      WriteFullEndElement(xtw);
       xtw.Flush();
     }
   }
