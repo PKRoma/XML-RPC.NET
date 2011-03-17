@@ -1460,5 +1460,80 @@ This should be ignored.
         typeof(void));
       Assert.IsNull(response.retVal);
     }
+
+    [XmlRpcMissingMapping(MappingAction.Ignore)]
+    public struct upcLookupValues
+    {
+      public string upc;
+      public int pendingUpdates;
+      public bool isCoupon;
+      public string ean;
+      public string issuerCountryCode;
+      public string mfr_comment;
+      public string mfr;
+      public string description;
+      public bool found;
+      public string size;
+      public string message;
+      public string issuerCountry;
+      public DateTime lastModifiedUTC;
+    }
+
+    [Test]
+    public void UpcResponse()
+    {
+      string xml = @"<?xml version=""1.0""?>
+<methodResponse>
+<params>
+<param><value><struct>
+<member><name>upc</name><value><string>639382000393</string></value>
+</member>
+<member><name>pendingUpdates</name><value><int>0</int></value>
+</member>
+<member><name>status</name><value><string>success</string></value>
+</member>
+<member><name>ean</name><value><string>0639382000393</string></value>
+</member>
+<member><name>issuerCountryCode</name><value><string>us</string></value>
+</member>
+<member><name>found</name><value><boolean>1</boolean></value>
+</member>
+<member><name>description</name><value><string>The Teenager's Guide to the Real World by BYG Publishing</string></value>
+</member>
+<member><name>message</name><value><string>Database entry found</string></value>
+</member>
+<member><name>size</name><value><string>book</string></value>
+</member>
+<member><name>issuerCountry</name><value><string>United States</string></value>
+</member>
+<member><name>noCacheAfterUTC</name><value><dateTime.iso8601>2011-03-18T13:26:28</dateTime.iso8601></value>
+</member>
+<member><name>lastModifiedUTC</name><value><dateTime.iso8601>2002-08-23T23:07:36</dateTime.iso8601></value>
+</member>
+</struct></value>
+</param>
+</params>
+</methodResponse>";
+      StringReader sr1 = new StringReader(xml);
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr1,
+        typeof(upcLookupValues));
+      Assert.IsTrue(response.retVal is upcLookupValues);
+      upcLookupValues ret = (upcLookupValues)response.retVal;
+      Assert.AreEqual("639382000393", ret.upc);
+      Assert.AreEqual("0639382000393", ret.ean);
+      Assert.AreEqual("us", ret.issuerCountryCode);
+      Assert.AreEqual(null, ret.mfr_comment);
+      Assert.AreEqual(null, ret.mfr);
+      Assert.AreEqual("The Teenager's Guide to the Real World by BYG Publishing", ret.description);
+      Assert.AreEqual(true, ret.found);
+      Assert.AreEqual("book", ret.size);
+      Assert.AreEqual("Database entry found", ret.message);
+      Assert.AreEqual("United States", ret.issuerCountry);
+      Assert.AreEqual(new DateTime(2002, 08, 23, 23, 07, 36), ret.lastModifiedUTC);
+
+    }
   }
 }
+
+
