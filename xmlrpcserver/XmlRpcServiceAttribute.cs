@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2011, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -70,6 +70,12 @@ namespace CookComputing.XmlRpc
       set { name = value; }
     }
 
+    public bool UseEmptyElementTags
+    {
+      get { return useEmptyElementTags; }
+      set { useEmptyElementTags = value; }
+    }
+
     public bool UseIndentation
     {
       get { return useIndentation; }
@@ -107,6 +113,7 @@ namespace CookComputing.XmlRpc
     private bool autoDocumentation = true;
     private bool autoDocVersion = true;
     private string name = "";
+    private bool useEmptyElementTags = true;
     private bool useStringTag = true;
     private bool useIndentation = true;
     private bool useIntTag = false;

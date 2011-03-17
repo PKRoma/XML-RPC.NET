@@ -67,6 +67,7 @@ namespace CookComputing.XmlRpc
     private int _timeout = 100000;
     private string _url = null;
     private string _userAgent = "XML-RPC.NET";
+    private bool _useEmptyElementTags = true;
     private bool _useEmptyParamsTag = true;
     private bool _useIndentation = true;
     private bool _useIntTag = false;
@@ -167,6 +168,7 @@ namespace CookComputing.XmlRpc
           serializer.Indentation = _indentation;
           serializer.UseStringTag = _useStringTag;
           serializer.UseIntTag = _useIntTag;
+          serializer.UseEmptyElementTags = _useEmptyElementTags;
           serializer.UseEmptyParamsTag = _useEmptyParamsTag;
           serializer.SerializeRequest(serStream, req);
           if (logging)
@@ -366,6 +368,12 @@ namespace CookComputing.XmlRpc
     {
       get { return _url; }
       set { _url = value; }
+    }
+
+    public bool UseEmptyElementTags
+    {
+      get { return _useEmptyElementTags; }
+      set { _useEmptyElementTags = value; }
     }
 
     public bool UseEmptyParamsTag
@@ -630,7 +638,7 @@ namespace CookComputing.XmlRpc
       if (_xmlEncoding != null)
         useEncoding = _xmlEncoding;
       XmlRpcAsyncResult asr = new XmlRpcAsyncResult(this, xmlRpcReq,
-        useEncoding, _useEmptyParamsTag, _useIndentation, _indentation, 
+        useEncoding, _useEmptyParamsTag, _useEmptyElementTags, _useIndentation, _indentation, 
         _useIntTag, _useStringTag, webReq, callback, outerAsyncState, 0);
       webReq.BeginGetRequestStream(new AsyncCallback(GetRequestStreamCallback),
         asr);
@@ -662,6 +670,7 @@ namespace CookComputing.XmlRpc
           var serializer = new XmlRpcRequestSerializer();
           if (clientResult.XmlEncoding != null)
             serializer.XmlEncoding = clientResult.XmlEncoding;
+          serializer.UseEmptyElementTags = clientResult.UseEmptyElementTags;
           serializer.UseEmptyParamsTag = clientResult.UseEmptyParamsTag;
           serializer.UseIndentation = clientResult.UseIndentation;
           serializer.Indentation = clientResult.Indentation;

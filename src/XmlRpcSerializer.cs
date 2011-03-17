@@ -49,7 +49,7 @@ namespace CookComputing.XmlRpc
     }
     int m_indentation = 2;
 
-    public bool UseEmptyElementTag
+    public bool UseEmptyElementTags
     {
       get { return m_bUseEmptyElementTag; }
       set { m_bUseEmptyElementTag = value; }
@@ -377,12 +377,12 @@ namespace CookComputing.XmlRpc
 
     protected void WriteFullEndElement(XmlWriter xtw)
     {
-      if (UseEmptyElementTag) { xtw.WriteEndElement(); } else { xtw.WriteFullEndElement(); }
+      if (UseEmptyElementTags) { xtw.WriteEndElement(); } else { xtw.WriteFullEndElement(); }
     }
 
     protected void WriteFullElementString(XmlWriter xtw, string name, string value)
     {
-      if (UseEmptyElementTag)
+      if (UseEmptyElementTags)
         xtw.WriteElementString(name, value);
       else
       {

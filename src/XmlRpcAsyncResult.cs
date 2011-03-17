@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2011, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -89,6 +89,11 @@ namespace CookComputing.XmlRpc
 #endif
 
 
+    public bool UseEmptyElementTags
+    {
+      get { return _useEmptyElementTags; }
+    }
+
     public bool UseEmptyParamsTag
     {
       get { return _useEmptyParamsTag; }
@@ -137,6 +142,7 @@ namespace CookComputing.XmlRpc
       XmlRpcRequest XmlRpcReq, 
       Encoding XmlEncoding,
       bool useEmptyParamsTag,
+      bool useEmptyElementTags,
       bool useIndentation,
       int indentation,
       bool UseIntTag,
@@ -154,6 +160,7 @@ namespace CookComputing.XmlRpc
       completedSynchronously = true;
       xmlEncoding = XmlEncoding;
       _useEmptyParamsTag = useEmptyParamsTag;
+      _useEmptyElementTags = useEmptyElementTags;
       _useIndentation = useIndentation;
       _indentation = indentation;
       _useIntTag = UseIntTag;
@@ -267,6 +274,7 @@ namespace CookComputing.XmlRpc
     byte[] buffer;
     XmlRpcRequest xmlRpcRequest;
     Encoding xmlEncoding;
+    bool _useEmptyElementTags;
     bool _useEmptyParamsTag;
     bool _useIndentation;
     int _indentation;
