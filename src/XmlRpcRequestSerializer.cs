@@ -40,9 +40,12 @@ namespace CookComputing.XmlRpc
 
   public class XmlRpcRequestSerializer : XmlRpcSerializer
   {
+    public XmlRpcRequestSerializer() { }
+    public XmlRpcRequestSerializer(XmlRpcFormatSettings settings) : base(settings) { }
+
     public void SerializeRequest(Stream stm, XmlRpcRequest request)
     {
-      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, XmlEncoding, UseIndentation, Indentation);
+      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, base.XmlRpcFormatSettings);
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodCall", "");
       {

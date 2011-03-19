@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2011, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -41,46 +41,17 @@ namespace CookComputing.XmlRpc
 #endif
     IXmlRpcProxy
   {
-    #region Instance Variables
-    private bool _allowAutoRedirect = true;
-#if (!COMPACT_FRAMEWORK)
-    private string _connectionGroupName = null;
-#endif
-#if (!COMPACT_FRAMEWORK && !FX1_0)
-    private bool _expect100Continue = false;
-    private bool _enableCompression = false;
-#endif
-    private ICredentials _credentials = null;
-    private WebHeaderCollection _headers = new WebHeaderCollection();
-    private int _indentation = 2;
-    private bool _keepAlive = true;
-    private XmlRpcNonStandard _nonStandard = XmlRpcNonStandard.None;
-    private bool _preAuthenticate = false;
-#if (!SILVERLIGHT)
-    private Version _protocolVersion = HttpVersion.Version11;
-    private IWebProxy _proxy = null;
-#endif
+    WebSettings webSettings = new WebSettings();
+    XmlRpcFormatSettings XmlRpcFormatSettings = new XmlRpcFormatSettings();
+
 #if (!COMPACT_FRAMEWORK)
     private CookieCollection _responseCookies;
     private WebHeaderCollection _responseHeaders;
 #endif
-    private int _timeout = 100000;
+    private XmlRpcNonStandard _nonStandard;
     private string _url = null;
-    private string _userAgent = "XML-RPC.NET";
-    private bool _useEmptyElementTags = true;
-    private bool _useEmptyParamsTag = true;
-    private bool _useIndentation = true;
-    private bool _useIntTag = false;
-    private bool _useStringTag = true;
-    private Encoding _xmlEncoding = null;
     private string _xmlRpcMethod = null;
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
-    private X509CertificateCollection _clientCertificates
-      = new X509CertificateCollection();
-    private CookieContainer _cookies = new CookieContainer();
-#endif
-    #endregion
     private Guid _id = Util.NewGuid();
 
 
@@ -148,9 +119,9 @@ namespace CookComputing.XmlRpc
         XmlRpcRequest req = MakeXmlRpcRequest(webReq, mi, parameters,
           clientObj, _xmlRpcMethod, _id);
         SetProperties(webReq);
-        SetRequestHeaders(_headers, webReq);
+        SetRequestHeaders(Headers, webReq);
 #if (!COMPACT_FRAMEWORK)
-        SetClientCertificates(_clientCertificates, webReq);
+        SetClientCertificates(ClientCertificates, webReq);
 #endif
         Stream serStream = null;
         Stream reqStream = null;
@@ -161,15 +132,7 @@ namespace CookComputing.XmlRpc
           serStream = new MemoryStream(2000);
         try
         {
-          var serializer = new XmlRpcRequestSerializer();
-          if (_xmlEncoding != null)
-            serializer.XmlEncoding = _xmlEncoding;
-          serializer.UseIndentation = _useIndentation;
-          serializer.Indentation = _indentation;
-          serializer.UseStringTag = _useStringTag;
-          serializer.UseIntTag = _useIntTag;
-          serializer.UseEmptyElementTags = _useEmptyElementTags;
-          serializer.UseEmptyParamsTag = _useEmptyParamsTag;
+          var serializer = new XmlRpcRequestSerializer(XmlRpcFormatSettings);
           serializer.SerializeRequest(serStream, req);
           if (logging)
           {
@@ -237,63 +200,61 @@ namespace CookComputing.XmlRpc
 #endif
     }
 
-    #region Properties
-
     public bool AllowAutoRedirect
     {
-      get { return _allowAutoRedirect; }
-      set { _allowAutoRedirect = value; }
+      get { return webSettings.AllowAutoRedirect; }
+      set { webSettings.AllowAutoRedirect = value; }
     }
 
 #if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     [Browsable(false)]
     public X509CertificateCollection ClientCertificates
     {
-      get { return _clientCertificates; }
+      get { return webSettings.ClientCertificates; }
     }
 #endif
 
 #if (!COMPACT_FRAMEWORK)
     public string ConnectionGroupName
     {
-      get { return _connectionGroupName; }
-      set { _connectionGroupName = value; }
+      get { return webSettings.ConnectionGroupName; }
+      set { webSettings.ConnectionGroupName = value; }
     }
 #endif
 
     [Browsable(false)]
     public ICredentials Credentials
     {
-      get { return _credentials; }
-      set { _credentials = value; }
+      get { return webSettings.Credentials; }
+      set { webSettings.Credentials = value; }
     }
 
 #if (!COMPACT_FRAMEWORK && !FX1_0)
     public bool EnableCompression
     {
-      get { return _enableCompression; }
-      set { _enableCompression = value; }
+      get { return webSettings.EnableCompression; }
+      set { webSettings.EnableCompression = value; }
     }
 #endif
 
     [Browsable(false)]
     public WebHeaderCollection Headers
     {
-      get { return _headers; }
+      get { return webSettings.Headers; }
     }
 
 #if (!COMPACT_FRAMEWORK && !FX1_0)
     public bool Expect100Continue
     {
-      get { return _expect100Continue; }
-      set { _expect100Continue = value; }
+      get { return webSettings.Expect100Continue; }
+      set { webSettings.Expect100Continue = value; }
     }
 #endif
 
 #if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     public CookieContainer CookieContainer
     {
-      get { return _cookies; }
+      get { return webSettings.CookieContainer; }
     }
 #endif
 
@@ -304,14 +265,14 @@ namespace CookComputing.XmlRpc
 
     public int Indentation
     {
-      get { return _indentation; }
-      set { _indentation = value; }
+      get { return XmlRpcFormatSettings.Indentation; }
+      set { XmlRpcFormatSettings.Indentation = value; }
     }
 
     public bool KeepAlive
     {
-      get { return _keepAlive; }
-      set { _keepAlive = value; }
+      get { return webSettings.KeepAlive; }
+      set { webSettings.KeepAlive = value; }
     }
 
     public XmlRpcNonStandard NonStandard
@@ -322,16 +283,16 @@ namespace CookComputing.XmlRpc
 
     public bool PreAuthenticate
     {
-      get { return _preAuthenticate; }
-      set { _preAuthenticate = value; }
+      get { return webSettings.PreAuthenticate; }
+      set { webSettings.PreAuthenticate = value; }
     }
 
 #if (!SILVERLIGHT)
     [Browsable(false)]
     public System.Version ProtocolVersion
     {
-      get { return _protocolVersion; }
-      set { _protocolVersion = value; }
+      get { return webSettings.ProtocolVersion; }
+      set { webSettings.ProtocolVersion = value; }
     }
 #endif
 
@@ -339,8 +300,8 @@ namespace CookComputing.XmlRpc
     [Browsable(false)]
     public IWebProxy Proxy
     {
-      get { return _proxy; }
-      set { _proxy = value; }
+      get { return webSettings.Proxy; }
+      set { webSettings.Proxy = value; }
     }
 #endif
 
@@ -360,8 +321,8 @@ namespace CookComputing.XmlRpc
 
     public int Timeout
     {
-      get { return _timeout; }
-      set { _timeout = value; }
+      get { return webSettings.Timeout; }
+      set { webSettings.Timeout = value; }
     }
 
     public string Url
@@ -372,45 +333,45 @@ namespace CookComputing.XmlRpc
 
     public bool UseEmptyElementTags
     {
-      get { return _useEmptyElementTags; }
-      set { _useEmptyElementTags = value; }
+      get { return XmlRpcFormatSettings.UseEmptyElementTags; }
+      set { XmlRpcFormatSettings.UseEmptyElementTags = value; }
     }
 
     public bool UseEmptyParamsTag
     {
-      get { return _useEmptyParamsTag; }
-      set { _useEmptyParamsTag = value; }
+      get { return XmlRpcFormatSettings.UseEmptyParamsTag; }
+      set { XmlRpcFormatSettings.UseEmptyParamsTag = value; }
     }
 
     public bool UseIndentation
     {
-      get { return _useIndentation; }
-      set { _useIndentation = value; }
+      get { return XmlRpcFormatSettings.UseIndentation; }
+      set { XmlRpcFormatSettings.UseIndentation = value; }
     }
 
     public bool UseIntTag
     {
-      get { return _useIntTag; }
-      set { _useIntTag = value; }
+      get { return XmlRpcFormatSettings.UseIntTag; }
+      set { XmlRpcFormatSettings.UseIntTag = value; }
     }
 
     public string UserAgent
     {
-      get { return _userAgent; }
-      set { _userAgent = value; }
+      get { return webSettings.UserAgent; }
+      set { webSettings.UserAgent = value; }
     }
 
     public bool UseStringTag
     {
-      get { return _useStringTag; }
-      set { _useStringTag = value; }
+      get { return XmlRpcFormatSettings.UseStringTag; }
+      set { XmlRpcFormatSettings.UseStringTag = value; }
     }
 
     [Browsable(false)]
     public Encoding XmlEncoding
     {
-      get { return _xmlEncoding; }
-      set { _xmlEncoding = value; }
+      get { return XmlRpcFormatSettings.XmlEncoding; }
+      set { XmlRpcFormatSettings.XmlEncoding = value; }
     }
 
     public string XmlRpcMethod
@@ -419,39 +380,37 @@ namespace CookComputing.XmlRpc
       set { _xmlRpcMethod = value; }
     }
 
-    #endregion
-
     public void SetProperties(WebRequest webReq)
     {
 #if (!SILVERLIGHT)
-      if (_proxy != null)
-        webReq.Proxy = _proxy;
+      if (Proxy != null)
+        webReq.Proxy = Proxy;
 #endif
       HttpWebRequest httpReq = (HttpWebRequest)webReq;
 #if (!SILVERLIGHT)
-      httpReq.UserAgent = _userAgent;
-      httpReq.ProtocolVersion = _protocolVersion;
-      httpReq.KeepAlive = _keepAlive;
-      httpReq.AllowAutoRedirect = _allowAutoRedirect;
+      httpReq.UserAgent = UserAgent;
+      httpReq.ProtocolVersion = ProtocolVersion;
+      httpReq.KeepAlive = KeepAlive;
+      httpReq.AllowAutoRedirect = AllowAutoRedirect;
       webReq.PreAuthenticate = PreAuthenticate;
       webReq.Timeout = Timeout;
       // Compact Framework sets this to false by default
       (webReq as HttpWebRequest).AllowWriteStreamBuffering = true;
 #endif
 #if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
-      httpReq.CookieContainer = _cookies;
+      httpReq.CookieContainer = CookieContainer;
 #endif
 #if (!COMPACT_FRAMEWORK && !FX1_0&&!SILVERLIGHT)
-      httpReq.ServicePoint.Expect100Continue = _expect100Continue;
+      httpReq.ServicePoint.Expect100Continue = Expect100Continue;
 #endif
 #if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
-      webReq.ConnectionGroupName = this._connectionGroupName;
+      webReq.ConnectionGroupName = ConnectionGroupName;
 #endif
 #if (!SILVERLIGHT)
       webReq.Credentials = Credentials;
 #endif
 #if (!COMPACT_FRAMEWORK && !FX1_0 &&!SILVERLIGHT)
-      if (_enableCompression)
+      if (EnableCompression)
         webReq.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
 #endif
     }
@@ -630,16 +589,12 @@ namespace CookComputing.XmlRpc
       XmlRpcRequest xmlRpcReq = MakeXmlRpcRequest(webReq, mi,
         parameters, clientObj, _xmlRpcMethod, _id);
       SetProperties(webReq);
-      SetRequestHeaders(_headers, webReq);
+      SetRequestHeaders(Headers, webReq);
 #if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
-      SetClientCertificates(_clientCertificates, webReq);
+      SetClientCertificates(ClientCertificates, webReq);
 #endif
-      Encoding useEncoding = null;
-      if (_xmlEncoding != null)
-        useEncoding = _xmlEncoding;
-      XmlRpcAsyncResult asr = new XmlRpcAsyncResult(this, xmlRpcReq,
-        useEncoding, _useEmptyParamsTag, _useEmptyElementTags, _useIndentation, _indentation, 
-        _useIntTag, _useStringTag, webReq, callback, outerAsyncState, 0);
+      XmlRpcAsyncResult asr = new XmlRpcAsyncResult(this, xmlRpcReq, XmlRpcFormatSettings, 
+        webReq, callback, outerAsyncState, 0);
       webReq.BeginGetRequestStream(new AsyncCallback(GetRequestStreamCallback),
         asr);
       if (!asr.IsCompleted)
@@ -668,14 +623,14 @@ namespace CookComputing.XmlRpc
         {
           XmlRpcRequest req = clientResult.XmlRpcRequest;
           var serializer = new XmlRpcRequestSerializer();
-          if (clientResult.XmlEncoding != null)
-            serializer.XmlEncoding = clientResult.XmlEncoding;
-          serializer.UseEmptyElementTags = clientResult.UseEmptyElementTags;
-          serializer.UseEmptyParamsTag = clientResult.UseEmptyParamsTag;
-          serializer.UseIndentation = clientResult.UseIndentation;
-          serializer.Indentation = clientResult.Indentation;
-          serializer.UseIntTag = clientResult.UseIntTag;
-          serializer.UseStringTag = clientResult.UseStringTag;
+          if (clientResult.XmlRpcFormatSettings.XmlEncoding != null)
+            serializer.XmlEncoding = clientResult.XmlRpcFormatSettings.XmlEncoding;
+          serializer.UseEmptyElementTags = clientResult.XmlRpcFormatSettings.UseEmptyElementTags;
+          serializer.UseEmptyParamsTag = clientResult.XmlRpcFormatSettings.UseEmptyParamsTag;
+          serializer.UseIndentation = clientResult.XmlRpcFormatSettings.UseIndentation;
+          serializer.Indentation = clientResult.XmlRpcFormatSettings.Indentation;
+          serializer.UseIntTag = clientResult.XmlRpcFormatSettings.UseIntTag;
+          serializer.UseStringTag = clientResult.XmlRpcFormatSettings.UseStringTag;
           serializer.SerializeRequest(serStream, req);
           if (logging)
           {
@@ -904,7 +859,6 @@ namespace CookComputing.XmlRpc
       return useUrl;
     }
 
-    #region Introspection Methods
     [XmlRpcMethod("system.listMethods")]
     public string[] SystemListMethods()
     {
@@ -968,9 +922,7 @@ namespace CookComputing.XmlRpc
     {
       return (string)EndInvoke(AsyncResult);
     }
-    #endregion
 
-    #region Component Designer generated code
     /// <summary>
     /// Required method for Designer support - do not modify
     /// the contents of this method with the code editor.
@@ -978,7 +930,6 @@ namespace CookComputing.XmlRpc
     private void InitializeComponent()
     {
     }
-    #endregion
 
     protected virtual WebRequest GetWebRequest(Uri uri)
     {

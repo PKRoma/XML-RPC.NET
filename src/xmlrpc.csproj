@@ -116,6 +116,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DateTime8601.cs" />
+    <Compile Include="XmlRpcFormatSettings.cs" />
     <Compile Include="GuidEx.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -126,12 +127,14 @@
     <Compile Include="util.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="WebSettings.cs" />
     <Compile Include="XmlRpcAsyncResult.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XmlRpcBeginAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcClient.cs" />
     <Compile Include="XmlRpcClientFormatterSink.cs">
       <SubType>Code</SubType>
     </Compile>

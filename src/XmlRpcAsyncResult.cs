@@ -34,6 +34,8 @@ namespace CookComputing.XmlRpc
 
   public class XmlRpcAsyncResult : IAsyncResult
   {
+    public XmlRpcFormatSettings XmlRpcFormatSettings { get; private set; }
+
     // IAsyncResult members
     public object AsyncState 
     { 
@@ -88,37 +90,6 @@ namespace CookComputing.XmlRpc
     }
 #endif
 
-
-    public bool UseEmptyElementTags
-    {
-      get { return _useEmptyElementTags; }
-    }
-
-    public bool UseEmptyParamsTag
-    {
-      get { return _useEmptyParamsTag; }
-    }
-
-    public bool UseIndentation 
-    {
-      get { return _useIndentation; } 
-    }
-
-    public int Indentation 
-    {
-      get { return _indentation; } 
-    }
-
-    public bool UseIntTag
-    {
-      get { return _useIntTag; }
-    }
-
-    public bool UseStringTag
-    {
-      get { return _useStringTag; }
-    }
-
     // public members
     public void Abort()
     {
@@ -140,13 +111,7 @@ namespace CookComputing.XmlRpc
     internal XmlRpcAsyncResult(
       XmlRpcClientProtocol ClientProtocol, 
       XmlRpcRequest XmlRpcReq, 
-      Encoding XmlEncoding,
-      bool useEmptyParamsTag,
-      bool useEmptyElementTags,
-      bool useIndentation,
-      int indentation,
-      bool UseIntTag,
-      bool UseStringTag,
+      XmlRpcFormatSettings xmlRpcFormatSettings,
       WebRequest Request, 
       AsyncCallback UserCallback, 
       object UserAsyncState, 
@@ -158,13 +123,7 @@ namespace CookComputing.XmlRpc
       userAsyncState = UserAsyncState;
       userCallback = UserCallback;
       completedSynchronously = true;
-      xmlEncoding = XmlEncoding;
-      _useEmptyParamsTag = useEmptyParamsTag;
-      _useEmptyElementTags = useEmptyElementTags;
-      _useIndentation = useIndentation;
-      _indentation = indentation;
-      _useIntTag = UseIntTag;
-      _useStringTag = UseStringTag;
+      XmlRpcFormatSettings = xmlRpcFormatSettings;
     }
   
     internal void Complete(
@@ -254,11 +213,6 @@ namespace CookComputing.XmlRpc
       set { responseBufferedStream = value; }
     }
 
-    internal Encoding XmlEncoding
-    {
-      get { return xmlEncoding; } 
-    }
-
     XmlRpcClientProtocol clientProtocol;
     WebRequest request;
     AsyncCallback userCallback;
@@ -273,13 +227,6 @@ namespace CookComputing.XmlRpc
     Stream responseBufferedStream;
     byte[] buffer;
     XmlRpcRequest xmlRpcRequest;
-    Encoding xmlEncoding;
-    bool _useEmptyElementTags;
-    bool _useEmptyParamsTag;
-    bool _useIndentation;
-    int _indentation;
-    bool _useIntTag;
-    bool _useStringTag;
 #if (!COMPACT_FRAMEWORK)
     internal CookieCollection _responseCookies;
     internal WebHeaderCollection _responseHeaders;

@@ -40,56 +40,59 @@ namespace CookComputing.XmlRpc
 
   public class XmlRpcSerializer
   {
-    // public properties
+    protected XmlRpcFormatSettings XmlRpcFormatSettings { get; private set; }
+
+    public XmlRpcSerializer() 
+    {
+      XmlRpcFormatSettings = new XmlRpcFormatSettings();
+    }
+
+    public XmlRpcSerializer(XmlRpcFormatSettings settings) 
+    {
+      XmlRpcFormatSettings = settings;
+    }
 
     public int Indentation
     {
-      get { return m_indentation; }
-      set { m_indentation = value; }
+      get { return XmlRpcFormatSettings.Indentation; }
+      set { XmlRpcFormatSettings.Indentation = value; }
     }
-    int m_indentation = 2;
 
     public bool UseEmptyElementTags
     {
-      get { return m_bUseEmptyElementTag; }
-      set { m_bUseEmptyElementTag = value; }
+      get { return XmlRpcFormatSettings.UseEmptyElementTags; }
+      set { XmlRpcFormatSettings.UseEmptyElementTags = value; }
     }
-    bool m_bUseEmptyElementTag = false;
 
     public bool UseEmptyParamsTag
     {
-      get { return m_bUseEmptyParamsTag; }
-      set { m_bUseEmptyParamsTag = value; }
+      get { return XmlRpcFormatSettings.UseEmptyParamsTag; }
+      set { XmlRpcFormatSettings.UseEmptyParamsTag = value; }
     }
-    bool m_bUseEmptyParamsTag = true;
 
     public bool UseIndentation
     {
-      get { return m_bUseIndentation; }
-      set { m_bUseIndentation = value; }
+      get { return XmlRpcFormatSettings.UseIndentation; }
+      set { XmlRpcFormatSettings.UseIndentation = value; }
     }
-    bool m_bUseIndentation = true;
 
     public bool UseIntTag
     {
-      get { return m_useIntTag; }
-      set { m_useIntTag = value; }
+      get { return XmlRpcFormatSettings.UseIntTag; }
+      set { XmlRpcFormatSettings.UseIntTag = value; }
     }
-    bool m_useIntTag;
 
     public bool UseStringTag
     {
-      get { return m_useStringTag; }
-      set { m_useStringTag = value; }
+      get { return XmlRpcFormatSettings.UseStringTag; }
+      set { XmlRpcFormatSettings.UseStringTag = value; }
     }
-    bool m_useStringTag = true;
 
     public Encoding XmlEncoding
     {
-      get { return m_encoding; }
-      set { m_encoding = value; }
+      get { return XmlRpcFormatSettings.XmlEncoding; }
+      set { XmlRpcFormatSettings.XmlEncoding = value; }
     }
-    Encoding m_encoding = null;
 
     //#if (DEBUG)
     public
@@ -343,7 +346,7 @@ namespace CookComputing.XmlRpc
       FaultStruct fs;
       fs.faultCode = faultEx.FaultCode;
       fs.faultString = faultEx.FaultString;
-      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, XmlEncoding, UseIndentation, Indentation);
+      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, XmlRpcFormatSettings);
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "fault", "");
@@ -355,13 +358,13 @@ namespace CookComputing.XmlRpc
 
     protected XmlWriterSettings ConfigureXmlFormat()
     {
-      if (m_bUseIndentation)
+      if (UseIndentation)
       {
         return new XmlWriterSettings
         {
           Indent = true,
-          IndentChars = new string(' ', m_indentation),
-          Encoding = m_encoding,
+          IndentChars = new string(' ', Indentation),
+          Encoding = XmlEncoding,
           NewLineHandling = NewLineHandling.None,
         };
       }
@@ -370,7 +373,7 @@ namespace CookComputing.XmlRpc
         return new XmlWriterSettings
         {
           Indent = false,
-          Encoding = m_encoding
+          Encoding = XmlEncoding
         };
       }
     }
