@@ -833,30 +833,15 @@ namespace CookComputing.XmlRpc
 
     string GetEffectiveUrl(object clientObj)
     {
-      Type type = clientObj.GetType();
       // client can either have define URI in attribute or have set it
       // via proxy's ServiceURI property - but must exist by now
-      string useUrl = "";
-      if (Url == "" || Url == null)
-      {
-        Attribute urlAttr = Attribute.GetCustomAttribute(type,
-          typeof(XmlRpcUrlAttribute));
-        if (urlAttr != null)
-        {
-          XmlRpcUrlAttribute xrsAttr = urlAttr as XmlRpcUrlAttribute;
-          useUrl = xrsAttr.Uri;
-        }
-      }
-      else
-      {
-        useUrl = Url;
-      }
-      if (useUrl == "")
-      {
-        throw new XmlRpcMissingUrl("Proxy XmlRpcUrl attribute or Url "
-          + "property not set.");
-      }
-      return useUrl;
+      if (!string.IsNullOrEmpty(Url)) 
+        return Url;
+      string useUrl = XmlRpcTypeInfo.GetUrlFromAttribute(clientObj.GetType());
+      if (!string.IsNullOrEmpty(useUrl))
+        return useUrl;
+      throw new XmlRpcMissingUrl("Proxy XmlRpcUrl attribute or Url "
+        + "property not set.");
     }
 
     [XmlRpcMethod("system.listMethods")]

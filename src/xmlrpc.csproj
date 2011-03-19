@@ -134,7 +134,6 @@
     <Compile Include="XmlRpcBeginAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XmlRpcClient.cs" />
     <Compile Include="XmlRpcClientFormatterSink.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -272,5 +272,11 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
+    public static string GetUrlFromAttribute(Type type)
+    {
+      XmlRpcUrlAttribute urlAttr = Attribute.GetCustomAttribute(type, typeof(XmlRpcUrlAttribute))
+        as XmlRpcUrlAttribute;
+      return urlAttr != null ? urlAttr.Uri : null;
+    }
   }
 }
