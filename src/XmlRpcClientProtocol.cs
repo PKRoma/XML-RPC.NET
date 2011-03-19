@@ -444,7 +444,7 @@ namespace CookComputing.XmlRpc
     {
       webReq.Method = "POST";
       webReq.ContentType = "text/xml";
-      string rpcMethodName = GetRpcMethodName(clientObj, mi);
+      string rpcMethodName = XmlRpcTypeInfo.GetRpcMethodName(mi);
       XmlRpcRequest req = new XmlRpcRequest(rpcMethodName, parameters, mi,
         xmlRpcMethod, proxyId);
       return req;
@@ -509,40 +509,6 @@ namespace CookComputing.XmlRpc
             + "not match signature of any method called " + methodName);
       }
       return mi;
-    }
-
-    string GetRpcMethodName(object clientObj, MethodInfo mi)
-    {
-      string rpcMethod;
-      string MethodName = mi.Name;
-      Attribute attr = Attribute.GetCustomAttribute(mi,
-        typeof(XmlRpcBeginAttribute));
-      if (attr != null)
-      {
-        rpcMethod = ((XmlRpcBeginAttribute)attr).Method;
-        if (rpcMethod == "")
-        {
-          if (!MethodName.StartsWith("Begin") || MethodName.Length <= 5)
-            throw new Exception(String.Format(
-              "method {0} has invalid signature for begin method",
-              MethodName));
-          rpcMethod = MethodName.Substring(5);
-        }
-        return rpcMethod;
-      }
-      // if no XmlRpcBegin attribute, must have XmlRpcMethod attribute   
-      attr = Attribute.GetCustomAttribute(mi, typeof(XmlRpcMethodAttribute));
-      if (attr == null)
-      {
-        throw new Exception("missing method attribute");
-      }
-      XmlRpcMethodAttribute xrmAttr = attr as XmlRpcMethodAttribute;
-      rpcMethod = xrmAttr.Method;
-      if (rpcMethod == "")
-      {
-        rpcMethod = mi.Name;
-      }
-      return rpcMethod;
     }
 
     public IAsyncResult BeginInvoke(
