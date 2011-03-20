@@ -87,6 +87,19 @@ Support for Windows Phone 7.
 </li>
 
 <li>
+New UseEmptyElementTags property on IXmlRpcProxy. If this is set to true full element tags will be
+generated, for example &lt;string&gt;&lt;/string&gt; instead of &lt;string /&gt;. The default 
+setting of false for this property results is consistent with previous releases. This new feature
+provides compatibility with servers implemented with XML-RPC libraries which don't support empty
+tags, such XMLRPC++.
+</li>
+
+<li>
+New UseNagleAlgorithm property on IXmlRpcProxy. With its default value of false calls
+will be quicker where small XML-RPC requests are being sent.
+</li>
+
+<li>
 Separate client and server assemblies — client assembly compatible with .NET Client Profile. 
 </li>
 
@@ -140,12 +153,6 @@ on all types.
 </li>
 
 <li>
-Issue 82: Empty string values are now always serialized as &lt;string&gt;&lt;/string&gt; 
-instead of &lt;string /&gt; or &lt;value&gt;&lt;/value&gt;  (for compatibility with XmlRpc++, 
-which doesn't support empty element tags).
-</li>
-
-<li>
 Issue 83: Change to prevent internal server error when viewing auto-generated help on
 Mono based servers.
 </li>
@@ -154,11 +161,16 @@ Mono based servers.
 Issue 86: XmlRpcDocWriter.WriteStruct now writes XmlRpcMember.Description.
 </li>
 
+<li>
+Issue 89: Workaround on XmlRpcListenerService for cases where closing the request stream was
+resulting in an InvalidOperationException. 
+</li>
+
 </ul>
 
 </li>
 
-<li> Breaking changes:
+<li> Changes:
 
 <ul>
 
@@ -170,6 +182,10 @@ been discontinued. Use the standard nullable types bool?, DateTime?, double?, in
 <li>
 A server implementation now needs to reference the CookComputing.XmlRpcServer assembly in 
 addition to the CookComputing.XmlRpc assembly.
+</li>
+
+<li>
+Default value for new UseNagleAlgorithm. By default it was previously always false.
 </li>
 
 </ul>
