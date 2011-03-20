@@ -55,6 +55,8 @@ namespace CookComputing.XmlRpc
     bool EnableCompression { get; set;}
 
     bool Expect100Continue { get; set; }
+
+    bool UseNagleAlgorithm { get; set; }
 #endif
 
     [Browsable(false)]

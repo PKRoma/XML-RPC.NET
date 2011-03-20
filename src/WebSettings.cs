@@ -124,6 +124,15 @@ namespace CookComputing.XmlRpc
     }
     private string _url = null;
 
+#if (!COMPACT_FRAMEWORK && !FX1_0 && !SILVERLIGHT)
+    public bool UseNagleAlgorithm
+    {
+      get { return _useNagleAlgorithm; }
+      set { _useNagleAlgorithm = value; }
+    }
+    private bool _useNagleAlgorithm = false;
+#endif
+
     public string UserAgent
     {
       get { return _userAgent; }

@@ -243,11 +243,17 @@ namespace CookComputing.XmlRpc
       get { return webSettings.Headers; }
     }
 
-#if (!COMPACT_FRAMEWORK && !FX1_0)
+#if (!COMPACT_FRAMEWORK && !FX1_0 && !SILVERLIGHT)
     public bool Expect100Continue
     {
       get { return webSettings.Expect100Continue; }
       set { webSettings.Expect100Continue = value; }
+    }
+
+    public bool UseNagleAlgorithm
+    {
+      get { return webSettings.UseNagleAlgorithm; }
+      set { webSettings.UseNagleAlgorithm = value; }
     }
 #endif
 
@@ -400,8 +406,9 @@ namespace CookComputing.XmlRpc
 #if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
       httpReq.CookieContainer = CookieContainer;
 #endif
-#if (!COMPACT_FRAMEWORK && !FX1_0&&!SILVERLIGHT)
+#if (!COMPACT_FRAMEWORK && !FX1_0 && !SILVERLIGHT)
       httpReq.ServicePoint.Expect100Continue = Expect100Continue;
+      httpReq.ServicePoint.UseNagleAlgorithm = UseNagleAlgorithm;
 #endif
 #if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
       webReq.ConnectionGroupName = ConnectionGroupName;
