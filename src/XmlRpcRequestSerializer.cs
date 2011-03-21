@@ -40,18 +40,21 @@ namespace CookComputing.XmlRpc
 
   public class XmlRpcRequestSerializer : XmlRpcSerializer
   {
+    public XmlRpcRequestSerializer() { }
+    public XmlRpcRequestSerializer(XmlRpcFormatSettings settings) : base(settings) { }
+
     public void SerializeRequest(Stream stm, XmlRpcRequest request)
     {
-      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, XmlEncoding, UseIndentation, Indentation);
+      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, base.XmlRpcFormatSettings);
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodCall", "");
       {
         // TODO: use global action setting
         NullMappingAction mappingAction = NullMappingAction.Nil;
-        xtw.WriteElementString("methodName", request.method);
+        WriteFullElementString(xtw, "methodName", request.method);
         if (request.args.Length > 0 || UseEmptyParamsTag)
         {
-          xtw.WriteStartElement("", "params", "");
+          xtw.WriteStartElement("params");
           try
           {
             if (!IsStructParamsMethod(request.mi))
@@ -66,10 +69,10 @@ namespace CookComputing.XmlRpc
               + "type {0} which cannot be mapped to an XML-RPC type",
               ex.UnsupportedType));
           }
-          xtw.WriteEndElement();
+          WriteFullEndElement(xtw);
         }
       }
-      xtw.WriteEndElement();
+      WriteFullEndElement(xtw);
       xtw.Flush();
     }
 
@@ -99,7 +102,7 @@ namespace CookComputing.XmlRpc
               //    "Null parameter in params array");
               xtw.WriteStartElement("", "param", "");
               Serialize(xtw, o, mappingAction);
-              xtw.WriteEndElement();
+              WriteFullEndElement(xtw);
             }
             break;
           }
@@ -111,7 +114,7 @@ namespace CookComputing.XmlRpc
         //}
         xtw.WriteStartElement("", "param", "");
         Serialize(xtw, request.args[i], mappingAction);
-        xtw.WriteEndElement();
+        WriteFullEndElement(xtw);
       }
     }
 
@@ -139,13 +142,13 @@ namespace CookComputing.XmlRpc
             "Null method parameter #{0}", i + 1));
         }
         xtw.WriteStartElement("", "member", "");
-        xtw.WriteElementString("name", pis[i].Name);
+        WriteFullElementString(xtw, "name", pis[i].Name);
         Serialize(xtw, request.args[i], mappingAction);
-        xtw.WriteEndElement();
+        WriteFullEndElement(xtw);
       }
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
+      WriteFullEndElement(xtw);
+      WriteFullEndElement(xtw);
+      WriteFullEndElement(xtw);
     }
 
   }

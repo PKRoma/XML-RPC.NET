@@ -55,6 +55,8 @@ namespace CookComputing.XmlRpc
     bool EnableCompression { get; set;}
 
     bool Expect100Continue { get; set; }
+
+    bool UseNagleAlgorithm { get; set; }
 #endif
 
     [Browsable(false)]
@@ -91,6 +93,8 @@ namespace CookComputing.XmlRpc
     int Timeout { get; set; }
 
     string Url { get; set; }
+
+    bool UseEmptyElementTags { get; set; }
 
     bool UseEmptyParamsTag { get; set; }
 

@@ -646,6 +646,33 @@ namespace ntest
       for (int i = 0; i < testb.Length; i++)
         Assert.IsTrue(testb[i] == ret[i]);
     }
+
+    [Test]
+    public void Base64_ZeroLength()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><base64></base64></value>";
+      object obj = Utils.Parse(xml, typeof(object), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is byte[], "result is array of byte");
+      byte[] ret = obj as byte[];
+      Assert.AreEqual(0, ret.Length);
+    }
+
+    [Test]
+    public void Base64_ZeroLengthEmptyTag()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+        <value><base64 /></value>";
+      object obj = Utils.Parse(xml, typeof(object), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is byte[], "result is array of byte");
+      byte[] ret = obj as byte[];
+      Assert.AreEqual(0, ret.Length);
+    }
+
   
     //---------------------- array -----------------------------------------// 
     [Test]

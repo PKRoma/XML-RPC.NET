@@ -94,11 +94,13 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CookComputing.XmlRpcServerV3">
-      <HintPath>..\..\bin\CookComputing.XmlRpcServerV3.dll</HintPath>
+    <Reference Include="CookComputing.XmlRpc">
+      <HintPath>..\..\bin\CookComputing.XmlRpc.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="CookComputing.XmlRpcV3">
-      <HintPath>..\..\bin\CookComputing.XmlRpcV3.dll</HintPath>
+    <Reference Include="CookComputing.XmlRpcServer">
+      <HintPath>..\..\bin\CookComputing.XmlRpcServer.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

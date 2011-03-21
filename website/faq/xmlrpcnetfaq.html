@@ -49,12 +49,11 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h1>XML-RPC.NET FAQ</h1>
 
-<p>Version 3.0.0 6th March 2010. &copy; Charles Cook, 2002-2011.</p>
+<p>Version 2-5-0 5th September 2010. &copy; Charles Cook, 2002-2010.</p>
 <p>Please send feedback, corrections, etc, to xmlrpcfaq@gmail.com.</p>
 <h2>Contents</h2>
 <p>1. Introduction</p>
   
-<div class="toc">
 <p class="indent">
 1.1 <a href="#1.1">What is XML-RPC?</a><br/>
 1.2 <a href="#1.2">What is XML-RPC.NET?</a><br/>
@@ -72,8 +71,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 1.14 <a href="#1.14">Why are my struct members ignored?</a><br/>
 1.15 <a href="#1.15">Can I specify struct members as optional?</a><br/>
 1.16 <a href="#1.16">How do I specify data whose type is not known until runtime?</a> <br/>
-1.17 <a href="#1.17">With which versions of .NET is XML-RPC.NET compatible?</a> <br/>
-1.18 <a href="#1.18">Does XML-RPC.NET support the &lt;nil&gt; extension?</a>
+1.17 <a href="#1.17">With which versions of .NET is XML-RPC.NET compatible?</a>
 
 </p>
 
@@ -184,7 +182,6 @@ XML-RPC Fault Responses represented?</a><br/>
 7.6 <a href="#7.6">Sample Services</a>
 </p>
 
-</div> <!-- toc -->
 
 <h2>1. Introduction</h2>
 
@@ -247,24 +244,12 @@ and the Yahoo <a href="http://groups.yahoo.com/XMLRPCNET/">XMLRPCNET</a> group.
 <h3><a id="1.5"></a>1.5 How do I install XML-RPC.NET?</h3>
 
 <p>
-Extract the files from the distribution zip file and reference the following assemblies 
-depending on your application:
-
-<ul>
-<li>
-<b>CookComputing.XmlRpcV3.dll</b> — .NET clients (.NET 2.0 upwards, compatible with .NET client profile)
-</li>
-<li>
-<b>CookComputing.XmlRpcServerV3.dll</b> — .NET servers ((.NET 2.0 upwards, requires CookComputing.XmlRpcV3.dll)
-</li>
-<li>
-<b>CookComputing.XmlRpcSilverlightV3.dll</b> — Silverlight clients (Silverlight 3 upwards)
-</li>
-<li>
-<b>CookComputing.XmlRpcPhoneV3.dll</b> — Windows Phone clients
-</li>
-</ul>
-
+XML-RPC.NET is used as a single assembly which contains both client and server 
+classes. When used by another program, installation is simply a matter of 
+ensuring that the assembly is in the same directory as the program using it 
+or referred to using the program's config file if in another directory. There 
+is one build of the assembly: <b>CookComputing.XmlRpcV2.dll</b> which runs on 
+.NET 2.0 onwards.  
 </p>
 
 <p>
@@ -305,7 +290,7 @@ the command line, the XmlRpc assembly is referenced like this:
 
 <h3><a id="1.8"></a>1.8 How does XML-RPC.NET represent XML-RPC requests and responses?</h3>
 <p>
-XML-RPC.NET clients represents an XML-RPC endpoint as a .NET interface whose methods 
+XML-RPC.NET represents an XML-RPC endpoint as a .NET interface whose methods 
 map onto the corresponding XML-RPC methods. For example:
 </p>
 
@@ -318,7 +303,7 @@ public struct SumAndDiffValue
 }
 
 [XmlRpcUrl("http://www.cookcomputing.com/sumAndDiff.rem")] 
-public interface ISumAndDiff : IXmlRpcProxy
+public interface ISumAndDiff
 { 
   [XmlRpcMethod] 
   SumAndDiffValue SumAndDifference(int x, int y);
@@ -326,11 +311,9 @@ public interface ISumAndDiff : IXmlRpcProxy
 </pre>
 
 <p>
-A client automatically generates a proxy class which derives from the interface.
-</p>
-
-<p>
-A server implements corresponding methods and exposes them as XML-RPC methods. 
+A server implementation implements these methods. A client 
+implementation automatically generates a proxy class which 
+derives from the interface.
 </p>
 
 <h3><a id="1.9"></a>1.9 How are XML-RPC simple types mapped onto .NET data types?</h3>
@@ -375,11 +358,6 @@ XML-RPC simple types are mapped to and from the following .NET types:
     <td >&lt;base64&gt;</td>
     <td >System.Byte[]</td>
     <td>&nbsp;</td>
-  </tr>
-  <tr> 
-    <td >&lt;nil&gt;</td>
-    <td >&nbsp;</td>
-    <td>Extension to XML-RPC. See <a href="#1.18">section 1.18</a></td>
   </tr>
 </table>
 
@@ -644,179 +622,9 @@ handled appropriately.
 <h3><a id="1.17"></a>1.17 With which versions of .NET is XML-RPC.NET compatible??</h3>
 
 <p>
-The assemblies CookComputing.XmlRpcV3 and CookComputing.XmlRpcServerV3 are 
-built for .NET 2.0 and so are compatible with this and later versions of .NET.
-</p>
-
-<p>
-The assembly CookComputing.XmlRpcSilverlightV3 is compatible with Silverlight 3 and later versions.
-</p>
-
-<p>
-The assembly CookComputing.XmlRpcPhoneV3 is compatible with Windows Phone 7.
-</p>
-
-
-<h3><a id="1.18"></a>1.18 Does XML-RPC.NET support the &lt;nil&gt; extension?</h3>
-
-<p>
-XML-RPC.NET supports the <a href="http://ontosys.com/xml-rpc/extensions.php>">&lt;nil&gt; 
-extension</a> by default without any additional configuration. 
-</p>
-
-<h4>Parameters</h4>
-
-<p>
-If a parameter is defined as a reference type or a nullable value type, and the value passed 
-into the method is null, &lt;nil&gt; is used as the XML-RPC param value. For example, if this
-method:
-</p>
-
-<pre>public interface INilMethods : IXmlRpcProxy
-{ 
-  [XmlRpcMethod] 
-  void MethodTakingIntAndString(int? x, string str);
-} 
-</pre>
-
-<p>
-Is called like this:
-</p>
-
-<pre>
-    proxy.MethodTakingIntAndString(null, null);
-</pre>
-
-<p>
-The XML-RPC request will look like this:
-</p>
-
-<pre>&lt;xml version="1.0"?&gt;
-&lt;methodCall&gt;
-  &lt;methodName&gt;MethodTakingIntAndString&lt;/methodName&gt;
-  &lt;params&gt;
-    &lt;param&gt;
-      &lt;value&gt;
-        &lt;nil /&gt;
-      &lt;/value&gt;
-    &lt;/param&gt;
-    &lt;param&gt;
-      &lt;value&gt;
-        &lt;nil /&gt;
-      &lt;/value&gt;
-    &lt;/param&gt;
-  &lt;/params&gt;
-&lt;/methodCall&gt;
-</pre>
-
-<p>
-A server method with the same signature will result in the &lt;nil&gt; parameter 
-values each being passed into the method as null.
-</p>
-
-<h4>Method Return Value</h4>
-
-<p>
-A client method with its return type defined as either a reference type 
-or a nullable value type will return null when it handles a response like this:
-</p>
-
-<pre>&lt;?xml version="1.0"?&gt;
-&lt;methodResponse&gt;
-  &lt;params&gt;
-    &lt;param&gt;
-      &lt;value&gt;
-        &lt;nil /&gt;
-      &lt;/value&gt;
-    &lt;/param&gt;
-  &lt;/params&gt;
-&lt;/methodResponse&gt;
-</pre>
-
-<p>
-A server method defined as returning a reference type or a nullable value type 
-will return a response with a &lt;nil&gt; as above if the method returns null.
-
-Note that for backwards compatibility a server will return a dummy XML-RPC int value 
-of zero for methods which are defined as returning void.
-</p>
-
-
-<h4>Struct Members</h4>
-
-<p>
-When converting a .NET struct or class to an XML-RPC struct the XmlRpcNullMapping 
-attribute can be used to specify what should happen if a member's value is null. It's constructor
-takes a value of NullMappingAction:
-</p>
-
-<pre>public enum NullMappingAction
-{
-Ignore = 0,
-Error = 1,
-Nil = 2,
-}
-</pre>
-
-<p>
-Ignore means that if the member's value is null the member should not be added to the 
-XML-RPC struct; Error means that the member is not allowed to be null and an exception is thrown
-if it is null; Nil means that the member should added to the XML-RPC struct with a value of 
-&lt;nil&gt;. For example given struct:
-</p>
-
-<pre>
-public struct TestStruct
-{
-  [XmlRpcMissingMapping(MappingAction.Ignore)]
-  public int? x;
-  [XmlRpcNullMapping(NullMappingAction.Error)]
-  public int? y;
-  [XmlRpcNullMapping(NullMappingAction.Nil)]
-  public int? z;
-}
-</pre>
-
-<p>
-If x is null, y is 1 (a null value would throw an exception), and z is null, the corresponding 
-XML-RPC struct would be:
-</p>
-
-<pre>&lt;?xml version="1.0"?&gt;
-&lt;methodCall&gt;
-  &lt;methodName&gt;MethodTakingTestStruct&lt;/methodName&gt;
-  &lt;params&gt;
-    &lt;param&gt;
-      &lt;value&gt;
-        &lt;struct&gt;
-          &lt;member&gt;
-            &lt;name&gt;y&lt;/name&gt;
-            &lt;value&gt;
-              &lt;i4&gt;1&lt;/i4&gt;
-            &lt;/value&gt;
-          &lt;/member&gt;
-          &lt;member&gt;
-            &lt;name&gt;z&lt;/name&gt;
-            &lt;value&gt;
-              &lt;nil /&gt;
-            &lt;/value&gt;
-          &lt;/member&gt;
-        &lt;/struct&gt;
-      &lt;/value&gt;
-    &lt;/param&gt;
-  &lt;/params&gt;
-&lt;/methodCall&gt;
-</pre>
-
-<p>
-The default behaviour is that a member with a null value will be mapped onto &lt;nil&gt;.
-</p>
-
-<p>
-When mapping an XML-RPC struct to a .NET struct or class, if a member in the XML-RPC struct is a 
-&lt;nil&gt; value and the corresponding .NET member is a reference type or nullable value type the 
-.NET member will be set to null. If the .NET member is a non-nullable reference type an exception
-will be thrown.
+As of version 2.5.0 of XML-RPC.NET the distribution contains a single assembly 
+named CookComputing.XmlRpcV2.dll which is built for .NET 2.0 and so can be used
+with this and later versions of .NET.
 </p>
 
 <h2>2. Clients</h2>
@@ -2095,7 +1903,7 @@ derived from MarshalRefByObject.<br/>
     // for CookComputing.XmlRpc
     //RemotingConfiguration.Configure("SumAndDiff.exe.config"); 
     RemotingConfiguration.RegisterWellKnownServiceType(
-      typeof(SumAndDiff), 
+	  typeof(SumAndDiff), 
       "SumAndDiff.rem",
       WellKnownObjectMode.Singleton); 
     Console.WriteLine("Press to shutdown"); 

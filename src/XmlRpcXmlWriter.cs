@@ -8,22 +8,22 @@ namespace CookComputing.XmlRpc
 {
   public class XmlRpcXmlWriter
   {
-    public static XmlWriter Create(Stream stm, Encoding encoding, bool useIndentation, int indentation)
+    public static XmlWriter Create(Stream stm, XmlRpcFormatSettings settings)
     {
-      var stmWriter = new EncodingStreamWriter(stm, encoding);
-      XmlWriter xtw = XmlWriter.Create(stmWriter, ConfigureXmlFormat(encoding, useIndentation, indentation));
+      var stmWriter = new EncodingStreamWriter(stm, settings.XmlEncoding);
+      XmlWriter xtw = XmlWriter.Create(stmWriter, ConfigureXmlFormat(settings));
       return xtw;
     }
 
-    private static XmlWriterSettings ConfigureXmlFormat(Encoding encoding, bool useIndentation, int indentation)
+    private static XmlWriterSettings ConfigureXmlFormat(XmlRpcFormatSettings settings)
     {
-      if (useIndentation)
+      if (settings.UseIndentation)
       {
         return new XmlWriterSettings
         {
           Indent = true,
-          IndentChars = new string(' ', indentation),
-          Encoding = encoding,
+          IndentChars = new string(' ', settings.Indentation),
+          Encoding = settings.XmlEncoding,
           NewLineHandling = NewLineHandling.None,
         };
       }
@@ -32,7 +32,7 @@ namespace CookComputing.XmlRpc
         return new XmlWriterSettings
         {
           Indent = false,
-          Encoding = encoding
+          Encoding = settings.XmlEncoding
         };
       }
     }

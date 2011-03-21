@@ -52,7 +52,24 @@ namespace CookComputing.XmlRpc
       }
       finally
       {
-        RequestContext.Response.OutputStream.Close();
+        try
+        {
+          RequestContext.Response.OutputStream.Close();
+        }
+        catch (System.InvalidOperationException)
+        {
+          // Zev Beckerman reported that this exception was something being thrown 
+          // by the call to Close - following seemed to handle the problem
+          try
+          {
+            RequestContext.Response.OutputStream.Flush();
+            System.Threading.Thread.Sleep(10000);
+            RequestContext.Response.OutputStream.Close();
+          }
+          catch (Exception)
+          {
+          }
+        }
       }
     }
 

@@ -40,6 +40,9 @@ namespace CookComputing.XmlRpc
 
   public class XmlRpcResponseSerializer : XmlRpcSerializer
   {
+    public XmlRpcResponseSerializer() { }
+    public XmlRpcResponseSerializer(XmlRpcFormatSettings settings) : base(settings) { }
+
     public void SerializeResponse(Stream stm, XmlRpcResponse response)
     {
       Object ret = response.retVal;
@@ -48,7 +51,7 @@ namespace CookComputing.XmlRpc
         SerializeFaultResponse(stm, (XmlRpcFaultException)ret);
         return;
       }
-      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, XmlEncoding, UseIndentation, Indentation); 
+      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, base.XmlRpcFormatSettings); 
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "params", "");
@@ -65,9 +68,9 @@ namespace CookComputing.XmlRpc
           "Return value is of, or contains an instance of, type {0} which "
           + "cannot be mapped to an XML-RPC type", ex.UnsupportedType));
       }
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
-      xtw.WriteEndElement();
+      WriteFullEndElement(xtw);
+      WriteFullEndElement(xtw);
+      WriteFullEndElement(xtw);
       xtw.Flush();
     }
   }

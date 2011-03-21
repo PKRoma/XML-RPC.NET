@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2010, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2011, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -24,7 +24,6 @@ DEALINGS IN THE SOFTWARE.
 */
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Security;
 
 [assembly: AssemblyTitle("XML-RPC.NET")]

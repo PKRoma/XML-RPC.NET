@@ -394,7 +394,7 @@ namespace CookComputing.XmlRpc
           string desc = "";
           Attribute mmbrAttr = Attribute.GetCustomAttribute(fi, 
             typeof(XmlRpcMemberAttribute));
-          if (attr != null && mmbrAttr is XmlRpcMemberAttribute)
+          if (mmbrAttr != null && mmbrAttr is XmlRpcMemberAttribute)
           {
             if ((mmbrAttr as XmlRpcMemberAttribute).Member != "")
               memberName = (mmbrAttr as XmlRpcMemberAttribute).Member + " ";

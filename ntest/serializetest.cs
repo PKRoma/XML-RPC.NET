@@ -155,6 +155,33 @@ namespace ntest
       for (int i = 0; i < testb.Length; i++)
         Assert.IsTrue(testb[i] == ret[i]);
     }
+
+    [Test]
+    public void ZeroLengthBas64()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { new byte[0] };
+      req.method = "Foo";
+      var ser = new XmlRpcRequestSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+@"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Foo</methodName>
+  <params>
+    <param>
+      <value>
+        <base64></base64>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
     
     //---------------------- array -----------------------------------------// 
     [Test]
@@ -1597,6 +1624,55 @@ namespace ntest
     </params>
 </methodCall>", reqstr);
      }
-  }
 
+
+    public struct TestPropertyMemberName
+    {
+      [XmlRpcMember("title1")]
+      public string Title1;
+      [XmlRpcMember("title2")]
+      public string Title2 { get; set; }
+    }
+
+    [Test]
+    public void PropertyMemberName()
+    {
+       Stream stm = new MemoryStream();
+       XmlRpcRequest req = new XmlRpcRequest();
+       req.args = new Object[] { new TestPropertyMemberName { Title1 = "abc", Title2 = "def"} };
+       req.method = "Foo";
+       var ser = new XmlRpcRequestSerializer();
+       ser.UseStringTag = true;
+       ser.Indentation = 2;
+       ser.SerializeRequest(stm, req);
+       stm.Position = 0;
+       TextReader tr = new StreamReader(stm);
+       string reqstr = tr.ReadToEnd();
+       Assert.AreEqual(
+@"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Foo</methodName>
+  <params>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>title2</name>
+            <value>
+              <string>def</string>
+            </value>
+          </member>
+          <member>
+            <name>title1</name>
+            <value>
+              <string>abc</string>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+  }
 }

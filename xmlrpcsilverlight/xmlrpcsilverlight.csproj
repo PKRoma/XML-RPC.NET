@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>xmlrpcsilverlight</RootNamespace>
-    <AssemblyName>CookComputing.XmlRpcSilverlightV3</AssemblyName>
+    <AssemblyName>CookComputing.XmlRpcSilverlight</AssemblyName>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -90,6 +90,9 @@
     <Compile Include="..\src\util.cs">
       <Link>util.cs</Link>
     </Compile>
+    <Compile Include="..\src\WebSettings.cs">
+      <Link>WebSettings.cs</Link>
+    </Compile>
     <Compile Include="..\src\XmlRpcAsyncResult.cs">
       <Link>XmlRpcAsyncResult.cs</Link>
     </Compile>
@@ -110,6 +113,9 @@
     </Compile>
     <Compile Include="..\src\XmlRpcFaultException.cs">
       <Link>XmlRpcFaultException.cs</Link>
+    </Compile>
+    <Compile Include="..\src\XmlRpcFormatSettings.cs">
+      <Link>XmlRpcFormatSettings.cs</Link>
     </Compile>
     <Compile Include="..\src\XmlRpcLogger.cs">
       <Link>XmlRpcLogger.cs</Link>

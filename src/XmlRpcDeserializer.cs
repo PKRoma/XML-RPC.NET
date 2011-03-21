@@ -432,8 +432,10 @@ namespace CookComputing.XmlRpc
       List<string> rpcNames = new List<string>();
       try
       {
-        while (iter.MoveNext() && iter.Current is StructMember)
+        while (iter.MoveNext())
         {
+          if (!(iter.Current is StructMember))
+            break;
           string rpcName = (iter.Current as StructMember).Value;
           if (rpcNames.Contains(rpcName))
           {
@@ -452,7 +454,10 @@ namespace CookComputing.XmlRpc
           MemberInfo mi = valueType.GetField(name);
           if (mi == null) mi = valueType.GetProperty(name);
           if (mi == null)
+          {
+            iter.MoveNext();  // value not required
             continue;
+          }
           if (names.Contains(name))
               names.Remove(name);
           else

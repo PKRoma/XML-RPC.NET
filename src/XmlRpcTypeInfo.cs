@@ -272,5 +272,45 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
+    public static string GetUrlFromAttribute(Type type)
+    {
+      XmlRpcUrlAttribute urlAttr = Attribute.GetCustomAttribute(type, typeof(XmlRpcUrlAttribute))
+        as XmlRpcUrlAttribute;
+      return urlAttr != null ? urlAttr.Uri : null;
+    }
+
+    public static string GetRpcMethodName(MethodInfo mi)
+    {
+      string rpcMethod;
+      string MethodName = mi.Name;
+      Attribute attr = Attribute.GetCustomAttribute(mi,
+        typeof(XmlRpcBeginAttribute));
+      if (attr != null)
+      {
+        rpcMethod = ((XmlRpcBeginAttribute)attr).Method;
+        if (rpcMethod == "")
+        {
+          if (!MethodName.StartsWith("Begin") || MethodName.Length <= 5)
+            throw new Exception(String.Format(
+              "method {0} has invalid signature for begin method",
+              MethodName));
+          rpcMethod = MethodName.Substring(5);
+        }
+        return rpcMethod;
+      }
+      // if no XmlRpcBegin attribute, must have XmlRpcMethod attribute   
+      attr = Attribute.GetCustomAttribute(mi, typeof(XmlRpcMethodAttribute));
+      if (attr == null)
+      {
+        throw new Exception("missing method attribute");
+      }
+      XmlRpcMethodAttribute xrmAttr = attr as XmlRpcMethodAttribute;
+      rpcMethod = xrmAttr.Method;
+      if (rpcMethod == "")
+      {
+        rpcMethod = mi.Name;
+      }
+      return rpcMethod;
+    }
   }
 }
