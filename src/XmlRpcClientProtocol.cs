@@ -595,15 +595,7 @@ namespace CookComputing.XmlRpc
         try
         {
           XmlRpcRequest req = clientResult.XmlRpcRequest;
-          var serializer = new XmlRpcRequestSerializer();
-          if (clientResult.XmlRpcFormatSettings.XmlEncoding != null)
-            serializer.XmlEncoding = clientResult.XmlRpcFormatSettings.XmlEncoding;
-          serializer.UseEmptyElementTags = clientResult.XmlRpcFormatSettings.UseEmptyElementTags;
-          serializer.UseEmptyParamsTag = clientResult.XmlRpcFormatSettings.UseEmptyParamsTag;
-          serializer.UseIndentation = clientResult.XmlRpcFormatSettings.UseIndentation;
-          serializer.Indentation = clientResult.XmlRpcFormatSettings.Indentation;
-          serializer.UseIntTag = clientResult.XmlRpcFormatSettings.UseIntTag;
-          serializer.UseStringTag = clientResult.XmlRpcFormatSettings.UseStringTag;
+          var serializer = new XmlRpcRequestSerializer(clientResult.XmlRpcFormatSettings);
           serializer.SerializeRequest(serStream, req);
           if (logging)
           {
