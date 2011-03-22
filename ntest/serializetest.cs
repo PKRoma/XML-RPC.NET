@@ -164,6 +164,7 @@ namespace ntest
       req.args = new Object[] { new byte[0] };
       req.method = "Foo";
       var ser = new XmlRpcRequestSerializer();
+      ser.UseEmptyElementTags = false;
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
       TextReader tr = new StreamReader(stm);
@@ -1444,6 +1445,7 @@ namespace ntest
          var ser = new XmlRpcRequestSerializer();
          ser.UseStringTag = true;
          ser.Indentation = 4;
+         ser.UseEmptyElementTags = false;
          ser.SerializeRequest(stm, req);
          stm.Position = 0;
          TextReader tr = new StreamReader(stm);
@@ -1473,6 +1475,7 @@ namespace ntest
          var ser = new XmlRpcRequestSerializer();
          ser.UseStringTag = true;
          ser.UseIndentation = false;
+         ser.UseEmptyElementTags = false;
          ser.SerializeRequest(stm, req);
          stm.Position = 0;
          TextReader tr = new StreamReader(stm);
@@ -1494,6 +1497,7 @@ namespace ntest
        var ser = new XmlRpcRequestSerializer();
        ser.UseStringTag = false;
        ser.Indentation = 4;
+       ser.UseEmptyElementTags = false;
        ser.SerializeRequest(stm, req);
        stm.Position = 0;
        TextReader tr = new StreamReader(stm);
