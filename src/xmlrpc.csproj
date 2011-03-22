@@ -115,10 +115,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AsyncResultNoResult.cs" />
-    <Compile Include="CallAsyncResult.cs" />
     <Compile Include="DateTime8601.cs" />
-    <Compile Include="XmlRpcCall.cs" />
     <Compile Include="XmlRpcFormatSettings.cs" />
     <Compile Include="GuidEx.cs">
       <SubType>Code</SubType>

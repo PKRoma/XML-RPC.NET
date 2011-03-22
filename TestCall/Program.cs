@@ -9,33 +9,37 @@ class Program
 {
   static void Main(string[] args)
   {
-    var call = new XmlRpcCall();
-    IAsyncResult ar = call.BeginCall(new Uri("http://www.cookcomputing.com/xmlrpcsamples/RPC2.ashx"),
-      new WebSettings(), Writer, Reader, null, "ABCD");
-    ar.AsyncWaitHandle.WaitOne();
-    object ret = call.EndCall(ar);
 
-  }
+    Stream readStream = new MemoryStream();
 
-  static string request =
-           @"<?xml version=""1.0""?>
-<methodCall>
-    <methodName>Foo</methodName>
-    <params>
-        <param>
-            <value>
-                <int>1</int>
-            </value>
-        </param>
-    </params>
-</methodCall>";
 
-  static void Writer(Stream stream)
-  {
-    var request = new XmlRpcRequest { method="examples.getStateName", args = new object[] { 1 } };
+
+
+    Stream inputStream = new MemoryStream();
+    Stream outputStream = new MemoryStream();
+    var request = new XmlRpcRequest
+    {
+      method = "examples.getStateName",
+      args = new object[] { 1 }
+    };
     var serializer = new XmlRpcRequestSerializer();
-    serializer.SerializeRequest(stream, request);
+    serializer.SerializeRequest(inputStream, request);
+    inputStream.Position = 0;
+
+    var call = new WebClient();
+    IAsyncResult ar = call.BeginCall(new Uri("http://www.cookcomputing.com/xmlrpcsamples/RPC2.ashx"),
+      inputStream, outputStream, null, "ABCD");
+    ar.AsyncWaitHandle.WaitOne();
+    call.EndCall(ar);
+
+    outputStream.Position = 0;
+    var deserializer = new XmlRpcResponseDeserializer();
+    var response = deserializer.DeserializeResponse(outputStream, null);
+
+    object reto = response.retVal;
   }
+
+
 
   static object Reader(Stream stream)
   {
@@ -45,3 +49,4 @@ class Program
     return response.retVal;
   }
 }
+
