@@ -4,9 +4,96 @@ using System.Text;
 using System.IO;
 using System.Net;
 
+
 namespace CookComputing.XmlRpc
 {
+
   class WebClient
+  {
+    public IAsyncResult BeginGet(Uri uri, Stream outputStream, AsyncCallback asyncCallback, object state)
+    {
+      var asyncResult = new GetAsyncResult(uri, outputStream, asyncCallback, state,
+        this, "get");
+      asyncResult.Process();
+      return asyncResult;
+    }
+
+    public object EndGet(IAsyncResult result)
+    {
+      object ret = AsyncResultWithTimeout<object>.End(result, this, "get");
+      return ret;
+    }
+
+    class GetAsyncResult : AsyncResultNoResult
+    {
+      Uri _uri;
+      Stream _outputStream;
+      object _state;
+      WebRequest _webRequest;
+      WebResponse _webResponse;
+      Stream _responseStream;
+      byte[] _buffer = new byte[4096];
+
+      public GetAsyncResult(Uri uri, Stream outputStream,
+        AsyncCallback asyncCallback, object state, object owner, string id)
+        : base(asyncCallback, state, owner, id)
+      {
+        _uri = uri;
+        _outputStream = outputStream;
+        _state = state;
+      }
+
+      override internal void Process()
+      {
+        _webRequest.BeginGetResponse(GetResponseCallback, _state);
+      }
+
+      void GetResponseCallback(IAsyncResult asyncResult)
+      {
+        try
+        {
+          _webResponse = _webRequest.GetResponse();
+          _responseStream = _webResponse.GetResponseStream();
+          _responseStream.BeginRead(_buffer, 0, _buffer.Length, ReadResponseCallback, null);
+        }
+        catch (Exception ex)
+        {
+          ProcessAsyncException(ex);
+        }
+      }
+
+      void ReadResponseCallback(IAsyncResult asyncResult)
+      {
+        try
+        {
+          int count = _responseStream.EndRead(asyncResult);
+          _outputStream.Write(_buffer, 0, count);
+          if (_outputStream.Length == _webResponse.ContentLength || count == 0)
+          {
+            _outputStream.Position = 0;
+            Complete(null, false);
+          }
+          else
+            _responseStream.BeginRead(_buffer, 0, _buffer.Length, ReadResponseCallback, null);
+        }
+        catch (Exception ex)
+        {
+          ProcessAsyncException(ex);
+        }
+      }
+
+      void ProcessAsyncException(Exception ex)
+      {
+        Complete(ex);
+      }
+    }
+  }
+
+
+
+/*
+
+  class WebClientX
   {
     public object Call(Uri uri, Stream inputStream, Stream outputStream)
     {
@@ -130,4 +217,5 @@ namespace CookComputing.XmlRpc
       }
     }
   }
+ * */
 }
