@@ -57,7 +57,7 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartElement("", "params", "");
       xtw.WriteStartElement("", "param", "");
       // TODO: use global action setting
-      NullMappingAction mappingAction = NullMappingAction.Nil;
+      NullMappingAction mappingAction = NullMappingAction.Error;
       try
       {
         Serialize(xtw, ret, mappingAction);

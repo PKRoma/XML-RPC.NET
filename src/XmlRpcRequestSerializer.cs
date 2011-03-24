@@ -50,7 +50,7 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartElement("", "methodCall", "");
       {
         // TODO: use global action setting
-        NullMappingAction mappingAction = NullMappingAction.Nil;
+        NullMappingAction mappingAction = NullMappingAction.Error;
         WriteFullElementString(xtw, "methodName", request.method);
         if (request.args.Length > 0 || UseEmptyParamsTag)
         {

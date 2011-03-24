@@ -176,7 +176,7 @@ namespace ntest
   <params>
     <param>
       <value>
-        <base64></base64>
+        <base64 />
       </value>
     </param>
   </params>
@@ -842,6 +842,121 @@ namespace ntest
 </methodCall>", reqstr);
     }
 
+
+    public struct DefaultNullMappingStruct
+    {
+      public string s;
+      public int? i;
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcMappingSerializeException))]
+    public void DefaultNullMapping()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { new DefaultNullMappingStruct() };
+      req.method = "Foo";
+      var ser = new XmlRpcRequestSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+      Assert.AreEqual(
+@"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Foo</methodName>
+  <params>
+    <param>
+      <value>
+        <struct>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
+    [XmlRpcNullMapping(NullMappingAction.Ignore)]
+    public struct NullMappingIgnoreStruct
+    {
+      public string s;
+      public int? i;
+    }
+
+    [Test]
+    public void NullMappingIgnore()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { new NullMappingIgnoreStruct() };
+      req.method = "Foo";
+      var ser = new XmlRpcRequestSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+      Assert.AreEqual(
+@"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Foo</methodName>
+  <params>
+    <param>
+      <value>
+        <struct />
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
+    [XmlRpcNullMapping(NullMappingAction.Nil)]
+    public struct NullMappingNilStruct
+    {
+      public string s;
+      public int? i;
+    }
+
+    [Test]
+    public void NullMappingNil()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { new NullMappingNilStruct() };
+      req.method = "Foo";
+      var ser = new XmlRpcRequestSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+      Assert.AreEqual(
+@"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Foo</methodName>
+  <params>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>s</name>
+            <value>
+              <nil />
+            </value>
+          </member>
+          <member>
+            <name>i</name>
+            <value>
+              <nil />
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
+
     //---------------------- XmlRpcStruct ------------------------------------// 
     [Test]
     public void XmlRpcStruct()
@@ -1415,6 +1530,7 @@ namespace ntest
          var ser = new XmlRpcRequestSerializer();
          ser.UseStringTag = true;
          ser.Indentation = 4;
+         ser.UseEmptyElementTags = false; 
          ser.SerializeRequest(stm, req);
          stm.Position = 0;
          TextReader tr = new StreamReader(stm);
@@ -1444,6 +1560,7 @@ namespace ntest
          var ser = new XmlRpcRequestSerializer();
          ser.UseStringTag = true;
          ser.Indentation = 4;
+         ser.UseEmptyElementTags = false;
          ser.SerializeRequest(stm, req);
          stm.Position = 0;
          TextReader tr = new StreamReader(stm);
@@ -1473,6 +1590,7 @@ namespace ntest
          var ser = new XmlRpcRequestSerializer();
          ser.UseStringTag = true;
          ser.UseIndentation = false;
+         ser.UseEmptyElementTags = false;
          ser.SerializeRequest(stm, req);
          stm.Position = 0;
          TextReader tr = new StreamReader(stm);

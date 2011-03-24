@@ -43,7 +43,7 @@ namespace CookComputing.XmlRpc
       get { return m_bUseEmptyElementTag; }
       set { m_bUseEmptyElementTag = value; }
     }
-    bool m_bUseEmptyElementTag = false;
+    bool m_bUseEmptyElementTag = true;
 
     public bool UseEmptyParamsTag
     {
