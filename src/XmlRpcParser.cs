@@ -338,7 +338,33 @@ namespace CookComputing.XmlRpc
     public bool ImplicitValue { get; private set; }
   }
 
-  public class StringValue : ValueNode
+  public class SimpleValueNode : ValueNode
+  {
+    public SimpleValueNode()
+    {
+    }
+
+    public SimpleValueNode(string value)
+      : base(value)
+    {
+      Value = value;
+    }
+
+    public SimpleValueNode(string value, bool implicitValue)
+      : base(value, implicitValue)
+    {
+    }
+  }
+
+  public class ComplexValueNode : ValueNode
+  {
+  }
+
+  public class EndComplexValueNode : Node
+  {
+  }
+
+  public class StringValue : SimpleValueNode
   {
     public StringValue(string value, bool implicitValue)
       : base(value, implicitValue)
@@ -346,7 +372,7 @@ namespace CookComputing.XmlRpc
     }
   }
 
-  public class IntValue : ValueNode
+  public class IntValue : SimpleValueNode
   {
     public IntValue(string value)
       : base(value)
@@ -354,7 +380,7 @@ namespace CookComputing.XmlRpc
     }
   }
 
-  public class LongValue : ValueNode
+  public class LongValue : SimpleValueNode
   {
     public LongValue(string value)
       : base(value)
@@ -362,7 +388,7 @@ namespace CookComputing.XmlRpc
     }
   }
 
-  public class DoubleValue : ValueNode
+  public class DoubleValue : SimpleValueNode
   {
     public DoubleValue(string value)
       : base(value)
@@ -370,7 +396,7 @@ namespace CookComputing.XmlRpc
     }
   }
 
-  public class BooleanValue : ValueNode
+  public class BooleanValue : SimpleValueNode
   {
     public BooleanValue(string value)
       : base(value)
@@ -378,7 +404,7 @@ namespace CookComputing.XmlRpc
     }
   }
 
-  public class DateTimeValue : ValueNode
+  public class DateTimeValue : SimpleValueNode
   {
     public DateTimeValue(string value)
       : base(value)
@@ -386,7 +412,7 @@ namespace CookComputing.XmlRpc
     }
   }
 
-  public class Base64Value : ValueNode
+  public class Base64Value : SimpleValueNode
   {
     public Base64Value(string value)
       : base(value)
@@ -429,27 +455,27 @@ namespace CookComputing.XmlRpc
   {
   }
 
-  public class StructValue : ValueNode
+  public class StructValue : ComplexValueNode
   {
 
   }
 
-  public class EndStructValue : Node
+  public class EndStructValue : EndComplexValueNode
   {
 
   }
 
-  public class ArrayValue : ValueNode
+  public class ArrayValue : ComplexValueNode
   {
 
   }
 
-  public class EndArrayValue : Node
+  public class EndArrayValue : EndComplexValueNode
   {
 
   }
 
-  public class NilValue : ValueNode
+  public class NilValue : SimpleValueNode
   {
 
   }
