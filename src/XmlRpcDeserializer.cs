@@ -294,7 +294,7 @@ namespace CookComputing.XmlRpc
       CheckExpectedType(valType, typeof(int), parseStack);
       parsedType = typeof(int);
       return OnStack("integer", parseStack, delegate()
-      { 
+      {
         int ret;
         if (!Int32.TryParse(value, out ret))
           throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
@@ -308,7 +308,7 @@ namespace CookComputing.XmlRpc
       CheckExpectedType(valType, typeof(byte[]), parseStack);
       parsedType = typeof(int);
       return OnStack("base64", parseStack, delegate()
-      { 
+      {
         if (value == "")
           return new byte[0];
         else
@@ -381,7 +381,7 @@ namespace CookComputing.XmlRpc
       return retObj;
     }
 
-    private object ParseStruct(IEnumerator<Node> iter, Type valueType, ParseStack parseStack, 
+    private object ParseStruct(IEnumerator<Node> iter, Type valueType, ParseStack parseStack,
       MappingAction mappingAction, out Type parsedType)
     {
       parsedType = null;
@@ -455,20 +455,26 @@ namespace CookComputing.XmlRpc
           if (mi == null) mi = valueType.GetProperty(name);
           if (mi == null)
           {
-            iter.MoveNext();  // value not required
+            iter.MoveNext();  // move to value
+            if (iter.Current is ComplexValueNode)
+            {
+              int depth = iter.Current.Depth;
+              while (!(iter.Current is EndComplexValueNode && iter.Current.Depth == depth))
+                iter.MoveNext();
+            }
             continue;
           }
           if (names.Contains(name))
-              names.Remove(name);
+            names.Remove(name);
           else
           {
-              if (Attribute.IsDefined(mi, typeof(NonSerializedAttribute)))
-              {
-                  parseStack.Push(String.Format("member {0}", name));
-                  throw new XmlRpcNonSerializedMember("Cannot map XML-RPC struct "
-                  + "member onto member marked as [NonSerialized]: "
-                  + " " + StackDump(parseStack));
-              }
+            if (Attribute.IsDefined(mi, typeof(NonSerializedAttribute)))
+            {
+              parseStack.Push(String.Format("member {0}", name));
+              throw new XmlRpcNonSerializedMember("Cannot map XML-RPC struct "
+              + "member onto member marked as [NonSerialized]: "
+              + " " + StackDump(parseStack));
+            }
           }
           Type memberType = mi.MemberType == MemberTypes.Field
           ? (mi as FieldInfo).FieldType : (mi as PropertyInfo).PropertyType;
@@ -479,7 +485,7 @@ namespace CookComputing.XmlRpc
           iter.MoveNext();
           object valObj = OnStack(parseMsg, parseStack, delegate()
           {
-              return ParseValueNode(iter, memberType, parseStack, mappingAction);
+            return ParseValueNode(iter, memberType, parseStack, mappingAction);
           });
 
           if (mi.MemberType == MemberTypes.Field)
@@ -499,8 +505,8 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    private object ParseArray(IEnumerator<Node> iter, Type valType, 
-      ParseStack parseStack, MappingAction mappingAction, 
+    private object ParseArray(IEnumerator<Node> iter, Type valType,
+      ParseStack parseStack, MappingAction mappingAction,
       out Type parsedType)
     {
       parsedType = null;
@@ -708,174 +714,39 @@ namespace CookComputing.XmlRpc
       dimLengths[CurRank] = nodeCount;
     }
 
-
-
-
-
-
     public Object ParseValueElement(
       XmlReader rdr,
       Type valType,
       ParseStack parseStack,
       MappingAction mappingAction)
     {
-      var iter = XmlRpcParser.ParseValue(rdr).GetEnumerator();
+      var iter = new XmlRpcParser().ParseValue(rdr).GetEnumerator();
       iter.MoveNext();
 
       return ParseValueNode(iter, valType, parseStack, mappingAction);
     }
 
-
-//    private object ParseArray(XmlReader rdr, Type valType, ParseStack parseStack,
-//      MappingAction mappingAction, out Type ParsedType, out Type ParsedArrayType)
-//    {
-//      ParsedType = null;
-//      ParsedArrayType = null;
-//      // required type must be an array
-//      if (valType != null
-//        && !(valType.IsArray == true
-//            || valType == typeof(Array)
-//            || valType == typeof(object)))
-//      {
-//        throw new XmlRpcTypeMismatchException(parseStack.ParseType
-//          + " contains array value where "
-//          + XmlRpcServiceInfo.GetXmlRpcTypeString(valType)
-//          + " expected " + StackDump(parseStack));
-//      }
-//      if (valType != null)
-//      {
-//        XmlRpcType xmlRpcType = XmlRpcServiceInfo.GetXmlRpcType(valType);
-//        if (xmlRpcType == XmlRpcType.tMultiDimArray)
-//        {
-//          parseStack.Push("array mapped to type " + valType.Name);
-//          Object ret = ParseMultiDimArray(rdr, valType, parseStack,
-//            mappingAction);
-//          return ret;
-//        }
-//        parseStack.Push("array mapped to type " + valType.Name);
-//      }
-//      else
-//        parseStack.Push("array");
-
-//      MoveToChild(rdr, "data");
-
-//      //XmlNode[] childNodes = SelectNodes(dataNode, "value");
-//      //int nodeCount = childNodes.Length;
-//      //Object[] elements = new Object[nodeCount];
-
-//      var values = new List<object>();
-//      Type elemType = DetermineArrayItemType(valType);
-
-
-
-//      bool bGotType = false;
-//      Type useType = null;
-
-//      bool gotValue = MoveToChild(rdr, "value");
-//      while (gotValue)
-//      {
-//        parseStack.Push(String.Format("element {0}", values.Count));
-//        object value = ParseValueElement(rdr, elemType, parseStack, mappingAction);
-//        values.Add(value);
-//        MoveToEndElement(rdr, "value", 0);
-//        gotValue = rdr.ReadToNextSibling("value");
-//        parseStack.Pop();
-//      }
-
-
-//      foreach (object value in values)
-//      {
-//        //if (bGotType == false)
-//        //{
-//        //  useType = parsedArrayType;
-//        //  bGotType = true;
-//        //}
-//        //else
-//        //{
-//        //  if (useType != parsedArrayType)
-//        //    useType = null;
-//        //}
-//      }
-
-//      Object[] args = new Object[1];
-//      args[0] = values.Count;
-//      Object retObj = null;
-//      if (valType != null
-//        && valType != typeof(Array)
-//        && valType != typeof(object))
-//      {
-//        retObj = CreateArrayInstance(valType, args);
-//      }
-//      else
-//      {
-//        if (useType == null)
-//          retObj = CreateArrayInstance(typeof(object[]), args);
-//        else
-//          retObj = CreateArrayInstance(useType, args);
-//      }
-//      for (int j = 0; j < values.Count; j++)
-//      {
-//        ((Array)retObj).SetValue(values[j], j);
-//      }
-
-//      parseStack.Pop();
-
-//      return retObj;
-//    }
-
-//    private static Type DetermineArrayItemType(Type valType)
-//    {
-//      Type elemType = null;
-//      if (valType != null
-//        && valType != typeof(Array)
-//        && valType != typeof(object))
-//      {
-//#if (!COMPACT_FRAMEWORK)
-//        elemType = valType.GetElementType();
-//#else
-//        string[] checkMultiDim = Regex.Split(ValueType.FullName, 
-//          "\\[\\]$");
-//        // determine assembly of array element type
-//        Assembly asmbly = ValueType.Assembly;
-//        string[] asmblyName = asmbly.FullName.Split(',');
-//        string elemTypeName = checkMultiDim[0] + ", " + asmblyName[0]; 
-//        elemType = Type.GetType(elemTypeName);
-//#endif
-//      }
-//      else
-//      {
-//        elemType = typeof(object);
-//      }
-//      return elemType;
-//    }
-
-//    private object ParseMultiDimArray(XmlReader rdr, Type valType, ParseStack parseStack, MappingAction mappingAction)
-//    {
-//      throw new NotImplementedException();
-//    }
-
     private static void CreateFieldNamesMap(Type valueType, List<string> names)
     {
-        foreach (FieldInfo fi in valueType.GetFields())
-        {
-            if (Attribute.IsDefined(fi, typeof(NonSerializedAttribute)))
-                continue;
-            names.Add(fi.Name);
-        }
-        foreach (PropertyInfo pi in valueType.GetProperties())
-        {
-            if (Attribute.IsDefined(pi, typeof(NonSerializedAttribute)))
-                continue;
-            names.Add(pi.Name);
-        }
+      foreach (FieldInfo fi in valueType.GetFields())
+      {
+        if (Attribute.IsDefined(fi, typeof(NonSerializedAttribute)))
+          continue;
+        names.Add(fi.Name);
+      }
+      foreach (PropertyInfo pi in valueType.GetProperties())
+      {
+        if (Attribute.IsDefined(pi, typeof(NonSerializedAttribute)))
+          continue;
+        names.Add(pi.Name);
+      }
     }
-
 
     private void CheckExpectedType(Type actualType, Type expectedType, ParseStack parseStack)
     {
       if (actualType != null && actualType != typeof(Object)
-        && actualType != expectedType 
-        && (expectedType.IsValueType 
+        && actualType != expectedType
+        && (expectedType.IsValueType
           && actualType != typeof(Nullable<>).MakeGenericType(expectedType)))
       {
         throw new XmlRpcTypeMismatchException(parseStack.ParseType +
@@ -892,7 +763,7 @@ namespace CookComputing.XmlRpc
     private T OnStack<T>(string p, ParseStack parseStack, Func<T> func)
     {
       parseStack.Push(p);
-      try 
+      try
       {
         return func();
       }

@@ -19,6 +19,8 @@ namespace CookComputing.XmlRpc
         });
     }
 
+    private int _depth = 0;
+
     public IEnumerable<Node> ParseRequest(XmlReader rdr)
     {
       rdr.MoveToContent();
@@ -32,10 +34,10 @@ namespace CookComputing.XmlRpc
       if (methodName == "")
         throw new XmlRpcInvalidXmlRpcException(
           "Request XML not valid XML-RPC - empty methodName.");
-      yield return new MethodName(methodName);
+      yield return CreateMethodName(methodName);
       if (MovetoSibling(rdr, "params", false))
       {
-        yield return new ParamsNode();
+        yield return new ParamsNode(_depth);
         int psDepth = rdr.Depth;
         bool gotP = MoveToChild(rdr, "param", false);
         while (gotP)
@@ -59,7 +61,7 @@ namespace CookComputing.XmlRpc
       MoveToChild(rdr, "params", "fault");
       if (rdr.Name == "params")
       {
-        yield return new ResponseNode();
+        yield return new ResponseNode(_depth);
         int psDepth = rdr.Depth;
         bool gotP = MoveToChild(rdr, "param");
         if (gotP)
@@ -79,17 +81,17 @@ namespace CookComputing.XmlRpc
       MoveToEndElement(rdr, mrDepth);
     }
 
-    private static IEnumerable<Node> ParseFault(XmlReader rdr)
+    private IEnumerable<Node> ParseFault(XmlReader rdr)
     {
       int fDepth = rdr.Depth;
-      yield return new FaultNode();
+      yield return new FaultNode(_depth);
       MoveToChild(rdr, "value", true);
       foreach (Node node in ParseValue(rdr))
         yield return node;
       MoveToEndElement(rdr, fDepth);
     }
 
-    private static IEnumerable<Node> ParseParam(XmlReader rdr)
+    private IEnumerable<Node> ParseParam(XmlReader rdr)
     {
       int pDepth = rdr.Depth;
       //yield return new ParamNode();
@@ -99,19 +101,19 @@ namespace CookComputing.XmlRpc
       MoveToEndElement(rdr, pDepth);
     }
 
-    public static IEnumerable<Node> ParseValue(XmlReader rdr)
+    public IEnumerable<Node> ParseValue(XmlReader rdr)
     {
       int vDepth = rdr.Depth;
       if (rdr.IsEmptyElement)
       {
-        yield return new StringValue("", true);
+        yield return CreateStringValue("", true);
       }
       else
       {
         rdr.Read(); // TODO: check all return values from rdr.Read()
         if (rdr.NodeType == XmlNodeType.Text)
         {
-          yield return new StringValue(rdr.Value,true);
+          yield return CreateStringValue(rdr.Value,true);
         }
         else
         {
@@ -123,33 +125,33 @@ namespace CookComputing.XmlRpc
           }
           if (rdr.NodeType == XmlNodeType.EndElement)
           {
-            yield return new StringValue(strValue, true);
+            yield return CreateStringValue(strValue, true);
           }
           else if (rdr.NodeType == XmlNodeType.Element)
           {
             switch (rdr.Name)
             {
               case "string":
-                yield return new StringValue(rdr.ReadElementContentAsString(), false);
+                yield return CreateStringValue(rdr.ReadElementContentAsString(), false);
                 break;
               case "int":
               case "i4":
-                yield return new IntValue(rdr.ReadElementContentAsString());
+                yield return CreateIntValue(rdr.ReadElementContentAsString());
                 break;
               case "i8":
-                yield return new LongValue(rdr.ReadElementContentAsString());
+                yield return CreateLongValue(rdr.ReadElementContentAsString());
                 break;
               case "double":
-                yield return new DoubleValue(rdr.ReadElementContentAsString());
+                yield return CreateDoubleValue(rdr.ReadElementContentAsString());
                 break;
               case "dateTime.iso8601":
-                yield return new DateTimeValue(rdr.ReadElementContentAsString());
+                yield return CreateDateTimeValue(rdr.ReadElementContentAsString());
                 break;
               case "boolean":
-                yield return new BooleanValue(rdr.ReadElementContentAsString());
+                yield return CreateBooleanValue(rdr.ReadElementContentAsString());
                 break;
               case "base64":
-                yield return new Base64Value(rdr.ReadElementContentAsString());
+                yield return CreateBase64Value(rdr.ReadElementContentAsString());
                 break;
               case "struct":
                 foreach (var node in ParseStruct(rdr))
@@ -160,7 +162,7 @@ namespace CookComputing.XmlRpc
                   yield return node;
                 break;
               case "nil":
-                yield return new NilValue();
+                yield return CreateNilValue();
                 break;
             }
           }
@@ -169,9 +171,9 @@ namespace CookComputing.XmlRpc
       MoveToEndElement(rdr, vDepth);
     }
 
-    private static IEnumerable<Node> ParseArray(XmlReader rdr)
+    private IEnumerable<Node> ParseArray(XmlReader rdr)
     {
-      yield return new ArrayValue();
+      yield return CreateArrayValue();
       int aDepth = rdr.Depth;
       MoveToChild(rdr, "data");
       bool gotV = MoveToChild(rdr, "value");
@@ -182,12 +184,12 @@ namespace CookComputing.XmlRpc
           yield return node;
         gotV = MovetoSibling(rdr, "value");
       }
-      yield return new EndArrayValue();
+      yield return CreateEndArrayValue();
     }
 
-    private static IEnumerable<Node> ParseStruct(XmlReader rdr)
+    private IEnumerable<Node> ParseStruct(XmlReader rdr)
     {
-      yield return new StructValue();
+      yield return CreateStructValue();
       int sDepth = rdr.Depth;
       bool gotM = MoveToChild(rdr, "member");
       int mDepth = rdr.Depth;
@@ -197,7 +199,7 @@ namespace CookComputing.XmlRpc
         string name = rdr.ReadElementContentAsString();
         if (name == "")
           throw new XmlRpcInvalidXmlRpcException("Struct contains member with empty name element.");
-        yield return new StructMember(name);
+        yield return CreateStructMember(name);
         MoveOverWhiteSpace(rdr);
         if (!(rdr.NodeType == XmlNodeType.Element && rdr.Name == "value"))
           throw new Exception();
@@ -207,15 +209,15 @@ namespace CookComputing.XmlRpc
         gotM = MovetoSibling(rdr, "member");
       }
       MoveToEndElement(rdr, sDepth);
-      yield return new EndStructValue();
+      yield return CreateEndStructValue();
     }
 
-    private static bool MovetoSibling(XmlReader rdr, string p)
+    private bool MovetoSibling(XmlReader rdr, string p)
     {
       return MovetoSibling(rdr, p, false);
     }
 
-    private static bool MovetoSibling(XmlReader rdr, string p, bool required)
+    private bool MovetoSibling(XmlReader rdr, string p, bool required)
     {
       if (!rdr.IsEmptyElement && rdr.NodeType == XmlNodeType.Element && rdr.Name == p)
         return true;
@@ -234,7 +236,7 @@ namespace CookComputing.XmlRpc
       return false;
     }
 
-    private static bool MoveToEndElement(XmlReader rdr, int mcDepth)
+    private bool MoveToEndElement(XmlReader rdr, int mcDepth)
     {
       // TODO: better error reporting required, i.e. include end element node type expected
       if (rdr.Depth == mcDepth && rdr.IsEmptyElement)
@@ -253,27 +255,27 @@ namespace CookComputing.XmlRpc
       return false;
     }
 
-    private static bool IsXmlRpcElement(string elementName)
+    private bool IsXmlRpcElement(string elementName)
     {
       return _xmlRpcMembers.Contains(elementName);
     }
 
-    private static bool MoveToChild(XmlReader rdr, string nodeName)
+    private bool MoveToChild(XmlReader rdr, string nodeName)
     {
       return MoveToChild(rdr, nodeName, false);
     }
 
-    private static bool MoveToChild(XmlReader rdr, string nodeName1, string nodeName2)
+    private bool MoveToChild(XmlReader rdr, string nodeName1, string nodeName2)
     {
       return MoveToChild(rdr, nodeName1, nodeName2, false);
     }
 
-    private static bool MoveToChild(XmlReader rdr, string nodeName, bool required)
+    private bool MoveToChild(XmlReader rdr, string nodeName, bool required)
     {
       return MoveToChild(rdr, nodeName, null, required);
     }
 
-    private static bool MoveToChild(XmlReader rdr, string nodeName1, string nodeName2,
+    private bool MoveToChild(XmlReader rdr, string nodeName1, string nodeName2,
       bool required)
     {
       int depth = rdr.Depth;
@@ -296,39 +298,114 @@ namespace CookComputing.XmlRpc
       return false;
     }
 
-    static string MakeMissingChildMessage(string nodeName1, string nodeName2)
+    string MakeMissingChildMessage(string nodeName1, string nodeName2)
     {
       return nodeName2 == null
         ? string.Format("Missing element:  {0}", nodeName1)
         : string.Format("Missing element: {0} or {1}", nodeName1, nodeName2);
     }
 
-    private static void MoveOverWhiteSpace(XmlReader rdr)
+    private void MoveOverWhiteSpace(XmlReader rdr)
     {
       while (rdr.NodeType == XmlNodeType.Whitespace
         || rdr.NodeType == XmlNodeType.SignificantWhitespace)
         rdr.Read();
     }
-  }
 
+
+    private MethodName CreateMethodName(string name)
+    {
+      return new MethodName(_depth, name);
+    }
+
+    private StringValue CreateStringValue(string value, bool implicitValue)
+    {
+      return new StringValue(_depth, value, implicitValue);
+    }
+
+    private IntValue CreateIntValue(string value)
+    {
+      return new IntValue(_depth, value);
+    }
+
+    private LongValue CreateLongValue(string value)
+    {
+      return new LongValue(_depth, value);
+    }
+
+    private DoubleValue CreateDoubleValue(string value)
+    {
+      return new DoubleValue(_depth, value);
+    }
+
+    private BooleanValue CreateBooleanValue(string value)
+    {
+      return new BooleanValue(_depth, value);
+    }
+
+    private DateTimeValue CreateDateTimeValue(string value)
+    {
+      return new DateTimeValue(_depth, value);
+    }
+
+    private Base64Value CreateBase64Value(string value)
+    {
+      return new Base64Value(_depth, value);
+    }
+
+    private NilValue CreateNilValue()
+    {
+      return new NilValue(_depth);
+    }
+
+    private StructValue CreateStructValue()
+    {
+      return new StructValue(_depth++);
+    }
+
+    private StructMember CreateStructMember(string name)
+    {
+      return new StructMember(_depth, name);
+    }
+
+    private EndStructValue CreateEndStructValue()
+    {
+      return new EndStructValue(--_depth);
+    }
+
+    private ArrayValue CreateArrayValue()
+    {
+      return new ArrayValue(_depth++);
+    }
+
+    private EndArrayValue CreateEndArrayValue()
+    {
+      return new EndArrayValue(--_depth);
+    }
+  }
 
   public class Node
   {
+    public int Depth { get; private set;}
 
+    public Node(int depth)
+    {
+      Depth = depth;
+    }
   }
 
   public class ValueNode : Node
   {
-    public ValueNode()
-    {
-    }
+    public ValueNode(int depth) : base(depth) { }
 
-    public ValueNode(string value)
+    public ValueNode(int depth, string value) 
+      : base(depth)
     {
       Value = value;
     }
 
-    public ValueNode(string value, bool implicitValue)
+    public ValueNode(int depth, string value, bool implicitValue)
+      : base(depth)
     {
       Value = value;
       ImplicitValue = implicitValue;
@@ -340,91 +417,73 @@ namespace CookComputing.XmlRpc
 
   public class SimpleValueNode : ValueNode
   {
-    public SimpleValueNode()
-    {
-    }
+    public SimpleValueNode(int depth) : base(depth) { }
 
-    public SimpleValueNode(string value)
-      : base(value)
+    public SimpleValueNode(int depth, string value)
+      : base(depth, value)
     {
       Value = value;
     }
 
-    public SimpleValueNode(string value, bool implicitValue)
-      : base(value, implicitValue)
+    public SimpleValueNode(int depth, string value, bool implicitValue)
+      : base(depth, value, implicitValue)
     {
     }
   }
 
   public class ComplexValueNode : ValueNode
   {
+    public ComplexValueNode(int depth) : base(depth) { }
   }
 
   public class EndComplexValueNode : Node
   {
+    public EndComplexValueNode(int depth) : base(depth) { }
   }
 
   public class StringValue : SimpleValueNode
   {
-    public StringValue(string value, bool implicitValue)
-      : base(value, implicitValue)
+    public StringValue(int depth, string value, bool implicitValue)
+      : base(depth, value, implicitValue)
     {
     }
   }
 
   public class IntValue : SimpleValueNode
   {
-    public IntValue(string value)
-      : base(value)
-    {
-    }
+    public IntValue(int depth, string value) : base(depth, value) { }
   }
 
   public class LongValue : SimpleValueNode
   {
-    public LongValue(string value)
-      : base(value)
-    {
-    }
+    public LongValue(int depth, string value) : base(depth, value) { }
   }
 
   public class DoubleValue : SimpleValueNode
   {
-    public DoubleValue(string value)
-      : base(value)
-    {
-    }
+    public DoubleValue(int depth, string value) : base(depth, value) { }
   }
 
   public class BooleanValue : SimpleValueNode
   {
-    public BooleanValue(string value)
-      : base(value)
-    {
-    }
+    public BooleanValue(int depth, string value) : base(depth, value) { }
   }
 
   public class DateTimeValue : SimpleValueNode
   {
-    public DateTimeValue(string value)
-      : base(value)
-    {
-    }
+    public DateTimeValue(int depth, string value) : base(depth, value) { }
   }
 
   public class Base64Value : SimpleValueNode
   {
-    public Base64Value(string value)
-      : base(value)
-    {
-    }
+    public Base64Value(int depth, string value) : base(depth, value) { }
   }
 
   public class MethodName : Node
   {
-    public MethodName(string value)
+    public MethodName(int depth, string name) : base(depth)  
     {
-      Name = value;
+      Name = name;
     }
 
     public string Name { get; set; }
@@ -432,51 +491,51 @@ namespace CookComputing.XmlRpc
 
   public class StructMember : ValueNode
   {
-    public StructMember(string value)
-      : base(value)
-    {
-    }
+    public StructMember(int depth, string name) : base(depth, name) { }
   }
 
-
-  public class FaultNode : Node
-  {
+  public class FaultNode : Node 
+  { 
+    public FaultNode(int depth) : base(depth) { }
   }
 
-  public class ResponseNode : Node
+  public class ResponseNode : Node 
   {
+    public ResponseNode(int depth) : base(depth) { }
   }
 
-  public class ParamsNode : Node
-  {
+  public class ParamsNode : Node 
+  { 
+    public ParamsNode(int depth) : base(depth) { }
   }
 
-  public class ParamNode : Node
+  public class ParamNode : Node 
   {
+    public ParamNode(int depth) : base(depth) { }
   }
 
   public class StructValue : ComplexValueNode
   {
-
+    public StructValue(int depth) : base(depth) { }
   }
 
   public class EndStructValue : EndComplexValueNode
   {
-
+    public EndStructValue(int depth) : base(depth) { }
   }
 
-  public class ArrayValue : ComplexValueNode
+  public class ArrayValue : ComplexValueNode 
   {
-
+    public ArrayValue(int depth) : base(depth) { }
   }
 
   public class EndArrayValue : EndComplexValueNode
   {
-
+    public EndArrayValue(int depth) : base(depth) { }
   }
 
   public class NilValue : SimpleValueNode
   {
-
+    public NilValue(int depth) : base(depth) { }
   }
 }
