@@ -30,7 +30,7 @@ using System.Diagnostics;
 using System.IO;
 using CookComputing.XmlRpc;
 
-namespace xmlrpc
+namespace CookComputing.XmlRpc
 {
   public class Tracer : XmlRpcLogger
   {
@@ -46,14 +46,9 @@ namespace xmlrpc
 
     private void DumpStream(Stream stm)
     {
-      stm.Position = 0;
       TextReader trdr = new StreamReader(stm);
-      String s = trdr.ReadLine();
-      while (s != null)
-      {
-        Trace.WriteLine(s);
-        s = trdr.ReadLine();
-      }
+      String s = trdr.ReadToEnd();
+      Trace.WriteLine(s);
     }
   }
 }
