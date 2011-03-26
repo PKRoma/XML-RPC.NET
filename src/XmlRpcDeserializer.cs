@@ -455,7 +455,12 @@ namespace CookComputing.XmlRpc
           if (mi == null) mi = valueType.GetProperty(name);
           if (mi == null)
           {
-            iter.MoveNext();  // value not required
+            iter.MoveNext();  // move to value
+            if (iter.Current is ComplexValueNode)
+            {
+              while (!(iter.Current is EndComplexValueNode))
+                iter.MoveNext();
+            }
             continue;
           }
           if (names.Contains(name))

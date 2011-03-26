@@ -1533,6 +1533,86 @@ This should be ignored.
       Assert.AreEqual(new DateTime(2002, 08, 23, 23, 07, 36), ret.lastModifiedUTC);
 
     }
+
+    [XmlRpcMissingMapping(MappingAction.Ignore)]
+    public struct upcsearchresults
+    {
+      public int result_count;
+      public string search;
+      public DateTime noCacheAfterUTC;
+      public string status;
+      //public XmlRpcStruct[] results;
+      public int? max_results;
+      public string message;
+    }
+
+    [Test]
+    public void UpcSearchResponse()
+    {
+      string xml = @"<?xml version=""1.0""?>
+<methodResponse>
+<params>
+<param><value><struct>
+<member><name>results</name><value><array><data>
+<value><struct>
+<member><name>ean</name><value><string>9338671003008</string></value>
+</member>
+<member><name>description</name><value><string>Driving Licence Success Theory Test Practical Test</string></value>
+</member>
+<member><name>size</name><value><string></string></value>
+</member>
+</struct></value>
+<value><struct>
+<member><name>ean</name><value><string>0084942384008</string></value>
+</member>
+<member><name>description</name><value><string>Mardel Master Test Kit</string></value>
+</member>
+<member><name>size</name><value><string>50 Test Srips</string></value>
+</member>
+</struct></value>
+<value><struct>
+<member><name>ean</name><value><string>0978087447523</string></value>
+</member>
+<member><name>description</name><value><string>LOOK INSIDE THE SAT I TEST PREP FROM THE TEST MAKERS VHS</string></value>
+</member>
+<member><name>size</name><value><string></string></value>
+</member>
+</struct></value>
+<value><struct>
+<member><name>ean</name><value><string>4719869700261</string></value>
+</member>
+<member><name>description</name><value><string>AIDS TEST QUICKPAC ONE STEP</string></value>
+</member>
+<member><name>size</name><value><string>HIV 1+2 Test</string></value>
+</member>
+</struct></value>
+<value><struct>
+<member><name>ean</name><value><string>5050582453249</string></value>
+</member>
+<member><name>description</name><value><string>DVD &quot;The big entertainment test, test the nation&quot;</string></value>
+</member>
+<member><name>size</name><value><string>Regular DVD box</string></value>
+</member>
+</struct></value>
+</data></array></value>
+</member>
+<member><name>max_results</name><value><int>5</int></value>
+</member>
+<member><name>message</name><value><string>Search successful</string></value>
+</member>
+</struct></value>
+</param>
+</params>
+</methodResponse>";
+      StringReader sr1 = new StringReader(xml);
+      var deserializer = new XmlRpcResponseDeserializer();
+      XmlRpcResponse response = deserializer.DeserializeResponse(sr1,
+        typeof(upcsearchresults));
+      Assert.IsTrue(response.retVal is upcsearchresults);
+      upcsearchresults ret = (upcsearchresults)response.retVal;
+      Assert.AreEqual(5, ret.max_results);
+      Assert.AreEqual("Search successful", ret.message);
+    }
   }
 }
 
