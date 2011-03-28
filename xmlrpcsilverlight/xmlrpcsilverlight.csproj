@@ -81,8 +81,8 @@
     <Compile Include="..\src\IXmlRpcProxy.cs">
       <Link>IXmlRpcProxy.cs</Link>
     </Compile>
-    <Compile Include="..\src\ParseStack.cs">
-      <Link>ParseStack.cs</Link>
+    <Compile Include="..\src\MappingStack.cs">
+      <Link>MappingStack.cs</Link>
     </Compile>
     <Compile Include="..\src\RequestResponseLogger.cs">
       <Link>RequestResponseLogger.cs</Link>

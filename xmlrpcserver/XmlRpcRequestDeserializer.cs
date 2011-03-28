@@ -126,7 +126,7 @@ namespace CookComputing.XmlRpc
           paramsType = pis[paramsPos].ParameterType.GetElementType();
         int minParamCount = pis == null ? int.MaxValue
           : (paramsPos == -1 ? pis.Length : paramsPos);
-        ParseStack parseStack = new ParseStack("request");
+        MappingStack mappingStack = new MappingStack("request");
         MappingAction mappingAction = MappingAction.Error;
         var objs = new List<object>();
         var paramsObjs = new List<object>();
@@ -143,28 +143,28 @@ namespace CookComputing.XmlRpc
           {
             if (svcType != null)
             {
-              parseStack.Push(String.Format("parameter {0}", paramCount));
+              mappingStack.Push(String.Format("parameter {0}", paramCount));
               // TODO: why following commented out?
               //          parseStack.Push(String.Format("parameter {0} mapped to type {1}", 
               //            i, pis[i].ParameterType.Name));
-              var obj = ParseValueNode(iter,
-                pis[paramCount - 1].ParameterType, parseStack, mappingAction);
+              var obj = MapValueNode(iter,
+                pis[paramCount - 1].ParameterType, mappingStack, mappingAction);
               objs.Add(obj);
             }
             else
             {
-              parseStack.Push(String.Format("parameter {0}", paramCount));
-              var obj = ParseValueNode(iter, null, parseStack, mappingAction);
+              mappingStack.Push(String.Format("parameter {0}", paramCount));
+              var obj = MapValueNode(iter, null, mappingStack, mappingAction);
               objs.Add(obj);
             }
-            parseStack.Pop();
+            mappingStack.Pop();
           }
           else
           {
-            parseStack.Push(String.Format("parameter {0}", paramCount + 1));
-            var paramsObj = ParseValueNode(iter, paramsType, parseStack, mappingAction);
+            mappingStack.Push(String.Format("parameter {0}", paramCount + 1));
+            var paramsObj = MapValueNode(iter, paramsType, mappingStack, mappingAction);
             paramsObjs.Add(paramsObj);
-            parseStack.Pop();
+            mappingStack.Pop();
           }
         }
 

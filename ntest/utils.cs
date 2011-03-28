@@ -83,10 +83,9 @@ namespace ntest
     {
       parsedType = parsedArrayType = null;
       rdr.ReadToDescendant("value");            
-      ParseStack parseStack 
-        = new ParseStack("request");
+      MappingStack mappingStack = new MappingStack("request");
       XmlRpcDeserializer ser = new XmlRpcDeserializer();
-      object obj = ser.ParseValueElement(rdr, valueType, parseStack, action);
+      object obj = ser.ParseValueElement(rdr, valueType, mappingStack, action);
       return obj;
     }
 
@@ -116,7 +115,7 @@ namespace ntest
     {
       parsedType = parsedArrayType = null;
       rdr.ReadToDescendant("value");
-      ParseStack parseStack = new ParseStack("request");
+      MappingStack parseStack = new MappingStack("request");
       object obj = deserializer.ParseValueElement(rdr, valueType, parseStack, action);
       return obj;
     }

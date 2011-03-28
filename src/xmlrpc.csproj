@@ -116,12 +116,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DateTime8601.cs" />
+    <Compile Include="MappingStack.cs" />
     <Compile Include="XmlRpcFormatSettings.cs" />
     <Compile Include="GuidEx.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IXmlRpcProxy.cs" />
-    <Compile Include="ParseStack.cs" />
     <Compile Include="RequestResponseLogger.cs" />
     <Compile Include="Tracer.cs" />
     <Compile Include="util.cs">

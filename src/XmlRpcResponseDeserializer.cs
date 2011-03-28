@@ -113,7 +113,7 @@ namespace CookComputing.XmlRpc
         if (returnType == typeof(void) || !iter.MoveNext())
           return new XmlRpcResponse { retVal = null };
         var valueNode = iter.Current as ValueNode;
-        object retObj = ParseValueNode(iter, returnType, new ParseStack("response"),
+        object retObj = MapValueNode(iter, returnType, new MappingStack("response"),
           MappingAction.Error);
         var response = new XmlRpcResponse { retVal = retObj };
         return response;
@@ -126,7 +126,7 @@ namespace CookComputing.XmlRpc
 
     private XmlRpcException DeserializeFault(IEnumerator<Node> iter)
     {
-      ParseStack faultStack = new ParseStack("fault response");
+      MappingStack faultStack = new MappingStack("fault response");
       // TODO: use global action setting
       MappingAction mappingAction = MappingAction.Error;
       XmlRpcFaultException faultEx = ParseFault(iter, faultStack, // TODO: fix
@@ -136,12 +136,12 @@ namespace CookComputing.XmlRpc
 
     XmlRpcFaultException ParseFault(
     IEnumerator<Node> iter,
-    ParseStack parseStack,
+    MappingStack parseStack,
     MappingAction mappingAction)
     {
       iter.MoveNext();  // move to StructValue
       Type parsedType;
-      var faultStruct = ParseHashtable(iter, null, parseStack, mappingAction,
+      var faultStruct = MapHashtable(iter, null, parseStack, mappingAction,
         out parsedType) as XmlRpcStruct;
       object faultCode = faultStruct["faultCode"];
       object faultString = faultStruct["faultString"];

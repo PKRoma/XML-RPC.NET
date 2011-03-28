@@ -395,7 +395,7 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    string StackDump(ParseStack parseStack)
+    string StackDump(MappingStack parseStack)
     {
       StringBuilder sb = new StringBuilder();
       foreach (string elem in parseStack)
@@ -403,7 +403,7 @@ namespace CookComputing.XmlRpc
         sb.Insert(0, elem);
         sb.Insert(0, " : ");
       }
-      sb.Insert(0, parseStack.ParseType);
+      sb.Insert(0, parseStack.MappingType);
       sb.Insert(0, "[");
       sb.Append("]");
       return sb.ToString();

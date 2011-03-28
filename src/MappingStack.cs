@@ -4,9 +4,9 @@ using System.Text;
 
 namespace CookComputing.XmlRpc
 {
-    public class ParseStack : Stack<string>
+    public class MappingStack : Stack<string>
     {
-      public ParseStack(string parseType)
+      public MappingStack(string parseType)
       {
         m_parseType = parseType;
       }
@@ -16,7 +16,7 @@ namespace CookComputing.XmlRpc
         base.Push(str);
       }
 
-      public string ParseType
+      public string MappingType
       {
         get { return m_parseType; }
       }

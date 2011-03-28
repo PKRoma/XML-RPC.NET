@@ -123,10 +123,10 @@ namespace CookComputing.XmlRpc
     }
 #endif
 
-    public Object ParseValueNode(
+    public Object MapValueNode(
       IEnumerator<Node> iter,
       Type valType,
-      ParseStack parseStack,
+      MappingStack mappingStack,
       MappingAction mappingAction)
     {
       var valueNode = iter.Current as ValueNode;
@@ -138,80 +138,81 @@ namespace CookComputing.XmlRpc
       object ret = "";
 
       if (valueNode is StringValue && valueNode.ImplicitValue)
-        CheckImplictString(valType, parseStack);
+        CheckImplictString(valType, mappingStack);
 
-      Type parsedType;
+      Type mappedType;
 
       object retObj = null;
       if (iter.Current is ArrayValue)
-        retObj = ParseArray(iter, valType, parseStack, mappingAction,
-          out parsedType);
+        retObj = MapArray(iter, valType, mappingStack, mappingAction,
+          out mappedType);
       else if (iter.Current is StructValue)
       {
         // if we don't know the expected struct type then we must
-        // parse the XML-RPC struct as an instance of XmlRpcStruct
+        // map the XML-RPC struct as an instance of XmlRpcStruct
         if (valType != null && valType != typeof(XmlRpcStruct)
           && !valType.IsSubclassOf(typeof(XmlRpcStruct)))
         {
-          retObj = ParseStruct(iter, valType, parseStack, mappingAction,
-            out parsedType);
+          retObj = MapStruct(iter, valType, mappingStack, mappingAction,
+            out mappedType);
         }
         else
         {
           if (valType == null || valType == typeof(object))
             valType = typeof(XmlRpcStruct);
           // TODO: do we need to validate type here?
-          retObj = ParseHashtable(iter, valType, parseStack, mappingAction,
-            out parsedType);
+          retObj = MapHashtable(iter, valType, mappingStack, mappingAction,
+            out mappedType);
         }
       }
       else if (iter.Current is Base64Value)
-        retObj = ParseBase64(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType);
+        retObj = MapBase64(valueNode.Value, valType, mappingStack, mappingAction,
+          out mappedType);
       else if (iter.Current is IntValue)
       {
-        retObj = ParseInt(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType);
+        retObj = MapInt(valueNode.Value, valType, mappingStack, mappingAction,
+          out mappedType);
       }
       else if (iter.Current is LongValue)
       {
-        retObj = ParseLong(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType);
+        retObj = MapLong(valueNode.Value, valType, mappingStack, mappingAction,
+          out mappedType);
       }
       else if (iter.Current is StringValue)
       {
-        retObj = ParseString(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType);
+        retObj = MapString(valueNode.Value, valType, mappingStack, mappingAction,
+          out mappedType);
       }
       else if (iter.Current is BooleanValue)
       {
-        retObj = ParseBoolean(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType);
+        retObj = MapBoolean(valueNode.Value, valType, mappingStack, mappingAction,
+          out mappedType);
       }
       else if (iter.Current is DoubleValue)
       {
-        retObj = ParseDouble(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType);
+        retObj = MapDouble(valueNode.Value, valType, mappingStack, mappingAction,
+          out mappedType);
       }
       else if (iter.Current is DateTimeValue)
       {
-        retObj = ParseDateTime(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType);
+        retObj = MapDateTime(valueNode.Value, valType, mappingStack, mappingAction,
+          out mappedType);
       }
       else if (iter.Current is NilValue)
       {
-        retObj = ParseNilValue(valueNode.Value, valType, parseStack, mappingAction,
-          out parsedType);
+        retObj = MapNilValue(valueNode.Value, valType, mappingStack, mappingAction,
+          out mappedType);
       }
 
       return retObj;
     }
 
-    private object ParseDateTime(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
+    private object MapDateTime(string value, Type valType, MappingStack mappingStack, 
+      MappingAction mappingAction, out Type mappedType)
     {
-      CheckExpectedType(valType, typeof(DateTime), parseStack);
-      parsedType = typeof(DateTime);
-      return OnStack("dateTime", parseStack, delegate()
+      CheckExpectedType(valType, typeof(DateTime), mappingStack);
+      mappedType = typeof(DateTime);
+      return OnStack("dateTime", mappingStack, delegate()
       {
         if (value == "" && MapEmptyDateTimeToMinValue)
           return DateTime.MinValue;
@@ -223,19 +224,20 @@ namespace CookComputing.XmlRpc
             || value == "00000000T00:00:00Z" || value == "0000-00-00T00:00:00"))
             retVal = DateTime.MinValue;
           else
-            throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
+            throw new XmlRpcInvalidXmlRpcException(mappingStack.MappingType
               + " contains invalid dateTime value "
-              + StackDump(parseStack));
+              + StackDump(mappingStack));
         }
         return retVal;
       });
     }
 
-    private object ParseDouble(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
+    private object MapDouble(string value, Type valType, MappingStack mappingStack, 
+      MappingAction mappingAction, out Type mappedType)
     {
-      CheckExpectedType(valType, typeof(double), parseStack);
-      parsedType = typeof(double);
-      return OnStack("double", parseStack, delegate()
+      CheckExpectedType(valType, typeof(double), mappingStack);
+      mappedType = typeof(double);
+      return OnStack("double", mappingStack, delegate()
       {
         try
         {
@@ -244,70 +246,75 @@ namespace CookComputing.XmlRpc
         }
         catch (Exception)
         {
-          throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
-            + " contains invalid double value " + StackDump(parseStack));
+          throw new XmlRpcInvalidXmlRpcException(mappingStack.MappingType
+            + " contains invalid double value " + StackDump(mappingStack));
         }
       });
     }
 
-    private object ParseBoolean(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
+    private object MapBoolean(string value, Type valType, MappingStack mappingStack, 
+      MappingAction mappingAction, out Type mappedType)
     {
-      CheckExpectedType(valType, typeof(bool), parseStack);
-      parsedType = typeof(bool);
-      return OnStack("boolean", parseStack, delegate()
+      CheckExpectedType(valType, typeof(bool), mappingStack);
+      mappedType = typeof(bool);
+      return OnStack("boolean", mappingStack, delegate()
       {
         if (value == "1")
           return true;
         else if (value == "0")
           return false;
         else
-          throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
+          throw new XmlRpcInvalidXmlRpcException(mappingStack.MappingType
             + " contains invalid boolean value "
-            + StackDump(parseStack));
+            + StackDump(mappingStack));
       });
     }
 
-    private object ParseString(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
+    private object MapString(string value, Type valType, MappingStack mappingStack, 
+      MappingAction mappingAction, out Type mappedType)
     {
-      CheckExpectedType(valType, typeof(string), parseStack);
-      parsedType = typeof(string);
-      return OnStack("string", parseStack, delegate()
+      CheckExpectedType(valType, typeof(string), mappingStack);
+      mappedType = typeof(string);
+      return OnStack("string", mappingStack, delegate()
       { return value; });
     }
 
-    private object ParseLong(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
+    private object MapLong(string value, Type valType, MappingStack mappingStack, 
+      MappingAction mappingAction, out Type mappedType)
     {
-      CheckExpectedType(valType, typeof(long), parseStack);
-      parsedType = typeof(long);
-      return OnStack("i8", parseStack, delegate()
+      CheckExpectedType(valType, typeof(long), mappingStack);
+      mappedType = typeof(long);
+      return OnStack("i8", mappingStack, delegate()
       {
         long ret;
         if (!Int64.TryParse(value, out ret))
-          throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
-            + " contains invalid i8 value " + StackDump(parseStack));
+          throw new XmlRpcInvalidXmlRpcException(mappingStack.MappingType
+            + " contains invalid i8 value " + StackDump(mappingStack));
         return ret;
       });
     }
 
-    private object ParseInt(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
+    private object MapInt(string value, Type valType, MappingStack mappingStack, 
+      MappingAction mappingAction, out Type mappedType)
     {
-      CheckExpectedType(valType, typeof(int), parseStack);
-      parsedType = typeof(int);
-      return OnStack("integer", parseStack, delegate()
+      CheckExpectedType(valType, typeof(int), mappingStack);
+      mappedType = typeof(int);
+      return OnStack("integer", mappingStack, delegate()
       {
         int ret;
         if (!Int32.TryParse(value, out ret))
-          throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
-            + " contains invalid int value " + StackDump(parseStack));
+          throw new XmlRpcInvalidXmlRpcException(mappingStack.MappingType
+            + " contains invalid int value " + StackDump(mappingStack));
         return ret;
       });
     }
 
-    private object ParseBase64(string value, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
+    private object MapBase64(string value, Type valType, MappingStack mappingStack, 
+      MappingAction mappingAction, out Type mappedType)
     {
-      CheckExpectedType(valType, typeof(byte[]), parseStack);
-      parsedType = typeof(int);
-      return OnStack("base64", parseStack, delegate()
+      CheckExpectedType(valType, typeof(byte[]), mappingStack);
+      mappedType = typeof(int);
+      return OnStack("base64", mappingStack, delegate()
       {
         if (value == "")
           return new byte[0];
@@ -320,38 +327,40 @@ namespace CookComputing.XmlRpc
           }
           catch (Exception)
           {
-            throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
+            throw new XmlRpcInvalidXmlRpcException(mappingStack.MappingType
               + " contains invalid base64 value "
-              + StackDump(parseStack));
+              + StackDump(mappingStack));
           }
         }
       });
     }
 
-    private object ParseNilValue(string p, Type type, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
+    private object MapNilValue(string p, Type type, MappingStack mappingStack, 
+      MappingAction mappingAction, out Type mappedType)
     {
       if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
       {
-        parsedType = type;
+        mappedType = type;
         return null;
       }
       else if (!type.IsPrimitive || !type.IsValueType)
       {
-        parsedType = type;
+        mappedType = type;
         return null;
       }
       else
       {
-        parsedType = null;
+        mappedType = null;
         throw new NotImplementedException(); // TODO: fix
       }
     }
 
-    protected object ParseHashtable(IEnumerator<Node> iter, Type valType, ParseStack parseStack, MappingAction mappingAction, out Type parsedType)
+    protected object MapHashtable(IEnumerator<Node> iter, Type valType, MappingStack mappingStack, 
+      MappingAction mappingAction, out Type mappedType)
     {
-      parsedType = null;
+      mappedType = null;
       XmlRpcStruct retObj = new XmlRpcStruct();
-      parseStack.Push("struct mapped to XmlRpcStruct");
+      mappingStack.Push("struct mapped to XmlRpcStruct");
       try
       {
         while (iter.MoveNext() && iter.Current is StructMember)
@@ -359,16 +368,16 @@ namespace CookComputing.XmlRpc
           string rpcName = (iter.Current as StructMember).Value;
           if (retObj.ContainsKey(rpcName)
             && !IgnoreDuplicateMembers)
-            throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
+            throw new XmlRpcInvalidXmlRpcException(mappingStack.MappingType
               + " contains struct value with duplicate member "
               + rpcName
-              + " " + StackDump(parseStack));
+              + " " + StackDump(mappingStack));
           iter.MoveNext();
 
           object value = OnStack(String.Format("member {0}", rpcName),
-            parseStack, delegate()
+            mappingStack, delegate()
             {
-              return ParseValueNode(iter, null, parseStack, mappingAction);
+              return MapValueNode(iter, null, mappingStack, mappingAction);
             });
           if (!retObj.ContainsKey(rpcName))
             retObj[rpcName] = value;
@@ -376,22 +385,22 @@ namespace CookComputing.XmlRpc
       }
       finally
       {
-        parseStack.Pop();
+        mappingStack.Pop();
       }
       return retObj;
     }
 
-    private object ParseStruct(IEnumerator<Node> iter, Type valueType, ParseStack parseStack,
-      MappingAction mappingAction, out Type parsedType)
+    private object MapStruct(IEnumerator<Node> iter, Type valueType, MappingStack mappingStack,
+      MappingAction mappingAction, out Type mappedType)
     {
-      parsedType = null;
+      mappedType = null;
 
       if (valueType.IsPrimitive)
       {
-        throw new XmlRpcTypeMismatchException(parseStack.ParseType
+        throw new XmlRpcTypeMismatchException(mappingStack.MappingType
           + " contains struct value where "
           + XmlRpcTypeInfo.GetXmlRpcTypeString(valueType)
-          + " expected " + StackDump(parseStack));
+          + " expected " + StackDump(mappingStack));
       }
       if (valueType.IsGenericType
         && valueType.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -405,24 +414,24 @@ namespace CookComputing.XmlRpc
       }
       catch (Exception)
       {
-        throw new XmlRpcTypeMismatchException(parseStack.ParseType
+        throw new XmlRpcTypeMismatchException(mappingStack.MappingType
           + " contains struct value where "
           + XmlRpcTypeInfo.GetXmlRpcTypeString(valueType)
           + " expected (as type " + valueType.Name + ") "
-          + StackDump(parseStack));
+          + StackDump(mappingStack));
       }
       // Note: mapping action on a struct is only applied locally - it 
       // does not override the global mapping action when members of the 
-      // struct are parsed
+      // struct are mapped
       MappingAction localAction = mappingAction;
       if (valueType != null)
       {
-        parseStack.Push("struct mapped to type " + valueType.Name);
+        mappingStack.Push("struct mapped to type " + valueType.Name);
         localAction = StructMappingAction(valueType, mappingAction);
       }
       else
       {
-        parseStack.Push("struct");
+        mappingStack.Push("struct");
       }
       // create map of field names and remove each name from it as 
       // processed so we can determine which fields are missing
@@ -440,10 +449,10 @@ namespace CookComputing.XmlRpc
           if (rpcNames.Contains(rpcName))
           {
             if (!IgnoreDuplicateMembers)
-              throw new XmlRpcInvalidXmlRpcException(parseStack.ParseType
+              throw new XmlRpcInvalidXmlRpcException(mappingStack.MappingType
                 + " contains struct value with duplicate member "
                 + rpcName
-                + " " + StackDump(parseStack));
+                + " " + StackDump(mappingStack));
             else
               continue;
           }
@@ -470,22 +479,22 @@ namespace CookComputing.XmlRpc
           {
             if (Attribute.IsDefined(mi, typeof(NonSerializedAttribute)))
             {
-              parseStack.Push(String.Format("member {0}", name));
+              mappingStack.Push(String.Format("member {0}", name));
               throw new XmlRpcNonSerializedMember("Cannot map XML-RPC struct "
               + "member onto member marked as [NonSerialized]: "
-              + " " + StackDump(parseStack));
+              + " " + StackDump(mappingStack));
             }
           }
           Type memberType = mi.MemberType == MemberTypes.Field
           ? (mi as FieldInfo).FieldType : (mi as PropertyInfo).PropertyType;
-          string parseMsg = valueType == null
+          string mappingMsg = valueType == null
               ? String.Format("member {0}", name)
               : String.Format("member {0} mapped to type {1}", name, memberType.Name);
 
           iter.MoveNext();
-          object valObj = OnStack(parseMsg, parseStack, delegate()
+          object valObj = OnStack(mappingMsg, mappingStack, delegate()
           {
-            return ParseValueNode(iter, memberType, parseStack, mappingAction);
+            return MapValueNode(iter, memberType, mappingStack, mappingAction);
           });
 
           if (mi.MemberType == MemberTypes.Field)
@@ -496,45 +505,45 @@ namespace CookComputing.XmlRpc
         }
 
         if (localAction == MappingAction.Error && names.Count > 0)
-          ReportMissingMembers(valueType, names, parseStack);
+          ReportMissingMembers(valueType, names, mappingStack);
         return retObj;
       }
       finally
       {
-        parseStack.Pop();
+        mappingStack.Pop();
       }
     }
 
-    private object ParseArray(IEnumerator<Node> iter, Type valType,
-      ParseStack parseStack, MappingAction mappingAction,
-      out Type parsedType)
+    private object MapArray(IEnumerator<Node> iter, Type valType, 
+      MappingStack mappingStack, MappingAction mappingAction,
+      out Type mappedType)
     {
-      parsedType = null;
+      mappedType = null;
       // required type must be an array
       if (valType != null
         && !(valType.IsArray == true
             || valType == typeof(Array)
             || valType == typeof(object)))
       {
-        throw new XmlRpcTypeMismatchException(parseStack.ParseType
+        throw new XmlRpcTypeMismatchException(mappingStack.MappingType
           + " contains array value where "
           + XmlRpcTypeInfo.GetXmlRpcTypeString(valType)
-          + " expected " + StackDump(parseStack));
+          + " expected " + StackDump(mappingStack));
       }
       if (valType != null)
       {
         XmlRpcType xmlRpcType = XmlRpcTypeInfo.GetXmlRpcType(valType);
         if (xmlRpcType == XmlRpcType.tMultiDimArray)
         {
-          parseStack.Push("array mapped to type " + valType.Name);
-          Object ret = ParseMultiDimArray(iter, valType, parseStack,
+          mappingStack.Push("array mapped to type " + valType.Name);
+          Object ret = MapMultiDimArray(iter, valType, mappingStack,
             mappingAction);
           return ret;
         }
-        parseStack.Push("array mapped to type " + valType.Name);
+        mappingStack.Push("array mapped to type " + valType.Name);
       }
       else
-        parseStack.Push("array");
+        mappingStack.Push("array");
 
       var values = new List<object>();
       Type elemType = DetermineArrayItemType(valType);
@@ -544,10 +553,10 @@ namespace CookComputing.XmlRpc
 
       while (iter.MoveNext() && iter.Current is ValueNode)
       {
-        parseStack.Push(String.Format("element {0}", values.Count));
-        object value = ParseValueNode(iter, elemType, parseStack, mappingAction);
+        mappingStack.Push(String.Format("element {0}", values.Count));
+        object value = MapValueNode(iter, elemType, mappingStack, mappingAction);
         values.Add(value);
-        parseStack.Pop();
+        mappingStack.Pop();
       }
 
       foreach (object value in values)
@@ -587,7 +596,7 @@ namespace CookComputing.XmlRpc
         ((Array)retObj).SetValue(values[j], j);
       }
 
-      parseStack.Pop();
+      mappingStack.Pop();
 
       return retObj;
     }
@@ -619,19 +628,19 @@ namespace CookComputing.XmlRpc
     }
 
 
-    private void CheckImplictString(Type valType, ParseStack parseStack)
+    private void CheckImplictString(Type valType, MappingStack mappingStack)
     {
       if (valType != null && valType != typeof(string))
       {
-        throw new XmlRpcTypeMismatchException(parseStack.ParseType
+        throw new XmlRpcTypeMismatchException(mappingStack.MappingType
           + " contains implicit string value where "
           + XmlRpcTypeInfo.GetXmlRpcTypeString(valType)
-          + " expected " + StackDump(parseStack));
+          + " expected " + StackDump(mappingStack));
       }
     }
 
-    Object ParseMultiDimArray(IEnumerator<Node> iter, Type ValueType,
-      ParseStack parseStack, MappingAction mappingAction)
+    Object MapMultiDimArray(IEnumerator<Node> iter, Type ValueType,
+      MappingStack mappingStack, MappingAction mappingAction)
     {
       // parse the type name to get element type and array rank
 #if (!COMPACT_FRAMEWORK)
@@ -645,15 +654,15 @@ namespace CookComputing.XmlRpc
         ValueType.FullName.Length-checkMultiDim[0].Length-2);
       int rank = commas.Length+1;
 #endif
-      // elements will be stored sequentially as nested arrays are parsed
+      // elements will be stored sequentially as nested arrays are mapped
       var elements = new List<object>();
       // create array to store length of each dimension - initialize to 
       // all zeroes so that when parsing we can determine if an array for 
-      // that dimension has been parsed already
+      // that dimension has been mapped already
       int[] dimLengths = new int[rank];
       dimLengths.Initialize();
-      ParseMultiDimElements(iter, rank, 0, elemType, elements, dimLengths,
-        parseStack, mappingAction);
+      MapMultiDimElements(iter, rank, 0, elemType, elements, dimLengths,
+        mappingStack, mappingAction);
       // build arguments to define array dimensions and create the array
       Object[] args = new Object[dimLengths.Length];
       for (int argi = 0; argi < dimLengths.Length; argi++)
@@ -678,9 +687,9 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
-    void ParseMultiDimElements(IEnumerator<Node> iter, int Rank, int CurRank,
+    void MapMultiDimElements(IEnumerator<Node> iter, int Rank, int CurRank,
       Type elemType, List<object> elements, int[] dimLengths,
-      ParseStack parseStack, MappingAction mappingAction)
+      MappingStack mappingStack, MappingAction mappingAction)
     {
       //XmlNode dataNode = SelectSingleNode(node, "data");
       //XmlNode[] childNodes = SelectNodes(dataNode, "value");
@@ -698,8 +707,8 @@ namespace CookComputing.XmlRpc
         while (iter.MoveNext() && iter.Current is ArrayValue)
         {
           nodeCount++;
-          ParseMultiDimElements(iter, Rank, CurRank + 1, elemType,
-            elements, dimLengths, parseStack, mappingAction);
+          MapMultiDimElements(iter, Rank, CurRank + 1, elemType,
+            elements, dimLengths, mappingStack, mappingAction);
         }
       }
       else
@@ -707,7 +716,7 @@ namespace CookComputing.XmlRpc
         while (iter.MoveNext() && iter.Current is ValueNode)
         {
           nodeCount++;
-          object value = ParseValueNode(iter, elemType, parseStack, mappingAction);
+          object value = MapValueNode(iter, elemType, mappingStack, mappingAction);
           elements.Add(value);
         }
       }
@@ -717,13 +726,13 @@ namespace CookComputing.XmlRpc
     public Object ParseValueElement(
       XmlReader rdr,
       Type valType,
-      ParseStack parseStack,
+      MappingStack mappingStack,
       MappingAction mappingAction)
     {
       var iter = new XmlRpcParser().ParseValue(rdr).GetEnumerator();
       iter.MoveNext();
 
-      return ParseValueNode(iter, valType, parseStack, mappingAction);
+      return MapValueNode(iter, valType, mappingStack, mappingAction);
     }
 
     private static void CreateFieldNamesMap(Type valueType, List<string> names)
@@ -742,41 +751,41 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    private void CheckExpectedType(Type actualType, Type expectedType, ParseStack parseStack)
+    private void CheckExpectedType(Type actualType, Type expectedType, MappingStack mappingStack)
     {
       if (actualType != null && actualType != typeof(Object)
         && actualType != expectedType
         && (expectedType.IsValueType
           && actualType != typeof(Nullable<>).MakeGenericType(expectedType)))
       {
-        throw new XmlRpcTypeMismatchException(parseStack.ParseType +
+        throw new XmlRpcTypeMismatchException(mappingStack.MappingType +
           " contains "
           + XmlRpcTypeInfo.GetXmlRpcTypeString(expectedType)
           + "value where "
           + XmlRpcTypeInfo.GetXmlRpcTypeString(actualType)
-          + " expected " + StackDump(parseStack));
+          + " expected " + StackDump(mappingStack));
       }
     }
 
     delegate T Func<T>();
 
-    private T OnStack<T>(string p, ParseStack parseStack, Func<T> func)
+    private T OnStack<T>(string p, MappingStack mappingStack, Func<T> func)
     {
-      parseStack.Push(p);
+      mappingStack.Push(p);
       try
       {
         return func();
       }
       finally
       {
-        parseStack.Pop();
+        mappingStack.Pop();
       }
     }
 
     void ReportMissingMembers(
       Type valueType,
       List<string> names,
-      ParseStack parseStack)
+      MappingStack mappingStack)
     {
       StringBuilder sb = new StringBuilder();
       int errorCount = 0;
@@ -798,9 +807,9 @@ namespace CookComputing.XmlRpc
         string plural = "";
         if (errorCount > 1)
           plural = "s";
-        throw new XmlRpcTypeMismatchException(parseStack.ParseType
+        throw new XmlRpcTypeMismatchException(mappingStack.MappingType
           + " contains struct value with missing non-optional member"
-          + plural + ": " + sb.ToString() + " " + StackDump(parseStack));
+          + plural + ": " + sb.ToString() + " " + StackDump(mappingStack));
       }
     }
 
@@ -878,15 +887,15 @@ namespace CookComputing.XmlRpc
       return currentAction;
     }
 
-    string StackDump(ParseStack parseStack)
+    string StackDump(MappingStack mappingStack)
     {
       StringBuilder sb = new StringBuilder();
-      foreach (string elem in parseStack)
+      foreach (string elem in mappingStack)
       {
         sb.Insert(0, elem);
         sb.Insert(0, " : ");
       }
-      sb.Insert(0, parseStack.ParseType);
+      sb.Insert(0, mappingStack.MappingType);
       sb.Insert(0, "[");
       sb.Append("]");
       return sb.ToString();
