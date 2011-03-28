@@ -420,15 +420,10 @@ namespace CookComputing.XmlRpc
     public SimpleValueNode(int depth) : base(depth) { }
 
     public SimpleValueNode(int depth, string value)
-      : base(depth, value)
-    {
-      Value = value;
-    }
+      : base(depth, value)  { }
 
     public SimpleValueNode(int depth, string value, bool implicitValue)
-      : base(depth, value, implicitValue)
-    {
-    }
+      : base(depth, value, implicitValue) { }
   }
 
   public class ComplexValueNode : ValueNode
@@ -444,9 +439,7 @@ namespace CookComputing.XmlRpc
   public class StringValue : SimpleValueNode
   {
     public StringValue(int depth, string value, bool implicitValue)
-      : base(depth, value, implicitValue)
-    {
-    }
+      : base(depth, value, implicitValue) { }
   }
 
   public class IntValue : SimpleValueNode
@@ -479,6 +472,31 @@ namespace CookComputing.XmlRpc
     public Base64Value(int depth, string value) : base(depth, value) { }
   }
 
+  public class NilValue : SimpleValueNode
+  {
+    public NilValue(int depth) : base(depth) { }
+  }
+
+  public class StructMember : ValueNode
+  {
+    public StructMember(int depth, string name) : base(depth, name) { }
+  }
+
+  public class EndStructValue : EndComplexValueNode
+  {
+    public EndStructValue(int depth) : base(depth) { }
+  }
+
+  public class ArrayValue : ComplexValueNode
+  {
+    public ArrayValue(int depth) : base(depth) { }
+  }
+
+  public class EndArrayValue : EndComplexValueNode
+  {
+    public EndArrayValue(int depth) : base(depth) { }
+  }
+
   public class MethodName : Node
   {
     public MethodName(int depth, string name) : base(depth)  
@@ -487,11 +505,6 @@ namespace CookComputing.XmlRpc
     }
 
     public string Name { get; set; }
-  }
-
-  public class StructMember : ValueNode
-  {
-    public StructMember(int depth, string name) : base(depth, name) { }
   }
 
   public class FaultNode : Node 
@@ -517,25 +530,5 @@ namespace CookComputing.XmlRpc
   public class StructValue : ComplexValueNode
   {
     public StructValue(int depth) : base(depth) { }
-  }
-
-  public class EndStructValue : EndComplexValueNode
-  {
-    public EndStructValue(int depth) : base(depth) { }
-  }
-
-  public class ArrayValue : ComplexValueNode 
-  {
-    public ArrayValue(int depth) : base(depth) { }
-  }
-
-  public class EndArrayValue : EndComplexValueNode
-  {
-    public EndArrayValue(int depth) : base(depth) { }
-  }
-
-  public class NilValue : SimpleValueNode
-  {
-    public NilValue(int depth) : base(depth) { }
   }
 }
