@@ -75,6 +75,7 @@
     <Compile Include="deserializeresponsetest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="enumtest.cs" />
     <Compile Include="invoketest.cs">
       <SubType>Component</SubType>
     </Compile>
