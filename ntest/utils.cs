@@ -120,6 +120,25 @@ namespace ntest
       return obj;
     }
 
+    public static object ParseValue(string xml, Type valueType)
+    {
+      MappingAction action = MappingAction.Error;
+      //Type parsedType;
+      //Type parsedArrayType;
+
+      StringReader sr = new StringReader(xml);
+      XmlTextReader rdr = new XmlTextReader(sr);
+      rdr.ProhibitDtd = true;
+      rdr.WhitespaceHandling = WhitespaceHandling.All;
+      rdr.MoveToElement();
+      MappingStack parseStack = new MappingStack("value");
+      var deser = new XmlRpcDeserializer();
+      object obj = deser.ParseValueElement(rdr, valueType, parseStack, action);
+      return obj;
+    }
+    
+
+
     static XmlNode SelectValueNode(XmlNode valueNode)
     {
       // an XML-RPC value is either held as the child node of a <value> element

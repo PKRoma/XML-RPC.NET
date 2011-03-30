@@ -62,5 +62,28 @@ namespace ntest
       TestEnum ret = (TestEnum)response.retVal;
       Assert.AreEqual(TestEnum.c, ret);
     }
+
+    public enum LongEnum2 : long
+    {
+      i = (long)Int32.MaxValue + 1,
+      j = 1,
+      k = 0
+    }
+
+    public enum TestEnum3 : long
+    {
+      i = (long)Int32.MaxValue + 1,
+      j = 1,
+      k = 0
+    }
+
+    [Test]
+    public void String_StringType()
+    {
+      string xml = @"<value><string>astring</string></value>";
+      object obj = Utils.ParseValue(xml, typeof(string));
+      Assert.AreEqual("astring", (string)obj);
+    }
   }
+
 }
