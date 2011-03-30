@@ -190,6 +190,7 @@
     <Compile Include="BrowsableAttribute.cs" />
     <Compile Include="NonSerializedAttribute.cs" />
     <Compile Include="SerializableAttribute.cs" />
+    <Compile Include="XmlRpcXmlReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

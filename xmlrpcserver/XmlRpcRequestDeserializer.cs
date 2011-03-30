@@ -46,7 +46,7 @@ namespace CookComputing.XmlRpc
       if (stm == null)
         throw new ArgumentNullException("stm",
           "XmlRpcSerializer.DeserializeRequest");
-      XmlReader xmlRdr = CreateXmlReader(stm);
+      XmlReader xmlRdr = XmlRpcXmlReader.Create(stm);
       return DeserializeRequest(xmlRdr, svcType);
     }
 
@@ -55,7 +55,7 @@ namespace CookComputing.XmlRpc
       if (txtrdr == null)
         throw new ArgumentNullException("txtrdr",
           "XmlRpcSerializer.DeserializeRequest");
-      XmlReader xmlRdr = CreateXmlReader(txtrdr);
+      XmlReader xmlRdr = XmlRpcXmlReader.Create(txtrdr);
       return DeserializeRequest(xmlRdr, svcType);
     }
 

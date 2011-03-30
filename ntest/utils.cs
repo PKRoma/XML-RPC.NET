@@ -34,9 +34,7 @@ namespace ntest
         s = trdr.ReadLine();
       }            
       stm.Position = 0;
-      XmlTextReader rdr = new XmlTextReader(stm);
-      rdr.ProhibitDtd = true;
-      rdr.WhitespaceHandling = WhitespaceHandling.All;
+      XmlReader rdr = XmlRpcXmlReader.Create(stm);
       return rdr;
     }
     	
@@ -67,9 +65,7 @@ namespace ntest
       out Type parsedArrayType)
     {
       StringReader sr = new StringReader(xml);
-      XmlTextReader rdr = new XmlTextReader(sr);
-      rdr.ProhibitDtd = true;
-      rdr.WhitespaceHandling = WhitespaceHandling.All;
+      XmlReader rdr = XmlRpcXmlReader.Create(sr);
       return Parse(rdr, valueType, action, 
         out parsedType, out parsedArrayType);
     }
@@ -98,9 +94,7 @@ namespace ntest
       out Type parsedArrayType)
     {
       StringReader sr = new StringReader(xml);
-      XmlTextReader rdr = new XmlTextReader(sr);
-      rdr.ProhibitDtd = true;
-      rdr.WhitespaceHandling = WhitespaceHandling.All;
+      XmlReader rdr = XmlRpcXmlReader.Create(sr);
       return Parse(rdr, valueType, action, serializer,
         out parsedType, out parsedArrayType);
     }
@@ -127,10 +121,8 @@ namespace ntest
       //Type parsedArrayType;
 
       StringReader sr = new StringReader(xml);
-      XmlTextReader rdr = new XmlTextReader(sr);
-      rdr.ProhibitDtd = true;
-      rdr.WhitespaceHandling = WhitespaceHandling.All;
-      rdr.MoveToElement();
+      XmlReader rdr = XmlRpcXmlReader.Create(sr);
+      rdr.MoveToContent();
       MappingStack parseStack = new MappingStack("value");
       var deser = new XmlRpcDeserializer();
       object obj = deser.ParseValueElement(rdr, valueType, parseStack, action);

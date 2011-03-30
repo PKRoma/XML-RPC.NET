@@ -204,6 +204,7 @@
     <Compile Include="XmlRpcUrlAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XmlRpcXmlReader.cs" />
     <Compile Include="XmlRpcXmlWriter.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -73,13 +73,7 @@ namespace CookComputing.XmlRpc
           }
         }
       }
-      var settings = new XmlReaderSettings
-      {
-        IgnoreComments = true,
-        IgnoreProcessingInstructions = true,
-        IgnoreWhitespace = false,
-      };
-      XmlReader xmlRdr = XmlReader.Create(stm, settings);
+      XmlReader xmlRdr = XmlRpcXmlReader.Create(stm);
       return DeserializeResponse(xmlRdr, svcType);
     }
 
@@ -88,13 +82,7 @@ namespace CookComputing.XmlRpc
       if (txtrdr == null)
         throw new ArgumentNullException("txtrdr",
           "XmlRpcSerializer.DeserializeResponse");
-      var settings = new XmlReaderSettings
-      {
-        IgnoreComments = true,
-        IgnoreProcessingInstructions = true,
-        IgnoreWhitespace = false,
-      };
-      XmlReader xmlRdr = XmlReader.Create(txtrdr, settings);
+      XmlReader xmlRdr = XmlRpcXmlReader.Create(txtrdr);
       return DeserializeResponse(xmlRdr, svcType);
     }
 

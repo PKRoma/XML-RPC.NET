@@ -6,7 +6,7 @@ using System.IO;
 
 namespace CookComputing.XmlRpc
 {
-  public class XmlRpcXmlWriter
+  public static class XmlRpcXmlWriter
   {
     public static XmlWriter Create(Stream stm, XmlRpcFormatSettings settings)
     {

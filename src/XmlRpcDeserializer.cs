@@ -79,50 +79,6 @@ namespace CookComputing.XmlRpc
       get { return (m_nonStandard & XmlRpcNonStandard.MapZerosDateTimeToMinValue) != 0; }
     }
 
-    protected static XmlReader CreateXmlReader(Stream stm)
-    {
-#if (!SILVERLIGHT)
-      XmlTextReader xmlRdr = new XmlTextReader(stm);
-      ConfigureXmlTextReader(xmlRdr);
-      return xmlRdr;
-#else
-      XmlReader xmlRdr = XmlReader.Create(stm, ConfigureXmlReaderSettings());
-      return xmlRdr;
-#endif
-    }
-
-    protected static XmlReader CreateXmlReader(TextReader txtrdr)
-    {
-#if (!SILVERLIGHT)
-      XmlTextReader xmlRdr = new XmlTextReader(txtrdr);
-      ConfigureXmlTextReader(xmlRdr);
-      return xmlRdr;
-#else
-      XmlReader xmlRdr = XmlReader.Create(txtrdr, ConfigureXmlReaderSettings());
-      return xmlRdr;
-#endif
-    }
-
-#if (!SILVERLIGHT)
-    private static void ConfigureXmlTextReader(XmlTextReader xmlRdr)
-    {
-      xmlRdr.Normalization = false;
-      xmlRdr.ProhibitDtd = true;
-      xmlRdr.WhitespaceHandling = WhitespaceHandling.All;
-    }
-#else
-    private static XmlReaderSettings ConfigureXmlReaderSettings()
-    {
-      var settings = new XmlReaderSettings
-      {
-        IgnoreComments = true,
-        IgnoreProcessingInstructions = true,
-        IgnoreWhitespace = false,
-      };
-      return settings;
-    }
-#endif
-
     public Object MapValueNode(
       IEnumerator<Node> iter,
       Type valType,
