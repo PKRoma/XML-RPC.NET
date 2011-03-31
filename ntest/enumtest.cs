@@ -12,10 +12,17 @@ namespace ntest
     c,
   }
 
+  public enum LongEnum2 : long
+  {
+    i = 0,
+    j = 1,
+    k = (long)Int32.MaxValue + 1
+  }
+
   class enumtest
   {
     [Test]
-    public void Serialize()
+    public void SerializeRequest()
     {
       Stream stm = new MemoryStream();
       XmlRpcRequest req = new XmlRpcRequest();
@@ -42,6 +49,22 @@ namespace ntest
     }
 
     [Test]
+    public void SerializeIntEnum()
+    {
+      string xml = Utils.SerializeValue(666, false);
+      Assert.AreEqual("<value><i4>2</i4>", xml);
+    }
+
+    [Test]
+    public void SerializeLongEnum()
+    {
+      long lnum = (long)Int32.MaxValue + 1;
+      string xml = Utils.SerializeValue(lnum, false);
+      Assert.AreEqual("<value><i4>" + lnum.ToString() + "</i4>", xml);
+    }
+
+
+    [Test]
     public void Deserialize()
     {
       string xml = 
@@ -63,27 +86,20 @@ namespace ntest
       Assert.AreEqual(TestEnum.c, ret);
     }
 
-    public enum LongEnum2 : long
-    {
-      i = (long)Int32.MaxValue + 1,
-      j = 1,
-      k = 0
-    }
-
-    public enum TestEnum3 : long
-    {
-      i = (long)Int32.MaxValue + 1,
-      j = 1,
-      k = 0
-    }
-
-    [Test]
-    public void String_StringType()
-    {
-      string xml = @"<value><string>astring</string></value>";
-      object obj = Utils.ParseValue(xml, typeof(string));
-      Assert.AreEqual("astring", (string)obj);
-    }
   }
-
 }
+
+
+/*
+Test cases : 
+
+ser - number mapped to i4 or i8 depending on enum type
+
+deser - number to be deserialized doesnt exist in enum
+deser - number overflows range of enum
+
+
+
+
+
+*/

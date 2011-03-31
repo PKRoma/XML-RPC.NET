@@ -79,5 +79,7 @@ namespace CookComputing.XmlRpc
       set { m_encoding = value; }
     }
     Encoding m_encoding = null;
+
+    public bool OmitXmlDeclaration { get; set; }
   }
 }

@@ -128,8 +128,19 @@ namespace ntest
       object obj = deser.ParseValueElement(rdr, valueType, parseStack, action);
       return obj;
     }
-    
 
+    public static string SerializeValue(object value, bool indent)
+    {
+      var memStm = new MemoryStream();
+      var writer = XmlRpcXmlWriter.Create(memStm,
+        new XmlRpcFormatSettings { OmitXmlDeclaration = true, UseIndentation = indent });
+      var serializer = new XmlRpcSerializer();
+      serializer.Serialize(writer, value, NullMappingAction.Error);
+      writer.Flush();
+      memStm.Position = 0;
+      string xml = new StreamReader(memStm).ReadToEnd();
+      return xml;
+    }
 
     static XmlNode SelectValueNode(XmlNode valueNode)
     {

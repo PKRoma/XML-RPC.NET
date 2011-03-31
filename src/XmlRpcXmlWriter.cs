@@ -25,6 +25,7 @@ namespace CookComputing.XmlRpc
           IndentChars = new string(' ', settings.Indentation),
           Encoding = settings.XmlEncoding,
           NewLineHandling = NewLineHandling.None,
+          OmitXmlDeclaration = settings.OmitXmlDeclaration,
         };
       }
       else
@@ -32,7 +33,8 @@ namespace CookComputing.XmlRpc
         return new XmlWriterSettings
         {
           Indent = false,
-          Encoding = settings.XmlEncoding
+          Encoding = settings.XmlEncoding,
+          OmitXmlDeclaration = settings.OmitXmlDeclaration,
         };
       }
     }
