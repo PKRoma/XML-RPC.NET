@@ -17,45 +17,16 @@ namespace ntest
       NullMappingAction action)
     {
       Stream stm = new MemoryStream();
-      XmlTextWriter xtw = new XmlTextWriter(stm, Encoding.UTF8);
-      xtw.Formatting = Formatting.Indented;
-      xtw.Indentation = 2;
+      XmlWriter xtw = XmlRpcXmlWriter.Create(stm, new XmlRpcFormatSettings());
       xtw.WriteStartDocument();      
       XmlRpcSerializer ser = new XmlRpcSerializer();
       ser.Serialize(xtw, obj, action); 
       xtw.Flush();
-      //Console.WriteLine(testName);
       stm.Position = 0;    
-      TextReader trdr = new StreamReader(stm, new UTF8Encoding(), true, 4096);
-      String s = trdr.ReadLine();
-      while (s != null)
-      {
-        //Console.WriteLine(s);
-        s = trdr.ReadLine();
-      }            
-      stm.Position = 0;
       XmlReader rdr = XmlRpcXmlReader.Create(stm);
       return rdr;
     }
     	
-    public static string SerializeToString(
-      string testName,
-      object obj, 
-      NullMappingAction action)
-    {
-      StringWriter strwrtr = new StringWriter();
-      XmlTextWriter xtw = new XmlTextWriter(strwrtr);
-      //      xtw.Formatting = formatting;
-      //      xtw.Indentation = indentation;
-      xtw.WriteStartDocument();      
-      XmlRpcSerializer ser = new XmlRpcSerializer();
-      ser.Serialize(xtw, obj, action); 
-      xtw.Flush();
-      //Console.WriteLine(testName);
-      //Console.WriteLine(strwrtr.ToString());
-      return strwrtr.ToString();
-    }
-
     //----------------------------------------------------------------------// 
     public static object Parse(
       string xml, 
@@ -117,8 +88,6 @@ namespace ntest
     public static object ParseValue(string xml, Type valueType)
     {
       MappingAction action = MappingAction.Error;
-      //Type parsedType;
-      //Type parsedArrayType;
 
       StringReader sr = new StringReader(xml);
       XmlReader rdr = XmlRpcXmlReader.Create(sr);
