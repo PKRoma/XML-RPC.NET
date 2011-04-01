@@ -238,4 +238,14 @@ namespace CookComputing.XmlRpc
       : base(msg, innerEx) { }
   }
 
+  public class XmlRpcInvalidEnumValue : XmlRpcException
+  {
+    public XmlRpcInvalidEnumValue() { }
+
+    public XmlRpcInvalidEnumValue(string msg)
+      : base(msg) { }
+
+    public XmlRpcInvalidEnumValue(string msg, Exception innerEx)
+      : base(msg, innerEx) { }
+  }
 }

@@ -5,28 +5,30 @@ using NUnit.Framework;
 
 namespace ntest
 {
-  public enum TestEnum
+  public enum IntEnum
   {
-    a,
-    b,
-    c,
+    Zero,
+    One,
+    Two,
   }
 
-  public enum LongEnum2 : long
+  public enum LongEnum : long
   {
-    i = 0,
-    j = 1,
-    k = (long)Int32.MaxValue + 1
+    Zero = 0,
+    One = 1,
+    MaxIntPlusOne = (long)Int32.MaxValue + 1,
   }
 
   class enumtest
   {
+    const long maxIntPlusOne = (long)Int32.MaxValue + 1;
+
     [Test]
     public void SerializeRequest()
     {
       Stream stm = new MemoryStream();
       XmlRpcRequest req = new XmlRpcRequest();
-      req.args = new Object[] { TestEnum.c };
+      req.args = new Object[] { IntEnum.Two };
       req.method = "Foo";
       var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
@@ -60,7 +62,7 @@ namespace ntest
     {
       long lnum = (long)Int32.MaxValue + 1;
       string xml = Utils.SerializeValue(lnum, false);
-      Assert.AreEqual("<value><i4>" + lnum.ToString() + "</i4>", xml);
+      Assert.AreEqual("<value><i4>" + maxIntPlusOne.ToString() + "</i4>", xml);
     }
 
 
@@ -81,24 +83,51 @@ namespace ntest
       StringReader sr1 = new StringReader(xml);
       var deserializer = new XmlRpcResponseDeserializer();
       XmlRpcResponse response = deserializer.DeserializeResponse(sr1,
-        typeof(TestEnum));
-      TestEnum ret = (TestEnum)response.retVal;
-      Assert.AreEqual(TestEnum.c, ret);
+        typeof(IntEnum));
+      IntEnum ret = (IntEnum)response.retVal;
+      Assert.AreEqual(IntEnum.Two, ret);
     }
 
+
+    [Test]
+    public void DeserializeIntEnum()
+    {
+      string xml = "<value><i4>2</i4>";
+      object o = Utils.ParseValue(xml, typeof(IntEnum));
+      Assert.IsInstanceOf<IntEnum>(o);
+      Assert.AreEqual(IntEnum.Two, o);
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcInvalidEnumValue))]
+    public void DeserializeMissingValue()
+    {
+      string xml = "<value><i4>1234</i4>";
+      object o = Utils.ParseValue(xml, typeof(IntEnum));
+      Assert.IsInstanceOf<IntEnum>(o);
+      Assert.AreEqual(IntEnum.Two, o);
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcInvalidEnumValue))]
+    public void DeserializeIntOverflow()
+    {
+      string xml = "<value><i4>" + maxIntPlusOne.ToString() + "</i4>";
+      object o = Utils.ParseValue(xml, typeof(IntEnum));
+    }
   }
 }
 
 
 /*
-Test cases : 
+The base-type of an enumeration may be one of the following: 
+  byte, sbyte, short, ushort, int, uint, long or ulong. 
+  If no base-type is declared, than the default of int is use
 
-ser - number mapped to i4 or i8 depending on enum type
-
-deser - number to be deserialized doesnt exist in enum
-deser - number overflows range of enum
-
-
+ Enum.GetName - retrieves the name of the constant in the enumeration that has a specific value.
+ Enum.GetNames - retrieves an array of the names of the constants in the enumeration.
+ Enum.GetValues - retrieves an array of the values of the constants in the enumeration.
+ Enum.IsDefined - returns an indication whether a constant with a specified value exists in a specified enumeration.
 
 
 
