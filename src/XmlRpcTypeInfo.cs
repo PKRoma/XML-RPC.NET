@@ -161,7 +161,6 @@ namespace CookComputing.XmlRpc
 #endif
 
       }
-#if !FX1_0
       else if (t == typeof(int?))
         ret = XmlRpcType.tInt32;
       else if (t == typeof(long?))
@@ -172,7 +171,6 @@ namespace CookComputing.XmlRpc
         ret = XmlRpcType.tDouble;
       else if (t == typeof(DateTime?))
         ret = XmlRpcType.tDateTime;
-#endif
       else if (t == typeof(void))
       {
         ret = XmlRpcType.tVoid;
@@ -228,6 +226,18 @@ namespace CookComputing.XmlRpc
           }
         }
         ret = XmlRpcType.tStruct;
+      }
+      else if (t.IsEnum)
+      {
+        Type enumBaseType = Enum.GetUnderlyingType(t);
+        if (enumBaseType == typeof(int) || enumBaseType == typeof(byte)
+          || enumBaseType == typeof(sbyte) || enumBaseType == typeof(short)
+          || enumBaseType == typeof(ushort))
+          ret = XmlRpcType.tInt32;
+        else if (enumBaseType == typeof(long) || enumBaseType == typeof(UInt32))
+          ret = XmlRpcType.tInt64;
+        else
+          ret = XmlRpcType.tInvalid;
       }
       else
         ret = XmlRpcType.tInvalid;

@@ -122,6 +122,7 @@
     <Compile Include="utils.cs" />
     <Compile Include="XmlRpcParserTest.cs" />
     <Compile Include="XmlRpcStructTest.cs" />
+    <Compile Include="XmlRpcType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

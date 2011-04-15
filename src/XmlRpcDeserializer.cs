@@ -239,6 +239,8 @@ namespace CookComputing.XmlRpc
       MappingAction mappingAction, out Type mappedType)
     {
       CheckExpectedType(valType, typeof(long), mappingStack);
+      if (valType != null && valType.IsEnum)
+        return MapNumberToEnum(value, valType, "i8", mappingStack, mappingAction, out mappedType);
       mappedType = typeof(long);
       return OnStack("i8", mappingStack, delegate()
       {
@@ -254,6 +256,8 @@ namespace CookComputing.XmlRpc
       MappingAction mappingAction, out Type mappedType)
     {
       CheckExpectedType(valType, typeof(int), mappingStack);
+      if (valType != null && valType.IsEnum)
+        return MapNumberToEnum(value, valType, "int", mappingStack, mappingAction, out mappedType);
       mappedType = typeof(int);
       return OnStack("integer", mappingStack, delegate()
       {
@@ -262,6 +266,37 @@ namespace CookComputing.XmlRpc
           throw new XmlRpcInvalidXmlRpcException(mappingStack.MappingType
             + " contains invalid int value " + StackDump(mappingStack));
         return ret;
+      });
+    }
+
+    private object MapNumberToEnum(string value, Type enumType, string xmlRpcType,
+      MappingStack mappingStack, MappingAction mappingAction, out Type mappedType)
+    {
+      mappedType = enumType;
+      return OnStack(xmlRpcType, mappingStack, delegate()
+      {
+        try
+        {
+          long lnum = long.Parse(value);
+          Type underlyingType = Enum.GetUnderlyingType(enumType);
+          object enumNumberValue = Convert.ChangeType(lnum, underlyingType, null);
+          if (!Enum.IsDefined(enumType, enumNumberValue))
+            throw new XmlRpcInvalidEnumValue(mappingStack.MappingType
+              + " contains " + xmlRpcType + "mapped to undefined enum value " 
+              + StackDump(mappingStack));
+          object ret = Enum.ToObject(enumType, enumNumberValue);
+          return ret;
+        }
+        catch (XmlRpcInvalidEnumValue)
+        {
+          throw;
+        }
+        catch (Exception ex)
+        {
+          throw new XmlRpcInvalidEnumValue(mappingStack.MappingType
+            + " contains invalid or out of range " + xmlRpcType + " value mapped to enum "
+            + StackDump(mappingStack));
+        }
       });
     }
 
@@ -707,8 +742,27 @@ namespace CookComputing.XmlRpc
       }
     }
 
-    private void CheckExpectedType(Type actualType, Type expectedType, MappingStack mappingStack)
+    private void CheckExpectedType(Type expectedType, Type actualType, MappingStack mappingStack)
     {
+      if (expectedType != null && expectedType.IsEnum)
+      {
+        Type[] i4Types = new Type[] { typeof(byte), typeof(sbyte), typeof(short), 
+          typeof(ushort), typeof(int) };
+        Type[] i8Types = new Type[] { typeof(uint), typeof(long) };
+        Type underlyingType = Enum.GetUnderlyingType(expectedType);
+        if (Array.IndexOf(i4Types, underlyingType) >= 0)
+          expectedType = typeof(Int32);
+        else if (Array.IndexOf(i8Types, underlyingType) >= 0)
+          expectedType = typeof(long);
+        else
+          throw new XmlRpcInvalidEnumValue(mappingStack.MappingType +
+          " contains "
+          + XmlRpcTypeInfo.GetXmlRpcTypeString(expectedType)
+          + " which cannot be mapped to  "
+          + XmlRpcTypeInfo.GetXmlRpcTypeString(actualType)
+          + " " + StackDump(mappingStack));
+      }
+      // TODO: throw exception for invalid enum type
       if (actualType != null && actualType != typeof(Object)
         && actualType != expectedType
         && (expectedType.IsValueType
@@ -717,7 +771,7 @@ namespace CookComputing.XmlRpc
         throw new XmlRpcTypeMismatchException(mappingStack.MappingType +
           " contains "
           + XmlRpcTypeInfo.GetXmlRpcTypeString(expectedType)
-          + "value where "
+          + " value where "
           + XmlRpcTypeInfo.GetXmlRpcTypeString(actualType)
           + " expected " + StackDump(mappingStack));
       }

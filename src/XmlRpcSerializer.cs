@@ -188,6 +188,8 @@ namespace CookComputing.XmlRpc
         }
         else if (xType == XmlRpcType.tInt32)
         {
+          if (o.GetType().IsEnum)
+            o = Convert.ToInt32(o);
           if (UseIntTag)
             WriteFullElementString(xtw, "int", o.ToString());
           else
@@ -195,6 +197,8 @@ namespace CookComputing.XmlRpc
         }
         else if (xType == XmlRpcType.tInt64)
         {
+          if (o.GetType().IsEnum)
+            o = Convert.ToInt64(o);
           WriteFullElementString(xtw, "i8", o.ToString());
         }
         else if (xType == XmlRpcType.tString)
