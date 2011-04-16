@@ -236,7 +236,7 @@ namespace ntest
     {
       Type type = typeof(struct2);
       XmlRpcType rpcType = XmlRpcTypeInfo.GetXmlRpcType(type);
-      Assert.AreEqual(XmlRpcType.tInvalid, rpcType, 
+      Assert.AreEqual(XmlRpcType.tStruct, rpcType, 
         "struct doesn't map to XmlRpcType.tInvalid");
     }
 

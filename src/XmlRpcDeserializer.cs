@@ -757,22 +757,22 @@ namespace CookComputing.XmlRpc
         else
           throw new XmlRpcInvalidEnumValue(mappingStack.MappingType +
           " contains "
-          + XmlRpcTypeInfo.GetXmlRpcTypeString(expectedType)
-          + " which cannot be mapped to  "
           + XmlRpcTypeInfo.GetXmlRpcTypeString(actualType)
+          + " which cannot be mapped to  "
+          + XmlRpcTypeInfo.GetXmlRpcTypeString(expectedType)
           + " " + StackDump(mappingStack));
       }
       // TODO: throw exception for invalid enum type
-      if (actualType != null && actualType != typeof(Object)
-        && actualType != expectedType
-        && (expectedType.IsValueType
-          && actualType != typeof(Nullable<>).MakeGenericType(expectedType)))
+      if (expectedType != null && expectedType != typeof(Object)
+        && expectedType != actualType
+        && (actualType.IsValueType
+          && expectedType != typeof(Nullable<>).MakeGenericType(actualType)))
       {
         throw new XmlRpcTypeMismatchException(mappingStack.MappingType +
           " contains "
-          + XmlRpcTypeInfo.GetXmlRpcTypeString(expectedType)
-          + " value where "
           + XmlRpcTypeInfo.GetXmlRpcTypeString(actualType)
+          + " value where "
+          + XmlRpcTypeInfo.GetXmlRpcTypeString(expectedType)
           + " expected " + StackDump(mappingStack));
       }
     }
