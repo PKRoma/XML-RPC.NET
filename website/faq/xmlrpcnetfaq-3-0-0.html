@@ -253,10 +253,10 @@ depending on your application:
 
 <ul>
 <li>
-<b>CookComputing.XmlRpc.dll</b> — .NET clients (.NET 2.0 upwards, compatible with .NET client profile)
+<b>CookComputing.XmlRpcV2.dll</b> — .NET clients (.NET 2.0 upwards, compatible with .NET client profile)
 </li>
 <li>
-<b>CookComputing.XmlRpcServer.dll</b> — .NET servers ((.NET 2.0 upwards, requires CookComputing.XmlRpc.dll)
+<b>CookComputing.XmlRpcV2Server.dll</b> — .NET servers ((.NET 2.0 upwards, requires CookComputing.XmlRpc.dll)
 </li>
 <li>
 <b>CookComputing.XmlRpcSilverlight.dll</b> — Silverlight clients (Silverlight 3 upwards)
@@ -284,7 +284,13 @@ Cache (GAC). To do this use the gacutil utility:
 <pre>gacutil /i CookComputing.XmlRpcV2.dll</pre>
 
 <p>
-Alternatively the dll can be dragged and dropped into the winnt\assembly directory 
+If you're implementing a server application add the server assembly too:
+</p>
+
+<pre>gacutil /i CookComputing.XmlRpcV2Server.dll</pre>
+
+<p>
+Alternatively the dll(s) can be dragged and dropped into the winnt\assembly directory 
 using Windows Explorer.
 </p>
 
@@ -302,6 +308,12 @@ the command line, the XmlRpc assembly is referenced like this:
 </p>
 
 <pre>csc /r:CookComputing.XmlRpcV2.dll myprogram.cs</pre>
+
+<p>
+If you are implementing an XML-RPC server, you must also reference the server assembly:
+</p>
+
+<pre>csc /r:CookComputing.XmlRpcV2.dll;CookComputing.XmlRpcV2Server.dll myprogram.cs</pre>
 
 
 <h3><a id="1.8"></a>1.8 How does XML-RPC.NET represent XML-RPC requests and responses?</h3>
