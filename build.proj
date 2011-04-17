@@ -107,10 +107,13 @@
     <RemoveDir Directories="$(OutputSrc)\website" />
     <RemoveDir Directories="$(OutputSrc)\tools\CommunityTasks" />
     <RemoveDir Directories="$(OutputSrc)\bin\testdocuments" />
-    <Delete Files="$(OutputSrc)\README.template" />
-    <Delete Files="$(OutputSrc)\bin\nunit.framework.dll" />
-    <Delete Files="$(OutputSrc)\bin\ntest.dll" />
-    <Delete Files="$(OutputSrc)\**\*FileListAbsolute.txt" />
+
+    <ItemGroup>
+      <FilesToDelete Include="$(OutputSrc)\README.template" />
+      <FilesToDelete Include="$(OutputSrc)\**\*FileListAbsolute.txt" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" />
+    
     <ItemGroup>
       <ZipFiles Include="$(OutputFiles)\**" />
     </ItemGroup>
