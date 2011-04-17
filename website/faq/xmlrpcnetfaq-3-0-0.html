@@ -73,7 +73,8 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 1.15 <a href="#1.15">Can I specify struct members as optional?</a><br/>
 1.16 <a href="#1.16">How do I specify data whose type is not known until runtime?</a> <br/>
 1.17 <a href="#1.17">With which versions of .NET is XML-RPC.NET compatible?</a> <br/>
-1.18 <a href="#1.18">Does XML-RPC.NET support the &lt;nil&gt; extension?</a>
+1.18 <a href="#1.18">Does XML-RPC.NET support the &lt;nil&gt; extension?</a> <br/>
+1.19 <a href="#1.19">Can .NET enum types be mapped to/from XML-RPC &lt;i4&gt; and &lt;i8&gt; values?</a>
 
 </p>
 
@@ -818,6 +819,19 @@ When mapping an XML-RPC struct to a .NET struct or class, if a member in the XML
 .NET member will be set to null. If the .NET member is a non-nullable reference type an exception
 will be thrown.
 </p>
+
+<h3><a id="1.19"></a>1.19 Can .NET enum types be mapped to/from XML-RPC &lt;i4&gt; and &lt;i8&gt; values?</h3>
+
+<p>
+.NET enum type can be mapped to/from XML-RPC &lt;i4&gt; and &lt;i8&gt; values. The type of XML-RPC
+value depends on the base type of the enum: enums with base type byte, sbyte, short, ushort, or int, 
+are mapped to &lt;i4&gt;; whereas enums with base type uint or long are mapped to &lt;i8&gt;.
+</p>
+
+<p>
+Enums with base type ulong are not supported because ulong cannot be represented by &lt;i8&gt;.
+</p>
+
 
 <h2>2. Clients</h2>
 
