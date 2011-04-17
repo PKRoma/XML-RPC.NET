@@ -1,23 +1,19 @@
 html
 {
-    overflow: hidden;
+   
 }
+
 
 #googlead
 {
-    position:absolute;
-    overflow:hidden;
-    top:10px; 
-    left:20px; 
-    width:140px; 
-    height: 750px;
+    float: left;
 }
 
 #googlink
 {
     position:relative; 
     top: 40px;
-}
+    }
 
 #headermenu
 {
@@ -26,15 +22,26 @@ html
 
 #content
 {
-    position:absolute; 
-    overflow:auto; 
     top:10px; 
-    left:160px; 
-    padding-right: 10px;
+    margin-left: 150px;
+    margin-right: 10px;
     right:20px;
     bottom:10px; 
+    width: 728px;
 }  
+ 
+#footer
+{
+    font-size: x-small;
+    text-align: center
+} 
     
+#donate
+{
+    float: right;
+    margin-left: 20px;
+}
+
 
 pre 
 {
@@ -47,6 +54,7 @@ pre
 
 body 
 {
+    width: 900px;
     font-size: 14px;
     font-family:helvetica, arial, freesans, clean, sans-serif;
 }
@@ -61,8 +69,11 @@ H1 {
 H2 {
   font-size: 110%;
 }
-H3, H4 {
+H3 {
   font-size: 100%;
+}
+H4 {
+  font-size: 80%;
 }
 
 

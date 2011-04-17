@@ -42,167 +42,21 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <div id="content">
 <div id="headermenu" >
+    Home
+    &nbsp;
+    <a href="news.html">Recent News</a>
+    &nbsp;
+    <a href="download.html">Download</a>
+    &nbsp;
     <a href="faq/xmlrpcnetfaq.html">Documentation</a>
     &nbsp;
     <a href="http://www.cookcomputing.com">Cook Computing</a>
 <br />
 <br />
 <br />
-<br />
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_s-xclick"/>
-<input type="hidden" name="hosted_button_id" value="4630719"/>
-<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online."/>
-<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1" />
-</form>
 </div>
 
 <h1>XML-RPC.NET</h1>
-
-<h2>Latest News</h2>
-
-<h3>12th March 2011</h3>
-<p>Version 3.0.0 beta has been released: 
-</p>
-<p>
-<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.3.0.0-beta1.zip">xml-rpc.net.3.0.0-beta1.zip</a>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="./faq/xmlrpcnetfaq-3-0-0.html">documentation</a>
-</p>
-
-<p>New features, changes, and fixed issues:</p>
-
-<ul>
-
-<li>
-Support for &lt;nil&gt; XML-RPC extension. 
-</li>
-
-<li>
-Support for Silverlight 3 and 4.
-</li>
-
-<li>
-Support for Windows Phone 7.
-</li>
-
-<li>
-New UseEmptyElementTags property on IXmlRpcProxy. If this is set to true full element tags will be
-generated, for example &lt;string&gt;&lt;/string&gt; instead of &lt;string /&gt;. The default 
-setting of false for this property results is consistent with previous releases. This new feature
-provides compatibility with servers implemented with XML-RPC libraries which don't support empty
-tags, such XMLRPC++.
-</li>
-
-<li>
-New UseNagleAlgorithm property on IXmlRpcProxy. With its default value of false calls
-will be quicker where small XML-RPC requests are being sent.
-</li>
-
-<li>
-Separate client and server assemblies — client assembly compatible with .NET Client Profile. 
-</li>
-
-<li>
-Changed directory structure within distribution zip file to avoid problem when opening the file
-in Windows Explorer.
-</li>
-
-
-<li>
-Moved to Visual Studio 2010.
-</li>
-
-<li> Fixed issues:
-
-<ul>
-
-<li>
-Issue 55 : change XmlRpcProxyGen so that FileIOPermission is not required for
-calls to Create.
-</li>
-
-<li>
-Issue 56: Maintain XML-RPC struct member ordering in XmlRpcStruct after
-deserialization.
-</li>
-
-<li>
-Issue 65: When deserializing request, check that the number of parameters is
-consistent with the method signature.
-</li>
-
-<li>
-Issue 70: Allow structs/classes to have members or arrays of the same type as
-the parent type.
-</li>
-
-<li>
-Issue 74: Fixed case where if a proxy call is made with a ResponseEvent assigned, 
-the call crashes with a "Stream Closed" error.
-</li>
-
-<li>
-Issue 77: Fixed exception when AllowStringFaultCode is set to true. Now string fault
-codes are handled as well as integer fault code by default.
-</li>
-
-<li>
-Issue 78: XmlRpcServiceInfo.GetXmlRpcType now handles case of NonSerializedAttribute 
-on all types.
-</li>
-
-<li>
-Issue 83: Change to prevent internal server error when viewing auto-generated help on
-Mono based servers.
-</li>
-
-<li>
-Issue 86: XmlRpcDocWriter.WriteStruct now writes XmlRpcMember.Description.
-</li>
-
-<li>
-Issue 89: Workaround on XmlRpcListenerService for cases where closing the request stream was
-resulting in an InvalidOperationException. 
-</li>
-
-</ul>
-
-</li>
-
-<li> Changes:
-
-<ul>
-
-<li>
-Custom nullable types — XmlRpcBoolean, XmlRpcDateTime, XmlRpcDouble, XmlRpcInt — have
-been discontinued. Use the standard nullable types bool?, DateTime?, double?, int?.
-</li>
-
-<li>
-A server implementation now needs to reference the CookComputing.XmlRpcServer assembly in 
-addition to the CookComputing.XmlRpc assembly.
-</li>
-
-<li>
-Default value for new UseNagleAlgorithm. By default it was previously always false.
-</li>
-
-</ul>
-
-</li>
-
-</ul>
-
-
-<p>
-The current stable release is available here: 
-</p>
-<p>
-<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.5.0.zip">xml-rpc.net.2.5.0.zip</a> 
-&nbsp;&nbsp;&nbsp;&nbsp;
-(<a href="./faq/xmlrpcnetfaq-2-5-0.html">documentation</a>). 
-</p>
 
 <h2>Overview</h2>
 <p>
@@ -225,28 +79,28 @@ Scott Hanselman — <a href="http://www.hanselman.com/blog/TheWeeklySourceCode55No
 </p>
 </i>
 </blockquote>
-
+<p>
   Its features include:
 </p>
 <ul>
-  <li>interface based definition of XML-RPC servers and clients</li>
-  <li>code generation of type-safe client proxies</li>
+  <li>Interface based definition of XML-RPC servers and clients</li>
+  <li>Code generation of type-safe client proxies</li>
   <li>Silverlight and Windows Phone 7</li>
   <li>ASP.NET Web Services which support both XML-RPC and SOAP</li>
-  <li>client support for asynchronous calls</li>
-  <li>client support for various XML encodings and XML indentation styles
+  <li>Client support for asynchronous calls</li>
+  <li>Client support for various XML encodings and XML indentation styles
   (some other XML-RPC server implementations only accept 
   certain indentation styles)</li>
-  <li>built-in support for XML-RPC Introspection API on server</li>
-  <li>dynamic generation of documentation page at URL of XML-RPC end-point</li>
-  <li>support for mapping XML-RPC method and struct member names to .NET-compatible 
+  <li>Built-in support for XML-RPC Introspection API on server</li>
+  <li>Dynamic generation of documentation page at URL of XML-RPC end-point</li>
+  <li>Support for mapping XML-RPC method and struct member names to .NET-compatible 
   names</li>
-  <li>support for Unicode XML-RPC strings in both client and server</li>
-  <li>support for optional struct members when mapping between .NET and XML-RPC 
+  <li>Support for Unicode XML-RPC strings in both client and server</li>
+  <li>Support for optional struct members when mapping between .NET and XML-RPC 
   types</li>
   <li>&lt;i8&gt; XML-RPC extension</li>
   <li>&lt;nil&gt; XML-RPC extension</li>
-  <li>support for .NET Remoting on both client and server</li>
+  <li>Support for .NET Remoting on both client and server</li>
 </ul>
 
 <p>
@@ -265,11 +119,12 @@ A couple of sample XML-RPC services implemented using XML-RPC.NET are available:
 <li><a href="http://www.cookcomputing.com/xmlrpcsamples/RPC2.ashx">StateName</a></li>
 </ul>
 
+
 <h3>XML-RPC Clients</h3>
 
 <p>
 It is easy to create client code which makes calls to XML-RPC servers. All 
-you need to do is define an interface representing the XML-RPC end-point and 
+you need to do is define an interface representing the XML-RPC end-point an d
 then use the XmlRpcProxyGen class to automatically generate the code for the 
 proxy. 
 </p>
@@ -392,7 +247,7 @@ in the assembly <i>StateNameService</i> (i.e. <i>StateNameService.dll</i>).
 If, instead of making an XML-RPC request via a HTTP POST request, the caller 
 makes a HTTP GET request to the same URL, the Service returns an automatically 
 generated page describing itself. For the example service above, 
-this <a href="http://www.dev1.eraserver.net/cookcomputing/math.aspx">page</a> 
+this <a href="http://www.cookcomputing.com/xmlrpcsamples/RPC2.ashx">page</a> 
 is returned.
 </p>
 
@@ -429,12 +284,6 @@ XML-RPC.NET is hosted at Google Code:
 Samples - several samples are available - see distribution.
 </p>
 
-<h2>Release History</h2>
-<p>
-Release history is available <a href="history.html">here</a>.
-</p>
-
-
 <h2>Developers</h2>
 <p>
 Lead Developer - Charles Cook.
@@ -446,6 +295,28 @@ XML-RPC.NET is released under the terms of the
 <a href="http://www.opensource.org/licenses/mit-license.html">MIT X11</a> 
 license (<a href="./faq/xmlrpcnetfaq.html#6.12">more</a>). 
 </p>
+
+<h3>Donations</h3>
+<div>
+
+<div id="donate">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick"/>
+<input type="hidden" name="hosted_button_id" value="4630719"/>
+<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online."/>
+<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1" />
+</form>
+</div>
+
+<p>
+If you have found XML-RPC.NET useful, please make a donation towards the costs of running the 
+project which include domain name and web site hosting fees.
+</p>
+
+</div>
+
+
+
 
 <h2>Contact</h2>
 <p>
@@ -459,10 +330,11 @@ document.write('<a href="mailto:' + '&#99;&#104;&#97;&#115;' +'&#99;&#111;&#111;
   with any feedback or suggestions for XML-RPC.NET. 
 </p>
 
-<p>&nbsp;</p>
-<p style="font-size: x-small;">
-Charles Cook, 2001-2011 All Rights Reserved. 12th March 2011
+<div id="footer">
+<p>
+Charles Cook, 2001-2011 All Rights Reserved. 17th April 2011
 </p>
+</div>
 
 </div>
 

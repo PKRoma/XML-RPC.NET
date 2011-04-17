@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-<title>XML-RPC.Net - History</title>
+<title>XML-RPC.Net - Downloads</title>
 <meta name="keywords" content="Charles Cook, XML-RPC, xmlrpc, .Net, C#, Cook Computing" />
 <link href="./css/styles.css" rel="stylesheet" type="text/css"/>
 <!--[if IE]>
@@ -40,23 +40,40 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 </div>
 
-
-
 <div id="content">
 <div id="headermenu" >
-        <a href="./index.html">Home</a>
+    <a href="index.html">Home</a>
+    &nbsp;
+    <a href="news.html">Recent News</a>
+    &nbsp;
+    Download
+    &nbsp;
+    <a href="faq/xmlrpcnetfaq.html">Documentation</a>
+    &nbsp;
+    <a href="http://www.cookcomputing.com">Cook Computing</a>
+<br />
+<br />
+<br />
+<br />
 </div>
 
-<h1>XML-RPC.NET - History</h1>
+<h1>XML-RPC.NET</h1>
+
+<h2>Downloads</h2>
+<p>
+
+</p>
 
 
-<h3>2.5.0</h3>
+<h2>Current Production Release</h2>
 
 <p>
-<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.5.0.zip">xml-rpc.net.2.5.0.zip</a> 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="./faq/xmlrpcnetfaq-2-5-0.html">documentation</a> 
+XML-RPC.NET 2.5.0 is the current production release.
 </p>
+
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.2.5.0.zip">xml-rpc.net.2.5.0.zip</a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="./faq/xmlrpcnetfaq-2-5-0.html">documentation</a>
 
 <p>New features, changes, and fixed issues:</p>
 
@@ -130,6 +147,148 @@ the parent type.
 
 </ul>
 
+<a name="3.0.0" />
+<h2>Work in Progress</h2>
+
+<p>
+This is a snapshot of work in progress. 
+</p>
+
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.3.0.0-snapshot.zip">xml-rpc.net.3.0.0-snapshot.zip</a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="./faq/xmlrpcnetfaq-3-0-0.html">documentation</a>
+
+<p>New features, changes, and fixed issues:</p>
+
+<ul>
+
+<li>
+Support for &lt;nil&gt; XML-RPC extension. 
+</li>
+
+<li>
+Support for Silverlight 3 and 4.
+</li>
+
+<li>
+Support for Windows Phone 7.
+</li>
+
+<li>
+XML-RPC &lt;int&gt; and &lt;i8&gt; values can be mapped to and from .NET enum types. (<a href="./faq/xmlrpcnetfaq.html#1.18">more</a>)
+</li>
+
+
+<li>
+New UseEmptyElementTags property on IXmlRpcProxy. If this is set to true full element tags will be
+generated, for example &lt;string&gt;&lt;/string&gt; instead of &lt;string /&gt;. The default 
+setting of false for this property results is consistent with previous releases. This new feature
+provides compatibility with servers implemented with XML-RPC libraries which don't support empty
+tags, such XMLRPC++.
+</li>
+
+<li>
+New UseNagleAlgorithm property on IXmlRpcProxy. With its default value of false calls
+will be quicker where small XML-RPC requests are being sent.
+</li>
+
+<li>
+Separate client and server assemblies — client assembly compatible with .NET Client Profile. 
+</li>
+
+<li>
+Changed directory structure within distribution zip file to avoid problem when opening the file
+in Windows Explorer.
+</li>
+
+
+<li>
+Moved to Visual Studio 2010.
+</li>
+
+<li> Fixed issues:
+
+<ul>
+
+<li>
+Issue 55 : change XmlRpcProxyGen so that FileIOPermission is not required for
+calls to Create.
+</li>
+
+<li>
+Issue 56: Maintain XML-RPC struct member ordering in XmlRpcStruct after
+deserialization.
+</li>
+
+<li>
+Issue 65: When deserializing request, check that the number of parameters is
+consistent with the method signature.
+</li>
+
+<li>
+Issue 70: Allow structs/classes to have members or arrays of the same type as
+the parent type.
+</li>
+
+<li>
+Issue 74: Fixed case where if a proxy call is made with a ResponseEvent assigned, 
+the call crashes with a "Stream Closed" error.
+</li>
+
+<li>
+Issue 77: Fixed exception when AllowStringFaultCode is set to true. Now string fault
+codes are handled as well as integer fault code by default.
+</li>
+
+<li>
+Issue 78: XmlRpcServiceInfo.GetXmlRpcType now handles case of NonSerializedAttribute 
+on all types.
+</li>
+
+<li>
+Issue 83: Change to prevent internal server error when viewing auto-generated help on
+Mono based servers.
+</li>
+
+<li>
+Issue 86: XmlRpcDocWriter.WriteStruct now writes XmlRpcMember.Description.
+</li>
+
+<li>
+Issue 89: Workaround on XmlRpcListenerService for cases where closing the request stream was
+resulting in an InvalidOperationException. 
+</li>
+
+</ul>
+
+</li>
+
+<li> Changes:
+
+<ul>
+
+<li>
+Custom nullable types — XmlRpcBoolean, XmlRpcDateTime, XmlRpcDouble, XmlRpcInt — have
+been discontinued. Use the standard nullable types bool?, DateTime?, double?, int?.
+</li>
+
+<li>
+A server implementation now needs to reference the CookComputing.XmlRpcServer assembly in 
+addition to the CookComputing.XmlRpc assembly.
+</li>
+
+<li>
+Default value for new UseNagleAlgorithm. By default it was previously always false.
+</li>
+
+</ul>
+
+</li>
+
+</ul>
+
+
+<h2>Older Releases</h2>
 
 <h3>2.4.0</h3>
 
@@ -727,18 +886,9 @@ Fix threading issue in AsyncBettyApplication sample.
 <h2>Developers</h2>
 <p>Lead Developer - Charles Cook.</p>
 
-<h2>License</h2>
-<p>XML-RPC.NET is released under the terms of the <a href="http://www.opensource.org/licenses/mit-license.html">MIT 
-  X11</a> license. </p>
-<h2>Contact</h2>
-<p>Please contact <script language="JavaScript" type="text/javascript">
-<!--
-document.write('<a href="mailto:' + '&#99;&#104;&#97;&#115;' +'&#99;&#111;&#111;&#107;' 
-+ '&#64;' 
-+ '&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;' + '" title="Charles Cook">' + 'Charles Cook' + '</a>');
-// -->
-</script> 
-  with any feedback or suggestions for XML-RPC.NET. </p>
+
+
+
 
 <div id="footer">
 <p>
