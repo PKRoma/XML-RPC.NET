@@ -7,11 +7,11 @@
   -->
  
   <PropertyGroup>
-    <ProductVersion>3.0 Beta 1</ProductVersion>
+    <ProductVersion>3.0 snapshot</ProductVersion>
     <ProductMajor>3</ProductMajor>
     <ProductMinor>0</ProductMinor>
     <ProductRevision>0</ProductRevision>
-    <ProductSuffix>-beta1</ProductSuffix>
+    <ProductSuffix>-snapshot</ProductSuffix>
     <GetFiles>yes</GetFiles>
     <PhoneBuild>yes</PhoneBuild>
     <BuildDir>$(MSBuildProjectDirectory)\build</BuildDir>
@@ -109,12 +109,13 @@
     <RemoveDir Directories="$(OutputSrc)\bin\testdocuments" />
     <Delete Files="$(OutputSrc)\README.template" />
     <Delete Files="$(OutputSrc)\bin\nunit.framework.dll" />
-   <Delete Files="$(OutputSrc)\bin\ntest.dll" />
+    <Delete Files="$(OutputSrc)\bin\ntest.dll" />
+    <Delete Files="$(OutputSrc)\**\*FileListAbsolute.txt" />
     <ItemGroup>
       <ZipFiles Include="$(OutputFiles)\**" />
     </ItemGroup>
     <Zip Files="@(ZipFiles)" WorkingDirectory="$(OutputFiles)"
-      ZipFileName="$(BuildDir)\xml-rpc.net.$(ProductMajor).$(ProductMinor).$(ProductRevision)$(ProductSuffix).zip">
+      ZipFileName="$(BuildDir)\xml-rpc.net.$(ProductMajor).$(ProductMinor).$(ProductRevision).$(Revision)$(ProductSuffix).zip">
     </Zip>
   </Target>
  
