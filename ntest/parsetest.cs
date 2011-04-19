@@ -835,7 +835,48 @@ namespace ntest
       Assert.AreEqual(13, ret[1]);
       Assert.AreEqual(14, ret[2]);
     }
-      
+
+    [Test]
+    public void JaggedArray()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+ <value>
+   <array>
+     <data>
+       <value>
+         <array>
+           <data>
+             <value>
+               <i4>1213028</i4>
+             </value>
+             <value>
+               <string>products</string>
+             </value>
+           </data>
+         </array>
+       </value>
+       <value>
+         <array>
+           <data>
+             <value>
+               <i4>666</i4>
+             </value>
+           </data>
+         </array>
+       </value>
+     </data>
+   </array>
+ </value>";
+      object obj = Utils.Parse(xml, typeof(object[][]), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is object[][]);
+      object[][] ret = (object[][])obj;
+      Assert.AreEqual(1213028, ret[0][0]);
+      Assert.AreEqual("products", ret[0][1]);
+      Assert.AreEqual(666, ret[1][0]);
+    }
+
     //---------------------- XmlRpcInt -------------------------------------// 
     [Test]
     public void XmlRpcInt_XmlRpcIntType()
