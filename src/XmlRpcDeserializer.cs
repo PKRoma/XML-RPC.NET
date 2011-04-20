@@ -329,20 +329,21 @@ namespace CookComputing.XmlRpc
     private object MapNilValue(string p, Type type, MappingStack mappingStack, 
       MappingAction mappingAction, out Type mappedType)
     {
-      if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-      {
-        mappedType = type;
-        return null;
-      }
-      else if (!type.IsPrimitive || !type.IsValueType)
+      if (type == null 
+        || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        || (!type.IsPrimitive || !type.IsValueType)
+        || type == typeof(object))
       {
         mappedType = type;
         return null;
       }
       else
       {
-        mappedType = null;
-        throw new NotImplementedException(); // TODO: fix
+        throw new XmlRpcInvalidXmlRpcException(mappingStack.MappingType
+          + " contains <nil> value which cannot be mapped to type " 
+          + (type != null && type != typeof(object) ? type.Name : "object")
+          + " "
+          + StackDump(mappingStack));
       }
     }
 

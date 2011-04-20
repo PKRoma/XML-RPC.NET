@@ -361,6 +361,14 @@ namespace ntest
       Assert.IsNull(bounds.lowerBound);
       Assert.IsNull(bounds.upperBound);
     }
+
+    [Test]
+    public void DeserializeNilObject()
+    {
+      string xml = "<value><nil /></value>";
+      object o = Utils.ParseValue(xml, typeof(object));
+      Assert.IsNull(o);
+    }
   }
 
   [XmlRpcNullMapping(NullMappingAction.Nil)]
@@ -369,6 +377,7 @@ namespace ntest
     public int? lowerBound;
     public int? upperBound;
   }
+
 }
 
 
