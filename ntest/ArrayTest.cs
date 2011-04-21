@@ -2,6 +2,8 @@
 using System.IO;
 using CookComputing.XmlRpc;
 using NUnit.Framework;
+using System.Xml;
+using System.Text;
 
 namespace ntest
 {
@@ -133,5 +135,246 @@ namespace ntest
       Assert.AreEqual(5, ret[2, 0]);
       Assert.AreEqual(6, ret[2, 1]);
     }
+
+    //---------------------- array -----------------------------------------// 
+    [Test]
+    public void MixedArray_NullType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <array>
+    <data>
+      <value><i4>12</i4></value>
+      <value><string>Egypt</string></value>
+      <value><boolean>0</boolean></value>
+    </data>
+  </array>
+</value>";
+      object obj = Utils.Parse(xml, null, MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is object[], "result is array of object");
+      object[] ret = obj as object[];
+      Assert.AreEqual(12, ret[0]);
+      Assert.AreEqual("Egypt", ret[1]);
+      Assert.AreEqual(false, ret[2]);
+    }
+
+    [Test]
+    public void MixedArray_ObjectArrayType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <array>
+    <data>
+      <value><i4>12</i4></value>
+      <value><string>Egypt</string></value>
+      <value><boolean>0</boolean></value>
+    </data>
+  </array>
+</value>";
+      object obj = Utils.Parse(xml, typeof(object[]), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is object[], "result is array of object");
+      object[] ret = obj as object[];
+      Assert.AreEqual(12, ret[0]);
+      Assert.AreEqual("Egypt", ret[1]);
+      Assert.AreEqual(false, ret[2]);
+    }
+
+    [Test]
+    public void MixedArray_ObjectType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <array>
+    <data>
+      <value><i4>12</i4></value>
+      <value><string>Egypt</string></value>
+      <value><boolean>0</boolean></value>
+    </data>
+  </array>
+</value>";
+      object obj = Utils.Parse(xml, typeof(object), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is object[], "result is array of object");
+      object[] ret = obj as object[];
+      Assert.AreEqual(12, ret[0]);
+      Assert.AreEqual("Egypt", ret[1]);
+      Assert.AreEqual(false, ret[2]);
+    }
+
+    [Test]
+    public void HomogArray_NullType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <array>
+    <data>
+      <value><i4>12</i4></value>
+      <value><i4>13</i4></value>
+      <value><i4>14</i4></value>
+    </data>
+  </array>
+</value>";
+      object obj = Utils.Parse(xml, null, MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is int[], "result is array of int");
+      int[] ret = obj as int[];
+      Assert.AreEqual(12, ret[0]);
+      Assert.AreEqual(13, ret[1]);
+      Assert.AreEqual(14, ret[2]);
+    }
+
+    [Test]
+    public void HomogArray_IntArrayType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <array>
+    <data>
+      <value><i4>12</i4></value>
+      <value><i4>13</i4></value>
+      <value><i4>14</i4></value>
+    </data>
+  </array>
+</value>";
+      object obj = Utils.Parse(xml, typeof(int[]), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is int[], "result is array of int");
+      int[] ret = obj as int[];
+      Assert.AreEqual(12, ret[0]);
+      Assert.AreEqual(13, ret[1]);
+      Assert.AreEqual(14, ret[2]);
+    }
+
+    [Test]
+    public void HomogArray_ObjectArrayType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <array>
+    <data>
+      <value><i4>12</i4></value>
+      <value><i4>13</i4></value>
+      <value><i4>14</i4></value>
+    </data>
+  </array>
+</value>";
+      object obj = Utils.Parse(xml, typeof(object[]), MappingAction.Error,
+      out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is object[], "result is array of object");
+      object[] ret = obj as object[];
+      Assert.AreEqual(12, ret[0]);
+      Assert.AreEqual(13, ret[1]);
+      Assert.AreEqual(14, ret[2]);
+    }
+
+    [Test]
+    public void HomogArray_ObjectType()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+<value>
+  <array>
+    <data>
+      <value><i4>12</i4></value>
+      <value><i4>13</i4></value>
+      <value><i4>14</i4></value>
+    </data>
+  </array>
+</value>";
+      object obj = Utils.Parse(xml, typeof(object), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is int[], "result is array of int");
+      int[] ret = obj as int[];
+      Assert.AreEqual(12, ret[0]);
+      Assert.AreEqual(13, ret[1]);
+      Assert.AreEqual(14, ret[2]);
+    }
+
+    [Test]
+    public void JaggedArray()
+    {
+      Type parsedType, parsedArrayType;
+      string xml = @"<?xml version=""1.0"" ?>
+ <value>
+   <array>
+     <data>
+       <value>
+         <array>
+           <data>
+             <value>
+               <i4>1213028</i4>
+             </value>
+             <value>
+               <string>products</string>
+             </value>
+           </data>
+         </array>
+       </value>
+       <value>
+         <array>
+           <data>
+             <value>
+               <i4>666</i4>
+             </value>
+           </data>
+         </array>
+       </value>
+     </data>
+   </array>
+ </value>";
+      object obj = Utils.Parse(xml, typeof(object[][]), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is object[][]);
+      object[][] ret = (object[][])obj;
+      Assert.AreEqual(1213028, ret[0][0]);
+      Assert.AreEqual("products", ret[0][1]);
+      Assert.AreEqual(666, ret[1][0]);
+    }
+
+    //---------------------- array -----------------------------------------// 
+    [Test]
+    public void Array()
+    {
+      object[] testary = new Object[] { 12, "Egypt", false };
+      XmlReader xdoc = Utils.Serialize("SerializeTest.testArray",
+      testary,
+      Encoding.UTF8, NullMappingAction.Ignore);
+      Type parsedType, parsedArrayType;
+      object obj = Utils.Parse(xdoc, null, MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is object[], "result is array of object");
+      object[] ret = obj as object[];
+      Assert.AreEqual(12, ret[0]);
+      Assert.AreEqual("Egypt", ret[1]);
+      Assert.AreEqual(false, ret[2]);
+    }
+
+    //---------------------- array -----------------------------------------// 
+    [Test]
+    public void MultiDimArray()
+    {
+      int[,] myArray = new int[,] { { 1, 2 }, { 3, 4 } };
+      XmlReader xdoc = Utils.Serialize("SerializeTest.testMultiDimArray",
+        myArray,
+        Encoding.UTF8, NullMappingAction.Ignore);
+      Type parsedType, parsedArrayType;
+      object obj = Utils.Parse(xdoc, typeof(int[,]), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.IsTrue(obj is int[,], "result is 2 dim array of int");
+      int[,] ret = obj as int[,];
+      Assert.AreEqual(1, ret[0, 0]);
+      Assert.AreEqual(2, ret[0, 1]);
+      Assert.AreEqual(3, ret[1, 0]);
+      Assert.AreEqual(4, ret[1, 1]);
+    }    
+ 
   }
 }

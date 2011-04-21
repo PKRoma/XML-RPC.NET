@@ -183,43 +183,6 @@ namespace ntest
 </methodCall>", reqstr);
     }
     
-    //---------------------- array -----------------------------------------// 
-    [Test]
-    public void Array()
-    {
-      object[] testary = new Object[] { 12, "Egypt", false };
-      XmlReader xdoc = Utils.Serialize("SerializeTest.testArray", 
-      testary,
-      Encoding.UTF8, NullMappingAction.Ignore);
-      Type parsedType, parsedArrayType;    
-      object obj = Utils.Parse(xdoc, null, MappingAction.Error, 
-        out parsedType, out parsedArrayType);
-      Assert.IsTrue(obj is object[], "result is array of object");
-      object[] ret = obj as object[];
-      Assert.AreEqual(12, ret[0]);
-      Assert.AreEqual("Egypt", ret[1]);
-      Assert.AreEqual(false, ret[2]);    
-    }    
-
-    //---------------------- array -----------------------------------------// 
-    [Test]
-    public void MultiDimArray()
-    {
-      int[,] myArray = new  int[,] {{1,2}, {3,4}};
-      XmlReader xdoc = Utils.Serialize("SerializeTest.testMultiDimArray", 
-        myArray,
-        Encoding.UTF8, NullMappingAction.Ignore);
-      Type parsedType, parsedArrayType;    
-      object obj = Utils.Parse(xdoc, typeof(int[,]), MappingAction.Error, 
-        out parsedType, out parsedArrayType);
-      Assert.IsTrue(obj is int[,], "result is 2 dim array of int");
-      int[,] ret = obj as int[,];
-      Assert.AreEqual(1, ret[0,0]);
-      Assert.AreEqual(2, ret[0,1]);
-      Assert.AreEqual(3, ret[1,0]);
-      Assert.AreEqual(4, ret[1,1]);
-    }    
-      
     //---------------------- struct ----------------------------------------// 
     struct Struct1
     {
