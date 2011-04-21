@@ -79,6 +79,7 @@
     <Compile Include="invoketest.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ArrayTest.cs" />
     <Compile Include="Listener.cs">
       <SubType>Code</SubType>
     </Compile>
