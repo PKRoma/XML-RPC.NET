@@ -36,6 +36,8 @@ namespace CookComputing.XmlRpc
   {
     bool AllowAutoRedirect { get; set; }
 
+    void AttachLogger(XmlRpcLogger logger);
+
 #if (!COMPACT_FRAMEWORK && !SILVERLIGHT && !SILVERLIGHT)
     X509CertificateCollection ClientCertificates { get; }
 #endif

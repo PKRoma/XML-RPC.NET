@@ -945,9 +945,14 @@ namespace CookComputing.XmlRpc
       return request.EndGetResponse(result);
     }
 
+
+    public void AttachLogger(XmlRpcLogger logger)
+    {
+      logger.SubscribeTo(this);
+    }
+
     public event XmlRpcRequestEventHandler RequestEvent;
     public event XmlRpcResponseEventHandler ResponseEvent;
-
 
     protected virtual void OnRequest(XmlRpcRequestEventArgs e)
     {

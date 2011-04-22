@@ -49,6 +49,7 @@ namespace CookComputing.XmlRpc
       TextReader trdr = new StreamReader(stm);
       String s = trdr.ReadToEnd();
       Trace.WriteLine(s);
+      stm.Position = 0;
     }
   }
 }

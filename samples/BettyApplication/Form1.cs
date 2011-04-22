@@ -277,6 +277,7 @@ namespace WindowsApplication4
     {
       labStateName.Text = "";
       IStateName betty = XmlRpcProxyGen.Create<IStateName>();
+      betty.AttachLogger(new XmlRpcDebugLogger());
       Cursor = Cursors.WaitCursor;
       try
       {
@@ -293,8 +294,8 @@ namespace WindowsApplication4
     private void butGetStateNames_Click(object sender, System.EventArgs e)
     {
       labStateNames1.Text = labStateNames2.Text = labStateNames3.Text = "";
-      IStateName betty 
-        = (IStateName)XmlRpcProxyGen.Create(typeof(IStateName));
+      IStateName betty = (IStateName)XmlRpcProxyGen.Create(typeof(IStateName));
+      betty.AttachLogger(new XmlRpcDebugLogger());
       StateStructRequest request;
       string retstr = "";
       Cursor = Cursors.WaitCursor;

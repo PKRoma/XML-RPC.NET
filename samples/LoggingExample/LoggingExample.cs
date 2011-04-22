@@ -33,9 +33,9 @@ class LoggingExample
     try
     {
       IStateName proxy = XmlRpcProxyGen.Create<IStateName>();
-      RequestResponseLogger dumper = new RequestResponseLogger();
-      dumper.Directory = "C:/temp";
-      dumper.Attach(proxy);
+      RequestResponseLogger logger = new RequestResponseLogger();
+      logger.Directory = "C:/temp";
+      proxy.AttachLogger(logger);
       Console.WriteLine("Synchronous call");
       string ret = proxy.GetStateName(45);
       Console.WriteLine("state #45 is {0}", ret);

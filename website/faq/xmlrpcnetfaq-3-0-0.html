@@ -892,15 +892,6 @@ Third, call a method on the interface:
 
 <pre>SumAndDiffValue ret = proxy.SumAndDifference(2, 3);</pre>
 
-<p>
-Note: for version one of XML-RPC.NET the non-generic form of Create must be
-used:
-</p>
-
-<pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
-</pre>
-
-
 <h3><a id="2.2"></a>2.2 What if the XML-RPC method name is not valid in my programming language?</h3>
 
 <p>
@@ -930,7 +921,7 @@ definition of the proxy class and instead the Url property is then set on
 an instance of the proxy class:
 </p>
 
-<pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
 proxy.Url = &quot;http://www.cookcomputing.com/SumAndDiff.rem&quot;;
 SumAndDiffValue ret = proxy.SumAndDifference(2, 3);
 </pre>
@@ -954,7 +945,7 @@ set a 5 second timeout:
 </p>
 
 
-<pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
 proxy.Timeout = 5000;
 SumAndDiffValue ret = proxy.SumAndDifference(2, 3);</pre>
 
@@ -968,7 +959,7 @@ The property is used in exactly the same way as the same property of the
 System.Net.WebRequest class. For example:
 </p>
 
-<pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
 proxy.Credentials = new NetworkCredential("jsmith","password");
 SumAndDiffValue ret = proxy.SumAndDifference(2, 3);
 </pre>
@@ -982,7 +973,7 @@ property of type WebHeaderCollection. This can be used to specify custom
 headers which will be added to the HTTP request. For example:
 </p>
 
-<pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
 proxy.Headers.Add("TestHeader", "this_is_a_test");
 SumAndDiffValue ret = proxy->SumAndDifference(2, 3);
 </pre>
@@ -997,7 +988,7 @@ System.Net.HttpWebRequest. Instances of System.Net.Cookie added to the container
 will sent with the HTTP request. For example:
 </p>
 
-<pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
 Cookie cookie = new Cookie("foo", "bar", "/", "www.cookcomputing.com")
 proxy.CookieContainer.Add(cookie);
 SumAndDiffValue ret = proxy->SumAndDifference(2, 3);
@@ -1346,7 +1337,7 @@ the property is set to an instance of the IWebProxy interface, this usually
 being the interface on an instance of the System.Net.WebProxy class. For example:
 </p>
 
-<pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
 proxy.Proxy = new WebProxy(&quot;http://proxyserver:8000&quot;);    
 SumAndDiffValue ret = proxy.SumAndDifference(2, 3); </pre>
 
@@ -1399,7 +1390,7 @@ public interface IParams : IXmlRpcProxy
 And called like this:
 </p>
 
-<pre>IFoo proxy = (IFoo)XmlRpcProxyGen.Create(typeof(IFoo));
+<pre>IFoo proxy = XmlRpcProxyGen.Create&lt;IFoo&gt;();
 proxy.SendMultipleParameters(1);
 proxy.SendMultipleParameters(1, 2, 3);
 </pre>
@@ -1474,7 +1465,7 @@ not support the &lt;i4&gt; form. If this is the case, the UseIntTag property of
 IXmlRpcProxy can be used to configure the use of &lt;int&gt;, for example:
 </p>
 
-<pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
 proxy.UseIntTag = true;
 </pre>
 
@@ -1560,7 +1551,7 @@ flag specifies that any leading whitespace should be ignored.
 For example: 
 </p>
 
-<pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;();
 proxy.NonStandard = XmlRpcNonStandard.AllowStringFaultCode
                     & XmlRpcNonStandard.IgnoreDuplicateMembers;
 </pre>
@@ -1581,7 +1572,7 @@ request will be &quot;Id1234_SumAndDifference&quot; instead of the
 statically defined &quot;SumAndDifference&quot;
 </p>
 
-<pre>ISumAndDiff proxy = (ISumAndDiff)XmlRpcProxyGen.Create(typeof(ISumAndDiff));
+<pre>ISumAndDiff proxy = XmlRpcProxyGen.Create&lt;ISumAndDiff&gt;);
 proxy.XmlRpcMethod = &quot;Id1234_SumAndDifference&quot;
 proxy.SumAndDifference(3, 4);
 </pre>
@@ -2624,8 +2615,25 @@ Perhaps even more useful is the HTTP debugging proxy called
 to look at requests and responses as text, hex, or xml.
 </p>
 
+<h4>Logging</h4>
+
 <p>
-Finally, proxies expose two events - RequestEvent and ResponseEvent - which 
+The simplest way to log the content of XML-RPC requests and responses is to
+attach an instance XmlRpcDebugLogger to your proxy, for example:
+</p>
+
+<pre>IStateName proxy = XmlRpcProxyGen.Create&lt;IStateName&gt;();
+proxy.AttachLogger(new XmlRpcDebugLogger());
+</pre>
+
+<p>
+This will result in the XML of the request and response for each call being 
+written to the currently configured Debug listeners. When using Visual Studio 
+the default listener writes to the Output window. 
+</p>
+
+<p>
+Proxies expose two events - RequestEvent and ResponseEvent - which 
 provide access to the streams containing the request and response XML for 
 each XML-RPC call. The delegates used to subscribe to these events are:</p>
 
@@ -2652,53 +2660,14 @@ has a ResponseStream property instead of RequestStream.
 </p>
 
 <p>
-The library contains a helper class - XmlRpcLogger - which simplifies attaching
-logging code to a proxy. For example, to log the content of requests and 
-responses to the current trace listener(s) this class derived from XmlRpcLogger
-can be used:
+The library contains a helper abstract class - XmlRpcLogger - which simplifies attaching
+logging code to a proxy. The classes XmlRpcDebugger and Tracer are examples of how 
+to derive from XmlRpcLogger (Tracer is similer to XmlRpcDebugger but it writes to
+the Trace listener(s) instead of the Debug listener(s)).
 </p>
 
-<pre>public class Tracer : XmlRpcLogger
-{
-  protected override void OnRequest(object sender, 
-    XmlRpcRequestEventArgs e)
-  {
-    DumpStream(e.RequestStream);
-  }
-
-  protected override void OnResponse(object sender, 
-    XmlRpcResponseEventArgs e)
-  {
-    DumpStream(e.ResponseStream);
-  }
-
-  private void DumpStream(Stream stm)
-  {
-    stm.Position = 0;
-    TextReader trdr = new StreamReader(stm);
-    String s = trdr.ReadLine();
-    while (s != null)
-    {
-      Trace.WriteLine(s);
-      s = trdr.ReadLine();
-    }
-  }
-}
-</pre>
-
 <p>
-Then once you have created a proxy attach an instance of Tracer:
-</p>
-
-<pre>IStateName proxy = (IStateName)XmlRpcProxyGen.Create(
-  typeof(IStateName));
-Tracer tracer = new Tracer();
-tracer.Attach(proxy);
-string ret = proxy.GetStateName(45);
-</pre>
-
-<p>
-The XML-RPC.NET assembly contains class Tracer as well as class
+The XML-RPC.NET assembly also contains the class
 RequestResponseLogger which can be used to dump the contents of request and 
 responses to individual files. This is useful when it is necessary to examine
 the exact content that it is being sent to and returned from the server. 
@@ -2708,7 +2677,7 @@ for requests and response pairs look like this:
 </p>
 
 <p>
-632880530803281250-0002-request-351884cb-cbde-417e-906e-b1424f617d89.xml
+632880530803281250-0002-request-351884cb-cbde-417e-906e-b1424f617d89.xml<br />
 632880530803281250-0002-response-351884cb-cbde-417e-906e-b1424f617d89.xml
 </p>
 
@@ -2723,10 +2692,8 @@ RequestResponseLogger is used in the same way as the Tracer class (see
 LoggingSample in the distribution):
 </p>
 
-<pre>IStateName proxy = (IStateName)XmlRpcProxyGen.Create(
-  typeof(IStateName));
-RequestResponseLogger dumper = new RequestResponseLogger();
-dumper.Attach(proxy);
+<pre>IStateName proxy = XmlRpcProxyGen.Create&lt;IStateName&gt;();
+proxy.AttachLogger(new RequestResponseLogger());
 string ret = proxy.GetStateName(45);
 </pre>
 

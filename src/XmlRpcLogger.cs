@@ -31,28 +31,28 @@ namespace CookComputing.XmlRpc
 {
   public abstract class XmlRpcLogger
   {
-    public void Attach(XmlRpcClientProtocol proxy)
+    public void SubscribeTo(IXmlRpcProxy proxy)
     {
       proxy.RequestEvent += new XmlRpcRequestEventHandler(OnRequest);
       proxy.ResponseEvent += new XmlRpcResponseEventHandler(OnResponse);
     }
 
+    [Obsolete("This method is obsolete; use SubscribeTo instead")]
     public void Attach(IXmlRpcProxy proxy)
     {
-      proxy.RequestEvent += new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent += new XmlRpcResponseEventHandler(OnResponse);
+      SubscribeTo(proxy);
     }
 
-    public void Detach(XmlRpcClientProtocol proxy)
+    public void UnsubscribeFrom(IXmlRpcProxy proxy)
     {
       proxy.RequestEvent -= new XmlRpcRequestEventHandler(OnRequest);
       proxy.ResponseEvent -= new XmlRpcResponseEventHandler(OnResponse);
     }
 
+    [Obsolete("This method is obsolete; use UnsubcribeFrom instead")]
     public void Detach(IXmlRpcProxy proxy)
     {
-      proxy.RequestEvent -= new XmlRpcRequestEventHandler(OnRequest);
-      proxy.ResponseEvent -= new XmlRpcResponseEventHandler(OnResponse);
+      UnsubscribeFrom(proxy);
     }
 
     protected virtual void OnRequest(object sender, XmlRpcRequestEventArgs e)

@@ -306,6 +306,59 @@ namespace ntest
         CodeAccessPermission.RevertDeny();
       }
     }
+
+
+
+
+    [Test]
+    public void Logging()
+    {
+      string expectedRequest = @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>examples.getStateName</methodName>
+  <params>
+    <param>
+      <value>
+        <i4>1</i4>
+      </value>
+    </param>
+  </params>
+</methodCall>";
+      string expectedResponseXml = @"<?xml version=""1.0""?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <string>Alabama</string>
+      </value>
+    </param>
+  </params>
+</methodResponse>";
+      string requestXml = null;
+      string responseXml = null;
+      IStateName proxy = (IStateName)XmlRpcProxyGen.Create(typeof(IStateName));
+      proxy.RequestEvent += delegate(object sender, XmlRpcRequestEventArgs args)
+      {
+        requestXml = GetXml(args.RequestStream);
+      };
+      proxy.ResponseEvent += delegate(object sender, XmlRpcResponseEventArgs args)
+      {
+        responseXml = GetXml(args.ResponseStream);
+      };
+      string ret = proxy.GetStateName(1);
+      Assert.AreEqual("Alabama", ret);
+      Assert.AreEqual(expectedRequest, requestXml);
+      Assert.AreEqual(expectedResponseXml, responseXml);
+    }
+
+
+    private string GetXml(Stream stm)
+    {
+        TextReader trdr = new StreamReader(stm);
+        String s = trdr.ReadToEnd();
+        stm.Position = 0;
+        return s;
+    }
   }
 }
 
