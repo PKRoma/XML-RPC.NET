@@ -87,6 +87,13 @@ namespace ntest
   </array>
 </value>";
 
+    string expectedEmptyArray =
+@"<value>
+  <array>
+    <data />
+  </array>
+</value>";
+
     [Test]
     public void SerializeJagged()
     {
@@ -134,6 +141,25 @@ namespace ntest
       Assert.AreEqual(4, ret[1, 1]);
       Assert.AreEqual(5, ret[2, 0]);
       Assert.AreEqual(6, ret[2, 1]);
+    }
+
+    [Test]
+    public void SerializeEmpty()
+    {
+      var empty = new int[] 
+      {
+      };
+      string xml = Utils.SerializeValue(empty, true);
+      Assert.AreEqual(expectedEmptyArray, xml);
+    }
+
+    [Test]
+    public void DeserializeEmpty()
+    {
+      object retVal = Utils.ParseValue(expectedEmptyArray, typeof(int[]));
+      Assert.IsInstanceOf<int[]>(retVal);
+      int[] ret = (int[])retVal;
+      Assert.IsTrue(ret.Length == 0);
     }
 
     //---------------------- array -----------------------------------------// 
