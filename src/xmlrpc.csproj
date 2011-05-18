@@ -118,6 +118,7 @@
     <Compile Include="DateTime8601.cs" />
     <Compile Include="MappingStack.cs" />
     <Compile Include="XmlRpcDebugLogger.cs" />
+    <Compile Include="XmlRpcEnumMapping.cs" />
     <Compile Include="XmlRpcFormatSettings.cs" />
     <Compile Include="GuidEx.cs">
       <SubType>Code</SubType>

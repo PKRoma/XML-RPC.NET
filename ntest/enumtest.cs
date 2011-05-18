@@ -40,6 +40,8 @@ namespace ntest
     Zero,
     One,
     Two,
+    Three,
+    Four,
   }
 
   public enum UIntEnum : uint
@@ -173,7 +175,7 @@ namespace ntest
     [Test]
     public void Deserialize()
     {
-      string xml = 
+      string xml =
 @"<?xml version=""1.0"" encoding=""iso-8859-1""?>
 <methodResponse>
   <params>
@@ -283,5 +285,529 @@ namespace ntest
       string xml = "<value><i4>" + maxIntPlusOne.ToString() + "</i4></value>";
       object o = Utils.ParseValue(xml, typeof(IntEnum));
     }
+
+    [Test]
+    public void DeserializeStringEnum()
+    {
+      string xml = "<value><string>Two</string></value>";
+      object o = Utils.ParseValue(xml, typeof(IntEnum));
+      Assert.IsInstanceOf<IntEnum>(o);
+      Assert.AreEqual(IntEnum.Two, o);
+    }
+
+    [Test]
+    public void DeserializeValueEnum()
+    {
+      string xml = "<value>Two</value>";
+      object o = Utils.ParseValue(xml, typeof(IntEnum));
+      Assert.IsInstanceOf<IntEnum>(o);
+      Assert.AreEqual(IntEnum.Two, o);
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcInvalidEnumValue))]
+    public void DeserializeInvalidStringEnum()
+    {
+      string xml = "<value><string>Two</string></value>";
+      object o = Utils.ParseValue(xml, typeof(IntEnum));
+      Assert.IsInstanceOf<IntEnum>(o);
+      Assert.AreEqual(IntEnum.Two, o);
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcInvalidEnumValue))]
+    public void DeserializeInvalidValueEnum()
+    {
+      string xml = "<value>Two</value>";
+      object o = Utils.ParseValue(xml, typeof(IntEnum));
+      Assert.IsInstanceOf<IntEnum>(o);
+      Assert.AreEqual(IntEnum.Two, o);
+    }
+
+
+    public void EnumMethod1([XmlRpcEnumMapping(EnumMapping.String)] IntEnum param1)
+    {
+    }
+
+    [Test]
+    public void SerializeRequestWithEnumStringParam()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] { IntEnum.Two };
+      req.method = "EnumMethod1";
+      req.mi = this.GetType().GetMethod("Foo");
+      var ser = new XmlRpcRequestSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>EnumMethod1</methodName>
+  <params>
+    <param>
+      <value>
+        <string>Two</string>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
+    public class IntEnumClass
+    {
+      public IntEnum IntEnum { get; set; }
+      public IntEnum intEnum;
+      public IntEnum[] IntEnums { get; set; }
+      public IntEnum[] intEnums;
+    }
+
+    [XmlRpcEnumMapping(EnumMapping.String)]
+    public void MappingOnMethod(IntEnum param1, IntEnum[] param2, IntEnumClass param3)
+    {
+    }
+
+    [Test]
+    public void SerializeWithMappingOnMethod()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] 
+      { 
+        IntEnum.Zero,
+        new IntEnum[] { IntEnum.One, IntEnum.Two },
+        new IntEnumClass 
+        { 
+          IntEnum = IntEnum.One, 
+          intEnum = IntEnum.Two,
+          IntEnums = new IntEnum[] { IntEnum.One, IntEnum.Two },
+          intEnums = new IntEnum[] { IntEnum.Three, IntEnum.Four },
+        } 
+      };
+      req.method = "MappingOnMethod";
+      req.mi = this.GetType().GetMethod("MappingOnMethod");
+      var ser = new XmlRpcRequestSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>EnumMethod2</methodName>
+  <params>
+    <param>
+      <value>
+        <string>Zero</string>
+      </value>
+    </param>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value>
+              <string>One</string>
+            </value>
+            <value>
+              <string>Two</string>
+            </value>
+          </data>
+        </array>
+      </value>
+    </param>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>IntEnum</name>
+            <value><string>One</string></value>
+          </member>
+          <member>
+            <name>intEnum</name>
+            <value><string>Two</string></value>
+          </member>
+          <member>
+            <name>IntEnum</name>
+              <value>
+                <array>
+                  <data>
+                    <value>
+                      <string>One</string>
+                    </value>
+                    <value>
+                      <string>Two</string>
+                    </value>
+                  </data>
+                </array>
+              </value>
+          </member>
+          <member>
+            <name>intEnums</name>
+              <value>
+                <array>
+                  <data>
+                    <value>
+                      <string>One</string>
+                    </value>
+                    <value>
+                      <string>Two</string>
+                    </value>
+                  </data>
+                </array>
+              </value>
+          </member>
+        </struct>      
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
+    public void MappingOnParameter(
+      [XmlRpcEnumMapping(EnumMapping.String)] IntEnum param1,
+      [XmlRpcEnumMapping(EnumMapping.String)]IntEnum[] param2,
+      [XmlRpcEnumMapping(EnumMapping.String)]IntEnumClass param3)
+    {
+    }
+
+    [Test]
+    public void SerializeWithMappingOnParameter()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] 
+      { 
+        IntEnum.Zero,
+        new IntEnum[] { IntEnum.One, IntEnum.Two },
+        new IntEnumClass 
+        { 
+          IntEnum = IntEnum.One, 
+          intEnum = IntEnum.Two,
+          IntEnums = new IntEnum[] { IntEnum.One, IntEnum.Two },
+          intEnums = new IntEnum[] { IntEnum.Three, IntEnum.Four },
+        } 
+      };
+      req.method = "MappingOnParameter";
+      req.mi = this.GetType().GetMethod("MappingOnParameter");
+      var ser = new XmlRpcRequestSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>EnumMethod2</methodName>
+  <params>
+    <param>
+      <value>
+        <string>Zero</string>
+      </value>
+    </param>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value>
+              <string>One</string>
+            </value>
+            <value>
+              <string>Two</string>
+            </value>
+          </data>
+        </array>
+      </value>
+    </param>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>IntEnum</name>
+            <value><string>One</string></value>
+          </member>
+          <member>
+            <name>intEnum</name>
+            <value><string>Two</string></value>
+          </member>
+          <member>
+            <name>IntEnum</name>
+              <value>
+                <array>
+                  <data>
+                    <value>
+                      <string>One</string>
+                    </value>
+                    <value>
+                      <string>Two</string>
+                    </value>
+                  </data>
+                </array>
+              </value>
+          </member>
+          <member>
+            <name>intEnums</name>
+              <value>
+                <array>
+                  <data>
+                    <value>
+                      <string>One</string>
+                    </value>
+                    <value>
+                      <string>Two</string>
+                    </value>
+                  </data>
+                </array>
+              </value>
+          </member>
+        </struct>      
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
+    [XmlRpcEnumMapping(EnumMapping.String)]
+    public class IntEnumClass2
+    {
+      public IntEnum IntEnum { get; set; }
+      public IntEnum intEnum;
+      public IntEnum[] IntEnums { get; set; }
+      public IntEnum[] intEnums;
+    }
+
+    public void MappingOnClass(IntEnum param1, IntEnum[] param2, IntEnumClass param3)
+    {
+    }
+
+    [Test]
+    public void SerializeWithMappingOnClass()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] 
+      { 
+        IntEnum.Zero,
+        new IntEnum[] { IntEnum.One, IntEnum.Two },
+        new IntEnumClass2 
+        { 
+          IntEnum = IntEnum.One, 
+          intEnum = IntEnum.Two,
+          IntEnums = new IntEnum[] { IntEnum.One, IntEnum.Two },
+          intEnums = new IntEnum[] { IntEnum.Three, IntEnum.Four },
+        } 
+      };
+      req.method = "MappingOnClass";
+      req.mi = this.GetType().GetMethod("MappingOnClass");
+      var ser = new XmlRpcRequestSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>EnumMethod2</methodName>
+  <params>
+    <param>
+      <value>
+        <string>Zero</string>
+      </value>
+    </param>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value>
+              <string>One</string>
+            </value>
+            <value>
+              <string>Two</string>
+            </value>
+          </data>
+        </array>
+      </value>
+    </param>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>IntEnum</name>
+            <value><string>One</string></value>
+          </member>
+          <member>
+            <name>intEnum</name>
+            <value><string>Two</string></value>
+          </member>
+          <member>
+            <name>IntEnum</name>
+              <value>
+                <array>
+                  <data>
+                    <value>
+                      <string>One</string>
+                    </value>
+                    <value>
+                      <string>Two</string>
+                    </value>
+                  </data>
+                </array>
+              </value>
+          </member>
+          <member>
+            <name>intEnums</name>
+              <value>
+                <array>
+                  <data>
+                    <value>
+                      <string>One</string>
+                    </value>
+                    <value>
+                      <string>Two</string>
+                    </value>
+                  </data>
+                </array>
+              </value>
+          </member>
+        </struct>      
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
+    public class IntEnumClass3
+    {
+      [XmlRpcEnumMapping(EnumMapping.String)]
+      public IntEnum IntEnum { get; set; }
+      [XmlRpcEnumMapping(EnumMapping.String)]
+      public IntEnum intEnum;
+      [XmlRpcEnumMapping(EnumMapping.String)]
+      public IntEnum[] IntEnums { get; set; }
+      [XmlRpcEnumMapping(EnumMapping.String)]
+      public IntEnum[] intEnums;
+    }
+
+    public void MappingOnClassMembers(IntEnum param1, IntEnum[] param2, IntEnumClass param3)
+    {
+    }
+
+    [Test]
+    public void SerializeWithMappingOnClassMembers()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new Object[] 
+      { 
+        IntEnum.Zero,
+        new IntEnum[] { IntEnum.One, IntEnum.Two },
+        new IntEnumClass3 
+        { 
+          IntEnum = IntEnum.One, 
+          intEnum = IntEnum.Two,
+          IntEnums = new IntEnum[] { IntEnum.One, IntEnum.Two },
+          intEnums = new IntEnum[] { IntEnum.Three, IntEnum.Four },
+        } 
+      };
+      req.method = "MappingOnClass";
+      req.mi = this.GetType().GetMethod("MappingOnClass");
+      var ser = new XmlRpcRequestSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>EnumMethod2</methodName>
+  <params>
+    <param>
+      <value>
+        <string>Zero</string>
+      </value>
+    </param>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value>
+              <string>One</string>
+            </value>
+            <value>
+              <string>Two</string>
+            </value>
+          </data>
+        </array>
+      </value>
+    </param>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>IntEnum</name>
+            <value><string>One</string></value>
+          </member>
+          <member>
+            <name>intEnum</name>
+            <value><string>Two</string></value>
+          </member>
+          <member>
+            <name>IntEnum</name>
+              <value>
+                <array>
+                  <data>
+                    <value>
+                      <string>One</string>
+                    </value>
+                    <value>
+                      <string>Two</string>
+                    </value>
+                  </data>
+                </array>
+              </value>
+          </member>
+          <member>
+            <name>intEnums</name>
+              <value>
+                <array>
+                  <data>
+                    <value>
+                      <string>One</string>
+                    </value>
+                    <value>
+                      <string>Two</string>
+                    </value>
+                  </data>
+                </array>
+              </value>
+          </member>
+        </struct>      
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
   }
 }
+
+
+/*
+Attribute on:
+  
+- interface
+- method
+- parameter
+- array
+- struct
+- struct member
+
+
+
+
+*/
