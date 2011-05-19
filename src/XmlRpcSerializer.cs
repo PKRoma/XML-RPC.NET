@@ -201,7 +201,7 @@ namespace CookComputing.XmlRpc
         else if (xType == XmlRpcType.tStruct)
         {
           MappingActions structActions
-            = StructMappingActions(o.GetType(), mappingActions);
+            = GetMappingActions(o.GetType(), mappingActions);
           xtw.WriteStartElement("", "struct", "");
           MemberInfo[] mis = o.GetType().GetMembers();
           foreach (MemberInfo mi in mis)
@@ -460,29 +460,6 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
-    MappingActions StructMappingActions(
-      Type type,
-      MappingActions currentActions)
-    {
-      if (type == null)
-        return currentActions;
-      var ret = new MappingActions { EnumMapping = currentActions.EnumMapping,
-        NullMappingAction = currentActions.NullMappingAction };
-      Attribute attr = Attribute.GetCustomAttribute(type, typeof(XmlRpcNullMappingAttribute));
-      if (attr != null)
-        ret.NullMappingAction = ((XmlRpcNullMappingAttribute)attr).Action;
-      else
-      {
-        attr = Attribute.GetCustomAttribute(type, typeof(XmlRpcMissingMappingAttribute));
-        if (attr != null)
-          ret.NullMappingAction = MapToNullMappingAction(((XmlRpcMissingMappingAttribute)attr).Action);
-      }
-      attr = Attribute.GetCustomAttribute(type, typeof(XmlRpcEnumMappingAttribute));
-      if (attr != null)
-        ret.EnumMapping = ((XmlRpcEnumMappingAttribute)attr).Mapping;
-      return ret;
-    }
-
     MappingActions MemberMappingActions(
       Type type,
       string memberName,
@@ -492,34 +469,46 @@ namespace CookComputing.XmlRpc
       // mapping action else just return the current action
       if (type == null)
         return currentActions;
-      Attribute attr = null;
       MemberInfo[] mis = type.GetMember(memberName);
-      var ret = new MappingActions
-      {
-        EnumMapping = currentActions.EnumMapping,
-        NullMappingAction = currentActions.NullMappingAction
-      };
-      if (mis.Length > 0 && mis != null)
-      {
-        attr = Attribute.GetCustomAttribute(mis[0], typeof(XmlRpcNullMappingAttribute));
-        if (attr != null)
-          ret.NullMappingAction = ((XmlRpcNullMappingAttribute)attr).Action;
-        else
-        {
-          // check for missing mapping attribute for backwards compatibility
-          attr = Attribute.GetCustomAttribute(mis[0], typeof(XmlRpcMissingMappingAttribute))
-            as XmlRpcMissingMappingAttribute;
-          if (attr != null)
-            ret.NullMappingAction = MapToNullMappingAction(((XmlRpcMissingMappingAttribute)attr).Action);
-        }
-        attr = Attribute.GetCustomAttribute(mis[0], typeof(XmlRpcEnumMappingAttribute));
-        if (attr != null)
-          ret.EnumMapping = ((XmlRpcEnumMappingAttribute)attr).Mapping;
-      }
+      if (mis == null || mis.Length == 0)
+        return currentActions;
+      var ret = GetMappingActions(mis[0], currentActions);
       return ret;
     }
 
-    private static NullMappingAction MapToNullMappingAction(MappingAction missingMappingAction)
+    protected MappingActions GetMappingActions(ICustomAttributeProvider cap, 
+      MappingActions mappingActions)
+    {
+      if (cap == null)
+        return mappingActions;
+      var ret = new MappingActions
+      {
+        EnumMapping = mappingActions.EnumMapping,
+        NullMappingAction = mappingActions.NullMappingAction
+      };
+      var nullMappingAttr = GetAttribute<XmlRpcNullMappingAttribute>(cap);
+      if (nullMappingAttr != null)
+        ret.NullMappingAction = nullMappingAttr.Action;
+      else
+      {
+        // check for missing mapping attribute for backwards compatibility
+        var missingAttr = GetAttribute<XmlRpcMissingMappingAttribute>(cap);
+        if (missingAttr != null)
+          ret.NullMappingAction = MapToNullMappingAction(missingAttr.Action);
+      }
+      var enumAttr = GetAttribute<XmlRpcEnumMappingAttribute>(cap);
+      if (enumAttr != null)
+        ret.EnumMapping = ((XmlRpcEnumMappingAttribute)enumAttr).Mapping;
+      return ret;
+    }
+
+    static T GetAttribute<T>(ICustomAttributeProvider cap) where T : class
+    {
+      var attrs = cap.GetCustomAttributes(typeof(T), true);
+      return attrs.Length == 0 ? null : attrs[0] as T;
+    }
+
+    static NullMappingAction MapToNullMappingAction(MappingAction missingMappingAction)
     {
       switch (missingMappingAction)
       {

@@ -49,7 +49,7 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodCall", "");
       {
-        var mappingActions = MethodMappingActions(request.mi, new MappingActions());
+        var mappingActions = GetMappingActions(request.mi, new MappingActions());
         WriteFullElementString(xtw, "methodName", request.method);
         if (request.args.Length > 0 || UseEmptyParamsTag)
         {
@@ -86,7 +86,7 @@ namespace CookComputing.XmlRpc
       for (int i = 0; i < request.args.Length; i++)
       {
         var paramMappingActions = pis == null ? mappingActions
-          : ParameterMappingActions(pis[i], mappingActions);
+          : GetMappingActions(pis[i], mappingActions);
         if (pis != null)
         {
           if (i >= pis.Length)
@@ -150,42 +150,6 @@ namespace CookComputing.XmlRpc
       WriteFullEndElement(xtw);
       WriteFullEndElement(xtw);
       WriteFullEndElement(xtw);
-    }
-
-    MappingActions MethodMappingActions(MethodInfo mi, MappingActions currentActions)
-    {
-      if (mi == null)
-        return currentActions;
-      var ret = new MappingActions
-      {
-        EnumMapping = currentActions.EnumMapping,
-        NullMappingAction = currentActions.NullMappingAction
-      };
-      Attribute attr = Attribute.GetCustomAttribute(mi, typeof(XmlRpcNullMappingAttribute));
-      if (attr != null)
-        ret.NullMappingAction = ((XmlRpcNullMappingAttribute)attr).Action;
-      attr = Attribute.GetCustomAttribute(mi, typeof(XmlRpcEnumMappingAttribute));
-      if (attr != null)
-        ret.EnumMapping = ((XmlRpcEnumMappingAttribute)attr).Mapping;
-      return ret;
-    }
-
-    MappingActions ParameterMappingActions(ParameterInfo pi, MappingActions currentActions)
-    {
-      if (pi == null)
-        return currentActions;
-      var ret = new MappingActions
-      {
-        EnumMapping = currentActions.EnumMapping,
-        NullMappingAction = currentActions.NullMappingAction
-      };
-      Attribute attr = Attribute.GetCustomAttribute(pi, typeof(XmlRpcNullMappingAttribute));
-      if (attr != null)
-        ret.NullMappingAction = ((XmlRpcNullMappingAttribute)attr).Action;
-      attr = Attribute.GetCustomAttribute(pi, typeof(XmlRpcEnumMappingAttribute));
-      if (attr != null)
-        ret.EnumMapping = ((XmlRpcEnumMappingAttribute)attr).Mapping;
-      return ret;
     }
   }
 }

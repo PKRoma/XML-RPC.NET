@@ -648,7 +648,7 @@ namespace CookComputing.XmlRpc
 
     private void CheckImplictString(Type valType, MappingStack mappingStack)
     {
-      if (valType != null && valType != typeof(string))
+      if (valType != null && valType != typeof(string) && !valType.IsEnum)
       {
         throw new XmlRpcTypeMismatchException(mappingStack.MappingType
           + " contains implicit string value where "
