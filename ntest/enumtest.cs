@@ -308,7 +308,7 @@ namespace ntest
     [ExpectedException(typeof(XmlRpcInvalidEnumValue))]
     public void DeserializeInvalidStringEnum()
     {
-      string xml = "<value><string>Two</string></value>";
+      string xml = "<value><string>Ten</string></value>";
       object o = Utils.ParseValue(xml, typeof(IntEnum));
       Assert.IsInstanceOf<IntEnum>(o);
       Assert.AreEqual(IntEnum.Two, o);
@@ -318,7 +318,7 @@ namespace ntest
     [ExpectedException(typeof(XmlRpcInvalidEnumValue))]
     public void DeserializeInvalidValueEnum()
     {
-      string xml = "<value>Two</value>";
+      string xml = "<value>Ten</value>";
       object o = Utils.ParseValue(xml, typeof(IntEnum));
       Assert.IsInstanceOf<IntEnum>(o);
       Assert.AreEqual(IntEnum.Two, o);
@@ -336,7 +336,7 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] { IntEnum.Two };
       req.method = "EnumMethod1";
-      req.mi = this.GetType().GetMethod("Foo");
+      req.mi = this.GetType().GetMethod("EnumMethod1");
       var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
@@ -398,7 +398,7 @@ namespace ntest
       Assert.AreEqual(
         @"<?xml version=""1.0""?>
 <methodCall>
-  <methodName>EnumMethod2</methodName>
+  <methodName>MappingOnMethod</methodName>
   <params>
     <param>
       <value>
@@ -424,43 +424,47 @@ namespace ntest
         <struct>
           <member>
             <name>IntEnum</name>
-            <value><string>One</string></value>
+            <value>
+              <string>One</string>
+            </value>
+          </member>
+          <member>
+            <name>IntEnums</name>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>One</string>
+                  </value>
+                  <value>
+                    <string>Two</string>
+                  </value>
+                </data>
+              </array>
+            </value>
           </member>
           <member>
             <name>intEnum</name>
-            <value><string>Two</string></value>
-          </member>
-          <member>
-            <name>IntEnum</name>
-              <value>
-                <array>
-                  <data>
-                    <value>
-                      <string>One</string>
-                    </value>
-                    <value>
-                      <string>Two</string>
-                    </value>
-                  </data>
-                </array>
-              </value>
+            <value>
+              <string>Two</string>
+            </value>
           </member>
           <member>
             <name>intEnums</name>
-              <value>
-                <array>
-                  <data>
-                    <value>
-                      <string>One</string>
-                    </value>
-                    <value>
-                      <string>Two</string>
-                    </value>
-                  </data>
-                </array>
-              </value>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>Three</string>
+                  </value>
+                  <value>
+                    <string>Four</string>
+                  </value>
+                </data>
+              </array>
+            </value>
           </member>
-        </struct>      
+        </struct>
       </value>
     </param>
   </params>
@@ -502,7 +506,7 @@ namespace ntest
       Assert.AreEqual(
         @"<?xml version=""1.0""?>
 <methodCall>
-  <methodName>EnumMethod2</methodName>
+  <methodName>MappingOnParameter</methodName>
   <params>
     <param>
       <value>
@@ -528,43 +532,47 @@ namespace ntest
         <struct>
           <member>
             <name>IntEnum</name>
-            <value><string>One</string></value>
+            <value>
+              <string>One</string>
+            </value>
+          </member>
+          <member>
+            <name>IntEnums</name>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>One</string>
+                  </value>
+                  <value>
+                    <string>Two</string>
+                  </value>
+                </data>
+              </array>
+            </value>
           </member>
           <member>
             <name>intEnum</name>
-            <value><string>Two</string></value>
-          </member>
-          <member>
-            <name>IntEnum</name>
-              <value>
-                <array>
-                  <data>
-                    <value>
-                      <string>One</string>
-                    </value>
-                    <value>
-                      <string>Two</string>
-                    </value>
-                  </data>
-                </array>
-              </value>
+            <value>
+              <string>Two</string>
+            </value>
           </member>
           <member>
             <name>intEnums</name>
-              <value>
-                <array>
-                  <data>
-                    <value>
-                      <string>One</string>
-                    </value>
-                    <value>
-                      <string>Two</string>
-                    </value>
-                  </data>
-                </array>
-              </value>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>Three</string>
+                  </value>
+                  <value>
+                    <string>Four</string>
+                  </value>
+                </data>
+              </array>
+            </value>
           </member>
-        </struct>      
+        </struct>
       </value>
     </param>
   </params>
@@ -580,7 +588,7 @@ namespace ntest
       public IntEnum[] intEnums;
     }
 
-    public void MappingOnClass(IntEnum param1, IntEnum[] param2, IntEnumClass param3)
+    public void MappingOnClass(IntEnumClass param1)
     {
     }
 
@@ -591,8 +599,6 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] 
       { 
-        IntEnum.Zero,
-        new IntEnum[] { IntEnum.One, IntEnum.Two },
         new IntEnumClass2 
         { 
           IntEnum = IntEnum.One, 
@@ -612,69 +618,54 @@ namespace ntest
       Assert.AreEqual(
         @"<?xml version=""1.0""?>
 <methodCall>
-  <methodName>EnumMethod2</methodName>
+  <methodName>MappingOnClass</methodName>
   <params>
-    <param>
-      <value>
-        <string>Zero</string>
-      </value>
-    </param>
-    <param>
-      <value>
-        <array>
-          <data>
-            <value>
-              <string>One</string>
-            </value>
-            <value>
-              <string>Two</string>
-            </value>
-          </data>
-        </array>
-      </value>
-    </param>
     <param>
       <value>
         <struct>
           <member>
             <name>IntEnum</name>
-            <value><string>One</string></value>
+            <value>
+              <string>One</string>
+            </value>
+          </member>
+          <member>
+            <name>IntEnums</name>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>One</string>
+                  </value>
+                  <value>
+                    <string>Two</string>
+                  </value>
+                </data>
+              </array>
+            </value>
           </member>
           <member>
             <name>intEnum</name>
-            <value><string>Two</string></value>
-          </member>
-          <member>
-            <name>IntEnum</name>
-              <value>
-                <array>
-                  <data>
-                    <value>
-                      <string>One</string>
-                    </value>
-                    <value>
-                      <string>Two</string>
-                    </value>
-                  </data>
-                </array>
-              </value>
+            <value>
+              <string>Two</string>
+            </value>
           </member>
           <member>
             <name>intEnums</name>
-              <value>
-                <array>
-                  <data>
-                    <value>
-                      <string>One</string>
-                    </value>
-                    <value>
-                      <string>Two</string>
-                    </value>
-                  </data>
-                </array>
-              </value>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>Three</string>
+                  </value>
+                  <value>
+                    <string>Four</string>
+                  </value>
+                </data>
+              </array>
+            </value>
           </member>
-        </struct>      
+        </struct>
       </value>
     </param>
   </params>
@@ -693,7 +684,7 @@ namespace ntest
       public IntEnum[] intEnums;
     }
 
-    public void MappingOnClassMembers(IntEnum param1, IntEnum[] param2, IntEnumClass param3)
+    public void MappingOnClassMembers(IntEnumClass param1)
     {
     }
 
@@ -704,8 +695,6 @@ namespace ntest
       XmlRpcRequest req = new XmlRpcRequest();
       req.args = new Object[] 
       { 
-        IntEnum.Zero,
-        new IntEnum[] { IntEnum.One, IntEnum.Two },
         new IntEnumClass3 
         { 
           IntEnum = IntEnum.One, 
@@ -714,8 +703,8 @@ namespace ntest
           intEnums = new IntEnum[] { IntEnum.Three, IntEnum.Four },
         } 
       };
-      req.method = "MappingOnClass";
-      req.mi = this.GetType().GetMethod("MappingOnClass");
+      req.method = "MappingOnClassMembers";
+      req.mi = this.GetType().GetMethod("MappingOnClassMembers");
       var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
@@ -725,73 +714,59 @@ namespace ntest
       Assert.AreEqual(
         @"<?xml version=""1.0""?>
 <methodCall>
-  <methodName>EnumMethod2</methodName>
+  <methodName>MappingOnClassMembers</methodName>
   <params>
-    <param>
-      <value>
-        <string>Zero</string>
-      </value>
-    </param>
-    <param>
-      <value>
-        <array>
-          <data>
-            <value>
-              <string>One</string>
-            </value>
-            <value>
-              <string>Two</string>
-            </value>
-          </data>
-        </array>
-      </value>
-    </param>
     <param>
       <value>
         <struct>
           <member>
             <name>IntEnum</name>
-            <value><string>One</string></value>
+            <value>
+              <string>One</string>
+            </value>
+          </member>
+          <member>
+            <name>IntEnums</name>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>One</string>
+                  </value>
+                  <value>
+                    <string>Two</string>
+                  </value>
+                </data>
+              </array>
+            </value>
           </member>
           <member>
             <name>intEnum</name>
-            <value><string>Two</string></value>
-          </member>
-          <member>
-            <name>IntEnum</name>
-              <value>
-                <array>
-                  <data>
-                    <value>
-                      <string>One</string>
-                    </value>
-                    <value>
-                      <string>Two</string>
-                    </value>
-                  </data>
-                </array>
-              </value>
+            <value>
+              <string>Two</string>
+            </value>
           </member>
           <member>
             <name>intEnums</name>
-              <value>
-                <array>
-                  <data>
-                    <value>
-                      <string>One</string>
-                    </value>
-                    <value>
-                      <string>Two</string>
-                    </value>
-                  </data>
-                </array>
-              </value>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>Three</string>
+                  </value>
+                  <value>
+                    <string>Four</string>
+                  </value>
+                </data>
+              </array>
+            </value>
           </member>
-        </struct>      
+        </struct>
       </value>
     </param>
   </params>
 </methodCall>", reqstr);
+
     }
   }
 }

@@ -14,13 +14,13 @@ namespace ntest
       string testName,
       object obj, 
       Encoding encoding,
-      NullMappingAction action)
+      MappingActions actions)
     {
       Stream stm = new MemoryStream();
       XmlWriter xtw = XmlRpcXmlWriter.Create(stm, new XmlRpcFormatSettings());
       xtw.WriteStartDocument();      
       XmlRpcSerializer ser = new XmlRpcSerializer();
-      ser.Serialize(xtw, obj, action); 
+      ser.Serialize(xtw, obj, actions); 
       xtw.Flush();
       stm.Position = 0;    
       XmlReader rdr = XmlRpcXmlReader.Create(stm);
@@ -104,7 +104,8 @@ namespace ntest
       var writer = XmlRpcXmlWriter.Create(memStm,
         new XmlRpcFormatSettings { OmitXmlDeclaration = true, UseIndentation = indent });
       var serializer = new XmlRpcSerializer();
-      serializer.Serialize(writer, value, NullMappingAction.Error);
+      serializer.Serialize(writer, value, 
+        new MappingActions { NullMappingAction = NullMappingAction.Error });
       writer.Flush();
       memStm.Position = 0;
       string xml = new StreamReader(memStm).ReadToEnd();

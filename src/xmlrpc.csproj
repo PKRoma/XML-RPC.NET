@@ -116,6 +116,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DateTime8601.cs" />
+    <Compile Include="MappingActions.cs" />
     <Compile Include="MappingStack.cs" />
     <Compile Include="XmlRpcDebugLogger.cs" />
     <Compile Include="XmlRpcEnumMapping.cs" />

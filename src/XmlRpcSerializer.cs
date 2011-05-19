@@ -100,9 +100,9 @@ namespace CookComputing.XmlRpc
     void Serialize(
       XmlWriter xtw,
       Object o,
-      NullMappingAction mappingAction)
+      MappingActions mappingActions)
     {
-      Serialize(xtw, o, mappingAction, new List<object>());
+      Serialize(xtw, o, mappingActions, new List<object>());
     }
 
     //#if (DEBUG)
@@ -111,7 +111,7 @@ namespace CookComputing.XmlRpc
     void Serialize(
       XmlWriter xtw,
       Object o,
-      NullMappingAction mappingAction,
+      MappingActions mappingActions,
       List<object> nestedObjs)
     {
       if (nestedObjs.Contains(o))
@@ -133,7 +133,7 @@ namespace CookComputing.XmlRpc
             //  throw new XmlRpcMappingSerializeException(String.Format(
             //    "Items in array cannot be null ({0}[]).",
             //o.GetType().GetElementType()));
-            Serialize(xtw, aobj, mappingAction, nestedObjs);
+            Serialize(xtw, aobj, mappingActions, nestedObjs);
           }
           WriteFullEndElement(xtw);
           WriteFullEndElement(xtw);
@@ -142,7 +142,7 @@ namespace CookComputing.XmlRpc
         {
           Array mda = (Array)o;
           int[] indices = new int[mda.Rank];
-          BuildArrayXml(xtw, mda, 0, indices, mappingAction, nestedObjs);
+          BuildArrayXml(xtw, mda, 0, indices, mappingActions, nestedObjs);
         }
         else if (xType == XmlRpcType.tBase64)
         {
@@ -181,39 +181,27 @@ namespace CookComputing.XmlRpc
             string skey = obj as string;
             xtw.WriteStartElement("", "member", "");
             WriteFullElementString(xtw, "name", skey);
-            Serialize(xtw, xrs[skey], mappingAction, nestedObjs);
+            Serialize(xtw, xrs[skey], mappingActions, nestedObjs);
             WriteFullEndElement(xtw);
           }
           WriteFullEndElement(xtw);
         }
         else if (xType == XmlRpcType.tInt32)
         {
-          if (o.GetType().IsEnum)
-            o = Convert.ToInt32(o);
-          if (UseIntTag)
-            WriteFullElementString(xtw, "int", o.ToString());
-          else
-            WriteFullElementString(xtw, "i4", o.ToString());
+          o = SerializeInt32(xtw, o, mappingActions);
         }
         else if (xType == XmlRpcType.tInt64)
         {
-          if (o.GetType().IsEnum)
-            o = Convert.ToInt64(o);
-          WriteFullElementString(xtw, "i8", o.ToString());
+          o = SerializeInt64(xtw, o, mappingActions);
         }
         else if (xType == XmlRpcType.tString)
         {
-          if (UseStringTag)
-          {
-            WriteFullElementString(xtw, "string", (string)o);
-          }
-          else
-            xtw.WriteString((string)o);
+          SerializeString(xtw, o);
         }
         else if (xType == XmlRpcType.tStruct)
         {
-          NullMappingAction structAction
-            = StructMappingAction(o.GetType(), mappingAction);
+          MappingActions structActions
+            = StructMappingActions(o.GetType(), mappingActions);
           xtw.WriteStartElement("", "struct", "");
           MemberInfo[] mis = o.GetType().GetMembers();
           foreach (MemberInfo mi in mis)
@@ -232,19 +220,19 @@ namespace CookComputing.XmlRpc
                 if (mmbr != "")
                   member = mmbr;
               }
+              MappingActions memberActions = MemberMappingActions(o.GetType(),
+                fi.Name, structActions);
               if (fi.GetValue(o) == null)
               {
-                NullMappingAction memberAction = MemberNullMappingAction(o.GetType(),
-                  fi.Name, structAction);
-                if (memberAction == NullMappingAction.Ignore)
+                if (memberActions.NullMappingAction == NullMappingAction.Ignore)
                   continue;
-                else if (memberAction == NullMappingAction.Error)
+                else if (memberActions.NullMappingAction == NullMappingAction.Error)
                   throw new XmlRpcMappingSerializeException(@"Member """ + member +
                     @""" of struct """ + o.GetType().Name + @""" cannot be null.");
               }
               xtw.WriteStartElement("", "member", "");
               WriteFullElementString(xtw, "name", member);
-              Serialize(xtw, fi.GetValue(o), mappingAction, nestedObjs);
+              Serialize(xtw, fi.GetValue(o), memberActions, nestedObjs);
               WriteFullEndElement(xtw);
             }
             else if (mi.MemberType == MemberTypes.Property)
@@ -259,19 +247,19 @@ namespace CookComputing.XmlRpc
                 if (mmbr != "")
                   member = mmbr;
               }
+              MappingActions memberActions = MemberMappingActions(o.GetType(),
+                pi.Name, structActions);
               if (pi.GetValue(o, null) == null)
               {
-                NullMappingAction memberAction = MemberNullMappingAction(o.GetType(),
-                  pi.Name, structAction);
-                if (memberAction == NullMappingAction.Ignore)
+                if (memberActions.NullMappingAction == NullMappingAction.Ignore)
                   continue;
-                else if (memberAction == NullMappingAction.Error)
+                else if (memberActions.NullMappingAction == NullMappingAction.Error)
                   throw new XmlRpcMappingSerializeException(@"Member """ + member +
                     @""" of struct """ + o.GetType().Name + @""" cannot be null.");
               }
               xtw.WriteStartElement("", "member", "");
               WriteFullElementString(xtw, "name", member);
-              Serialize(xtw, pi.GetValue(o, null), mappingAction, nestedObjs);
+              Serialize(xtw, pi.GetValue(o, null), memberActions, nestedObjs);
               WriteFullEndElement(xtw);
             }
           }
@@ -299,12 +287,56 @@ namespace CookComputing.XmlRpc
       }
     }
 
+    private void SerializeString(XmlWriter xtw, Object o)
+    {
+      if (UseStringTag)
+      {
+        WriteFullElementString(xtw, "string", (string)o);
+      }
+      else
+        xtw.WriteString((string)o);
+    }
+
+    private Object SerializeInt64(XmlWriter xtw, Object o, MappingActions mappingActions)
+    {
+      if (o.GetType().IsEnum)
+      {
+        if (mappingActions.EnumMapping == EnumMapping.String)
+        {
+          SerializeString(xtw, o.ToString());
+        }
+        else
+          o = Convert.ToInt64(o);
+      }
+      WriteFullElementString(xtw, "i8", o.ToString());
+      return o;
+    }
+
+    private Object SerializeInt32(XmlWriter xtw, Object o, MappingActions mappingActions)
+    {
+      if (o.GetType().IsEnum)
+      {
+        if (mappingActions.EnumMapping == EnumMapping.String)
+        {
+          SerializeString(xtw, o.ToString());
+          return o;
+        }
+        else
+          o = Convert.ToInt32(o);
+      }
+      if (UseIntTag)
+        WriteFullElementString(xtw, "int", o.ToString());
+      else
+        WriteFullElementString(xtw, "i4", o.ToString());
+      return o;
+    }
+
     void BuildArrayXml(
       XmlWriter xtw,
       Array ary,
       int CurRank,
       int[] indices,
-      NullMappingAction mappingAction,
+      MappingActions mappingActions,
       List<object> nestedObjs)
     {
       xtw.WriteStartElement("", "array", "");
@@ -315,7 +347,7 @@ namespace CookComputing.XmlRpc
         {
           indices[CurRank] = i;
           xtw.WriteStartElement("", "value", "");
-          BuildArrayXml(xtw, ary, CurRank + 1, indices, mappingAction, nestedObjs);
+          BuildArrayXml(xtw, ary, CurRank + 1, indices, mappingActions, nestedObjs);
           WriteFullEndElement(xtw);
         }
       }
@@ -324,7 +356,7 @@ namespace CookComputing.XmlRpc
         for (int i = 0; i < ary.GetLength(CurRank); i++)
         {
           indices[CurRank] = i;
-          Serialize(xtw, ary.GetValue(indices), mappingAction, nestedObjs);
+          Serialize(xtw, ary.GetValue(indices), mappingActions, nestedObjs);
         }
       }
       WriteFullEndElement(xtw);
@@ -354,7 +386,7 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "fault", "");
-      Serialize(xtw, fs, NullMappingAction.Error);
+      Serialize(xtw, fs, new MappingActions { NullMappingAction = NullMappingAction.Error });
       WriteFullEndElement(xtw);
       WriteFullEndElement(xtw);
       xtw.Flush();
@@ -428,45 +460,63 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
-    NullMappingAction StructMappingAction(
+    MappingActions StructMappingActions(
       Type type,
-      NullMappingAction currentAction)
+      MappingActions currentActions)
     {
-      // if struct member has mapping action attribute, override the current
-      // mapping action else just return the current action
       if (type == null)
-        return currentAction;
+        return currentActions;
+      var ret = new MappingActions { EnumMapping = currentActions.EnumMapping,
+        NullMappingAction = currentActions.NullMappingAction };
       Attribute attr = Attribute.GetCustomAttribute(type, typeof(XmlRpcNullMappingAttribute));
       if (attr != null)
-        return ((XmlRpcNullMappingAttribute)attr).Action;
-      attr = Attribute.GetCustomAttribute(type, typeof(XmlRpcMissingMappingAttribute));
+        ret.NullMappingAction = ((XmlRpcNullMappingAttribute)attr).Action;
+      else
+      {
+        attr = Attribute.GetCustomAttribute(type, typeof(XmlRpcMissingMappingAttribute));
+        if (attr != null)
+          ret.NullMappingAction = MapToNullMappingAction(((XmlRpcMissingMappingAttribute)attr).Action);
+      }
+      attr = Attribute.GetCustomAttribute(type, typeof(XmlRpcEnumMappingAttribute));
       if (attr != null)
-        return MapToNullMappingAction(((XmlRpcMissingMappingAttribute)attr).Action);
-      return currentAction;
+        ret.EnumMapping = ((XmlRpcEnumMappingAttribute)attr).Mapping;
+      return ret;
     }
 
-    NullMappingAction MemberNullMappingAction(
+    MappingActions MemberMappingActions(
       Type type,
       string memberName,
-      NullMappingAction currentAction)
+      MappingActions currentActions)
     {
       // if struct member has mapping action attribute, override the current
       // mapping action else just return the current action
       if (type == null)
-        return currentAction;
+        return currentActions;
       Attribute attr = null;
       MemberInfo[] mis = type.GetMember(memberName);
+      var ret = new MappingActions
+      {
+        EnumMapping = currentActions.EnumMapping,
+        NullMappingAction = currentActions.NullMappingAction
+      };
       if (mis.Length > 0 && mis != null)
       {
         attr = Attribute.GetCustomAttribute(mis[0], typeof(XmlRpcNullMappingAttribute));
         if (attr != null)
-          return ((XmlRpcNullMappingAttribute)attr).Action;
-        // check for missing mapping attribute for backwards compatibility
-        attr = Attribute.GetCustomAttribute(mis[0], typeof(XmlRpcMissingMappingAttribute));
+          ret.NullMappingAction = ((XmlRpcNullMappingAttribute)attr).Action;
+        else
+        {
+          // check for missing mapping attribute for backwards compatibility
+          attr = Attribute.GetCustomAttribute(mis[0], typeof(XmlRpcMissingMappingAttribute))
+            as XmlRpcMissingMappingAttribute;
+          if (attr != null)
+            ret.NullMappingAction = MapToNullMappingAction(((XmlRpcMissingMappingAttribute)attr).Action);
+        }
+        attr = Attribute.GetCustomAttribute(mis[0], typeof(XmlRpcEnumMappingAttribute));
         if (attr != null)
-          return MapToNullMappingAction(((XmlRpcMissingMappingAttribute)attr).Action);
+          ret.EnumMapping = ((XmlRpcEnumMappingAttribute)attr).Mapping;
       }
-      return currentAction;
+      return ret;
     }
 
     private static NullMappingAction MapToNullMappingAction(MappingAction missingMappingAction)

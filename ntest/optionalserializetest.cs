@@ -284,7 +284,7 @@ namespace ntest
       strout.nxstr = new ChildStruct(567);
 #endif
       XmlReader xdoc = Utils.Serialize("Struct0_AllExist",
-        strout, Encoding.UTF8, NullMappingAction.Error);
+        strout, Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Error });
       Type parsedType, parsedArrayType;
       object obj = Utils.Parse(xdoc, typeof(Struct0), MappingAction.Error,
         out parsedType, out parsedArrayType);
@@ -310,7 +310,7 @@ namespace ntest
     {
       XmlReader xdoc = Utils.Serialize("Struct1_AllMissing_ErrorDefault",
         new Struct1(),
-        Encoding.UTF8, NullMappingAction.Error);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Error });
     }
 
     [Test]
@@ -318,7 +318,7 @@ namespace ntest
     {
       XmlReader xdoc = Utils.Serialize("Struct1_AllMissing_IgnoreDefault",
         new Struct1(),
-        Encoding.UTF8, NullMappingAction.Ignore);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Ignore });
     }
 
     //-------------------------------------------------------------------------/
@@ -329,7 +329,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct2_AllMissing_ErrorError",
         new Struct2(),
-        Encoding.UTF8, NullMappingAction.Error);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Error });
     }
 
     [Test]
@@ -339,7 +339,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct2_AllMissing_IgnoreError",
         new Struct2(),
-        Encoding.UTF8, NullMappingAction.Ignore);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Ignore });
     }
 
     //-------------------------------------------------------------------------/
@@ -350,7 +350,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct3_AllMissing_ErrorDefaultError",
         new Struct3(),
-        Encoding.UTF8, NullMappingAction.Error);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Error });
     }
 
     [Test]
@@ -360,7 +360,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct3_AllMissing_IgnoreDefaultError",
         new Struct3(),
-        Encoding.UTF8, NullMappingAction.Ignore);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Ignore });
     }
 
     //-------------------------------------------------------------------------/
@@ -371,7 +371,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct4_AllMissing_ErrorIgnoreError",
         new Struct4(),
-        Encoding.UTF8, NullMappingAction.Error);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Error });
     }
 
     [Test]
@@ -381,7 +381,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct4_AllMissing_IgnoreIgnoreError",
         new Struct4(),
-        Encoding.UTF8, NullMappingAction.Ignore);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Ignore });
     }
 
     //-------------------------------------------------------------------------/
@@ -391,7 +391,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct5_AllMissing_ErrorIgnoreDefault",
         new Struct5(),
-        Encoding.UTF8, NullMappingAction.Error);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Error });
     }
 
     [Test]
@@ -400,7 +400,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct5_AllMissing_IgnoreIgnoreDefault",
         new Struct5(),
-        Encoding.UTF8, NullMappingAction.Ignore);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Ignore });
     }
 
     //-------------------------------------------------------------------------/
@@ -410,7 +410,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct6_AllMissing_ErrorDefaultIgnore",
         new Struct6(),
-        Encoding.UTF8, NullMappingAction.Error);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Error });
     }
 
     [Test]
@@ -419,7 +419,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct6_AllMissing_IgnoreDefaultIgnore",
         new Struct6(),
-        Encoding.UTF8, NullMappingAction.Ignore);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Ignore });
     }
 
     //-------------------------------------------------------------------------/
@@ -429,7 +429,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct7_AllMissing_ErrorErrorIgnore",
         new Struct7(),
-        Encoding.UTF8, NullMappingAction.Error);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Error });
     }
 
     [Test]
@@ -438,7 +438,7 @@ namespace ntest
       XmlReader xdoc = Utils.Serialize(
         "Struct7_AllMissing_IgnoreErrorIgnore",
         new Struct7(),
-        Encoding.UTF8, NullMappingAction.Ignore);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Error });
     }
   }
 }

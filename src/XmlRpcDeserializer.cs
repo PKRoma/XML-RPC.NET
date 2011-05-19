@@ -230,9 +230,35 @@ namespace CookComputing.XmlRpc
       MappingAction mappingAction, out Type mappedType)
     {
       CheckExpectedType(valType, typeof(string), mappingStack);
+      if (valType != null && valType.IsEnum)
+        return MapStringToEnum(value, valType, "i8", mappingStack, mappingAction, out mappedType);
       mappedType = typeof(string);
       return OnStack("string", mappingStack, delegate()
       { return value; });
+    }
+
+    private object MapStringToEnum(string value, Type enumType, string xmlRpcType,
+      MappingStack mappingStack, MappingAction mappingAction, out Type mappedType)
+    {
+      mappedType = enumType;
+      return OnStack(xmlRpcType, mappingStack, delegate()
+      {
+        try
+        {
+          object ret = Enum.Parse(enumType, value, true);
+          return ret;
+        }
+        catch (XmlRpcInvalidEnumValue)
+        {
+          throw;
+        }
+        catch (Exception ex)
+        {
+          throw new XmlRpcInvalidEnumValue(mappingStack.MappingType
+            + " contains invalid or out of range " + xmlRpcType + " value mapped to enum "
+            + StackDump(mappingStack));
+        }
+      });
     }
 
     private object MapLong(string value, Type valType, MappingStack mappingStack, 

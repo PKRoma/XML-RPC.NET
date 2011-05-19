@@ -36,13 +36,13 @@ namespace CookComputing.XmlRpc
   [AttributeUsage(AttributeTargets.Field | AttributeTargets.Struct
      | AttributeTargets.Property | AttributeTargets.Class | AttributeTargets.Parameter
      | AttributeTargets.Method)]
-  public class XmlRpcEnumMapping : Attribute
+  public class XmlRpcEnumMappingAttribute : Attribute
   {
-    public XmlRpcEnumMapping()
+    public XmlRpcEnumMappingAttribute()
     {
     }
 
-    public XmlRpcEnumMapping(EnumMapping mapping)
+    public XmlRpcEnumMappingAttribute(EnumMapping mapping)
     {
       _mapping = mapping;
     }

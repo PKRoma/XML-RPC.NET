@@ -29,8 +29,8 @@ namespace CookComputing.XmlRpc
 
   public enum NullMappingAction
   {
-    Ignore,
     Error,
+    Ignore,
     Nil
   }
 

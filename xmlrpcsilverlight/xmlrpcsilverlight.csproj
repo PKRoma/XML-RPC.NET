@@ -81,6 +81,9 @@
     <Compile Include="..\src\IXmlRpcProxy.cs">
       <Link>IXmlRpcProxy.cs</Link>
     </Compile>
+    <Compile Include="..\src\MappingActions.cs">
+      <Link>MappingActions.cs</Link>
+    </Compile>
     <Compile Include="..\src\MappingStack.cs">
       <Link>MappingStack.cs</Link>
     </Compile>
@@ -107,6 +110,9 @@
     </Compile>
     <Compile Include="..\src\XmlRpcEndAttribute.cs">
       <Link>XmlRpcEndAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\src\XmlRpcEnumMapping.cs">
+      <Link>XmlRpcEnumMapping.cs</Link>
     </Compile>
     <Compile Include="..\src\XmlRpcException.cs">
       <Link>XmlRpcException.cs</Link>

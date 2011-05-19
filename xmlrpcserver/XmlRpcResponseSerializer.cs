@@ -57,10 +57,10 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartElement("", "params", "");
       xtw.WriteStartElement("", "param", "");
       // TODO: use global action setting
-      NullMappingAction mappingAction = NullMappingAction.Error;
+      var mappingActions = new MappingActions();
       try
       {
-        Serialize(xtw, ret, mappingAction);
+        Serialize(xtw, ret, mappingActions);
       }
       catch (XmlRpcUnsupportedTypeException ex)
       {

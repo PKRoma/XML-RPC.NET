@@ -372,7 +372,7 @@ namespace ntest
       object[] testary = new Object[] { 12, "Egypt", false };
       XmlReader xdoc = Utils.Serialize("SerializeTest.testArray",
       testary,
-      Encoding.UTF8, NullMappingAction.Ignore);
+      Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Ignore });
       Type parsedType, parsedArrayType;
       object obj = Utils.Parse(xdoc, null, MappingAction.Error,
         out parsedType, out parsedArrayType);
@@ -390,7 +390,7 @@ namespace ntest
       int[,] myArray = new int[,] { { 1, 2 }, { 3, 4 } };
       XmlReader xdoc = Utils.Serialize("SerializeTest.testMultiDimArray",
         myArray,
-        Encoding.UTF8, NullMappingAction.Ignore);
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Ignore });
       Type parsedType, parsedArrayType;
       object obj = Utils.Parse(xdoc, typeof(int[,]), MappingAction.Error,
         out parsedType, out parsedArrayType);

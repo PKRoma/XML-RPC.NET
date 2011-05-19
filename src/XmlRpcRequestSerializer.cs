@@ -49,8 +49,7 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodCall", "");
       {
-        // TODO: use global action setting
-        NullMappingAction mappingAction = NullMappingAction.Error;
+        var mappingActions = MethodMappingActions(request.mi, new MappingActions());
         WriteFullElementString(xtw, "methodName", request.method);
         if (request.args.Length > 0 || UseEmptyParamsTag)
         {
@@ -58,9 +57,9 @@ namespace CookComputing.XmlRpc
           try
           {
             if (!IsStructParamsMethod(request.mi))
-              SerializeParams(xtw, request, mappingAction);
+              SerializeParams(xtw, request, mappingActions);
             else
-              SerializeStructParams(xtw, request, mappingAction);
+              SerializeStructParams(xtw, request, mappingActions);
           }
           catch (XmlRpcUnsupportedTypeException ex)
           {
@@ -77,7 +76,7 @@ namespace CookComputing.XmlRpc
     }
 
     void SerializeParams(XmlWriter xtw, XmlRpcRequest request,
-      NullMappingAction mappingAction)
+      MappingActions mappingActions)
     {
       ParameterInfo[] pis = null;
       if (request.mi != null)
@@ -86,6 +85,8 @@ namespace CookComputing.XmlRpc
       }
       for (int i = 0; i < request.args.Length; i++)
       {
+        var paramMappingActions = pis == null ? mappingActions
+          : ParameterMappingActions(pis[i], mappingActions);
         if (pis != null)
         {
           if (i >= pis.Length)
@@ -101,7 +102,7 @@ namespace CookComputing.XmlRpc
               //  throw new XmlRpcNullParameterException(
               //    "Null parameter in params array");
               xtw.WriteStartElement("", "param", "");
-              Serialize(xtw, o, mappingAction);
+              Serialize(xtw, o, paramMappingActions);
               WriteFullEndElement(xtw);
             }
             break;
@@ -113,13 +114,13 @@ namespace CookComputing.XmlRpc
         //    "Null method parameter #{0}", i + 1));
         //}
         xtw.WriteStartElement("", "param", "");
-        Serialize(xtw, request.args[i], mappingAction);
+        Serialize(xtw, request.args[i], paramMappingActions);
         WriteFullEndElement(xtw);
       }
     }
 
     void SerializeStructParams(XmlWriter xtw, XmlRpcRequest request,
-      NullMappingAction mappingAction)
+      MappingActions mappingActions)
     {
       ParameterInfo[] pis = request.mi.GetParameters();
       if (request.args.Length > pis.Length)
@@ -143,7 +144,7 @@ namespace CookComputing.XmlRpc
         }
         xtw.WriteStartElement("", "member", "");
         WriteFullElementString(xtw, "name", pis[i].Name);
-        Serialize(xtw, request.args[i], mappingAction);
+        Serialize(xtw, request.args[i], mappingActions);
         WriteFullEndElement(xtw);
       }
       WriteFullEndElement(xtw);
@@ -151,5 +152,40 @@ namespace CookComputing.XmlRpc
       WriteFullEndElement(xtw);
     }
 
+    MappingActions MethodMappingActions(MethodInfo mi, MappingActions currentActions)
+    {
+      if (mi == null)
+        return currentActions;
+      var ret = new MappingActions
+      {
+        EnumMapping = currentActions.EnumMapping,
+        NullMappingAction = currentActions.NullMappingAction
+      };
+      Attribute attr = Attribute.GetCustomAttribute(mi, typeof(XmlRpcNullMappingAttribute));
+      if (attr != null)
+        ret.NullMappingAction = ((XmlRpcNullMappingAttribute)attr).Action;
+      attr = Attribute.GetCustomAttribute(mi, typeof(XmlRpcEnumMappingAttribute));
+      if (attr != null)
+        ret.EnumMapping = ((XmlRpcEnumMappingAttribute)attr).Mapping;
+      return ret;
+    }
+
+    MappingActions ParameterMappingActions(ParameterInfo pi, MappingActions currentActions)
+    {
+      if (pi == null)
+        return currentActions;
+      var ret = new MappingActions
+      {
+        EnumMapping = currentActions.EnumMapping,
+        NullMappingAction = currentActions.NullMappingAction
+      };
+      Attribute attr = Attribute.GetCustomAttribute(pi, typeof(XmlRpcNullMappingAttribute));
+      if (attr != null)
+        ret.NullMappingAction = ((XmlRpcNullMappingAttribute)attr).Action;
+      attr = Attribute.GetCustomAttribute(pi, typeof(XmlRpcEnumMappingAttribute));
+      if (attr != null)
+        ret.EnumMapping = ((XmlRpcEnumMappingAttribute)attr).Mapping;
+      return ret;
+    }
   }
 }
