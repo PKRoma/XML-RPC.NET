@@ -477,7 +477,7 @@ namespace CookComputing.XmlRpc
       deserializer.NonStandard = _nonStandard;
       Type retType = req.mi.ReturnType;
       XmlRpcResponse xmlRpcResp
-        = deserializer.DeserializeResponse(respStm, retType);
+        = deserializer.DeserializeResponse(respStm, req.ReturnType);
       return xmlRpcResp;
     }
 
