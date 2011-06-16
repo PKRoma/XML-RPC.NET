@@ -161,6 +161,10 @@ namespace CookComputing.XmlRpc
         try
         {
           respStm = webResp.GetResponseStream();
+#if (!COMPACT_FRAMEWORK && !FX1_0)
+          respStm = MaybeDecompressStream((HttpWebResponse)webResp,
+            respStm);
+#endif
           if (!logging)
           {
             deserStream = respStm;
@@ -172,10 +176,6 @@ namespace CookComputing.XmlRpc
             deserStream.Flush();
             deserStream.Position = 0;
           }
-#if (!COMPACT_FRAMEWORK && !FX1_0)
-          deserStream = MaybeDecompressStream((HttpWebResponse)webResp, 
-            deserStream);          
-#endif
           if (logging)
           {
             OnResponse(new XmlRpcResponseEventArgs(req.proxyId, req.number,
