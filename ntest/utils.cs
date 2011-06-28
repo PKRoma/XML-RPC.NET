@@ -112,15 +112,7 @@ namespace ntest
       return xml;
     }
 
-    static XmlNode SelectValueNode(XmlNode valueNode)
-    {
-      // an XML-RPC value is either held as the child node of a <value> element
-      // or is just the text of the value node as an implicit string value
-      XmlNode vvNode = valueNode.SelectSingleNode("*");
-      if (vvNode == null)
-        vvNode = valueNode.FirstChild;
-      return vvNode;
-    }
+
 
     public static string[] GetLocales()
     {

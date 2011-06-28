@@ -185,7 +185,7 @@ namespace ntest
     }
     
     //---------------------- struct ----------------------------------------// 
-    struct Struct1
+    public struct Struct1
     {
       public int mi;
       public string ms;
@@ -236,9 +236,9 @@ namespace ntest
       Assert.IsTrue(obj is Struct1, "result is Struct1");
       Struct1 str2 = (Struct1)obj;
       Assert.IsTrue(str2.Equals(str1));
-    }  
+    }
 
-    struct Struct2
+    public struct Struct2
     {
       [XmlRpcMember("member_1")]
       public int member1;
@@ -296,7 +296,7 @@ namespace ntest
 }
 
 
-    struct Struct3
+    public struct Struct3
     {
       int _member1;
       public int member1 { get { return _member1; } set { _member1 = value; } } 
@@ -414,15 +414,15 @@ namespace ntest
 </methodCall>", reqstr);
     }
 
-
-    struct Struct4
+#if (!SILVERLIGHT)
+    public struct Struct4
     {
       [NonSerialized]
       public int x;
       public int y;
     }
 
-    class Class4
+    public class Class4
     {
       [NonSerialized]
       public int x;
@@ -462,8 +462,10 @@ namespace ntest
   </params>
 </methodCall>", reqstr);
     }
+#endif
 
-    struct Struct5
+#if (!SILVERLIGHT)
+    public struct Struct5
     {
       [NonSerialized]
       public System.Data.DataSet ds;
@@ -538,8 +540,9 @@ namespace ntest
   </params>
 </methodCall>", reqstr);
     }
+#endif
 
-    class RecursiveMember
+    public class RecursiveMember
     {
       public string Level;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
@@ -612,7 +615,7 @@ namespace ntest
 </methodCall>", reqstr);
     }
 
-    class RecursiveArrayMember
+    public class RecursiveArrayMember
     {
       public string Level;
       public RecursiveArrayMember[] childExamples;
