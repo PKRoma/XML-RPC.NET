@@ -13,13 +13,13 @@ namespace ntest
   [TestFixture]
   public class OptionalSerializeTest
   {
-    struct ChildStruct
+    public struct ChildStruct
     {
       public int x;
       public ChildStruct(int num) { x = num; }
     }
 
-    struct Struct0
+    public struct Struct0
     {
       public int? xi;
       public bool? xb;
@@ -34,7 +34,7 @@ namespace ntest
 #endif
     }
 
-    struct Struct1
+    public struct Struct1
     {
       public int mi;
       public string ms;
@@ -58,7 +58,7 @@ namespace ntest
     }
 
     [XmlRpcMissingMapping(MappingAction.Error)]
-    struct Struct2
+    public struct Struct2
     {
       public int mi;
       public string ms;
@@ -81,7 +81,7 @@ namespace ntest
 #endif
     }
 
-    struct Struct3
+    public struct Struct3
     {
       [XmlRpcMissingMapping(MappingAction.Error)]
       public int mi;
@@ -122,7 +122,7 @@ namespace ntest
     }
 
     [XmlRpcMissingMapping(MappingAction.Ignore)]
-    struct Struct4
+    public struct Struct4
     {
       [XmlRpcMissingMapping(MappingAction.Error)]
       public int mi;
@@ -163,7 +163,7 @@ namespace ntest
     }
 
     [XmlRpcMissingMapping(MappingAction.Ignore)]
-    struct Struct5
+    public struct Struct5
     {
       public int mi;
       public string ms;
@@ -186,7 +186,7 @@ namespace ntest
 #endif
     }
 
-    struct Struct6
+    public struct Struct6
     {
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public int mi;
@@ -227,7 +227,7 @@ namespace ntest
     }
 
     [XmlRpcMissingMapping(MappingAction.Error)]
-    struct Struct7
+    public struct Struct7
     {
       [XmlRpcMissingMapping(MappingAction.Ignore)]
       public int mi;

@@ -6,14 +6,14 @@ using NUnit.Framework;
 using CookComputing.XmlRpc;
 
 
-struct ChildStruct
+public struct ChildStruct
 {
   public int x;
   public ChildStruct(int num) { x = num; }
 }
-    
 
-class XmlRpcStruct1 : XmlRpcStruct
+
+public class XmlRpcStruct1 : XmlRpcStruct
 {
   public int mi;
 }

@@ -612,7 +612,7 @@ namespace ntest
       Assert.AreEqual(myint, 12, "int is 12");
     }
 
-    struct BillStruct
+    public struct BillStruct
     {
       public int x;
       public string s;
@@ -806,6 +806,7 @@ namespace ntest
       public double [] component_scores;
     }
 
+#if (!SILVERLIGHT)
     [Test]
     public void ISO_8869_1()
     {
@@ -821,6 +822,7 @@ namespace ntest
           "retVal is 'hæ hvað segirðu þá'");
       }
     }
+#endif 
 
     [Test]
     public void FaultResponse()
@@ -957,7 +959,7 @@ namespace ntest
       Assert.AreEqual(results.Length, 1);
     }
 
-    struct DupMem
+    public struct DupMem
     {
       public string foo;
     }
@@ -1049,6 +1051,7 @@ namespace ntest
       Assert.IsTrue((string)dupMem["foo"] == "this is a test");
     }
 
+#if (!SILVERLIGHT)
     [Test]
     [ExpectedException(typeof(XmlRpcIllFormedXmlException))]
     public void InvalidHTTPContentLeadingWhiteSpace()
@@ -1192,7 +1195,7 @@ namespace ntest
       deserializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
       XmlRpcResponse response = deserializer.DeserializeResponse(stm, typeof(int));
     }
-
+#endif
 
     [Test]
     public void Donhrobjartz_XmlRpcStructNonMemberStructChild()
@@ -1283,7 +1286,7 @@ This should be ignored.
       XmlRpcStruct ret = (XmlRpcStruct)response.retVal;
     }
 
-    struct Donhrobjartz
+    public struct Donhrobjartz
     {
       public string period;
     }

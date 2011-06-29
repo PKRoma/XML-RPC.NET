@@ -100,6 +100,24 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\ntest\ArrayTest.cs">
+      <Link>ArrayTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ntest\deserializeresponsetest.cs">
+      <Link>deserializeresponsetest.cs</Link>
+    </Compile>
+    <Compile Include="..\ntest\enumtest.cs">
+      <Link>enumtest.cs</Link>
+    </Compile>
+    <Compile Include="..\ntest\optionaldeserializetest.cs">
+      <Link>optionaldeserializetest.cs</Link>
+    </Compile>
+    <Compile Include="..\ntest\optionalserializetest.cs">
+      <Link>optionalserializetest.cs</Link>
+    </Compile>
+    <Compile Include="..\ntest\parsetest.cs">
+      <Link>parsetest.cs</Link>
+    </Compile>
     <Compile Include="..\ntest\serializetest.cs">
       <Link>serializetest.cs</Link>
     </Compile>

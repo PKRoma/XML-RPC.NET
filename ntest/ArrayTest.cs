@@ -7,7 +7,8 @@ using System.Text;
 
 namespace ntest
 {
-  class ArrayTest
+  [TestFixture]
+  public class ArrayTest
   {
     string expectedJagged =
 @"<value>

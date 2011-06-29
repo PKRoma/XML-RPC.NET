@@ -69,7 +69,8 @@ namespace ntest
   }
 
 
-  class enumtest
+  [TestFixture]
+  public class enumtest
   {
     const long maxIntPlusOne = (long)Int32.MaxValue + 1;
     const ulong maxUintPlusOne = (ulong)UInt32.MaxValue + 1;

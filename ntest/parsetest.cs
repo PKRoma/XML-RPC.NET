@@ -17,7 +17,7 @@ namespace ntest
   [TestFixture]
   public class ParseTest
   {
-    struct Struct2
+    public struct Struct2
     {
       public int mi;
       public string ms;
@@ -837,7 +837,7 @@ namespace ntest
     }
 
     //------------------------------------------------------------------------// 
-    struct Struct3
+    public struct Struct3
     {
       [XmlRpcMember("IntField")]
       public int intOne;
@@ -867,7 +867,7 @@ namespace ntest
         out parsedType, out parsedArrayType);
     }
 
-
+#if (!SILVERLIGHT)
     struct Struct4
     {
       [NonSerialized]
@@ -916,9 +916,9 @@ namespace ntest
       Assert.AreEqual(0, ret.x);
       Assert.AreEqual(18, ret.y);
     }
+#endif
 
-
-    struct Struct5
+    public struct Struct5
     {
       public int x;
     }
@@ -944,14 +944,7 @@ namespace ntest
         out parsedType, out parsedArrayType);
     }
 
-
-    struct Struct6
-    {
-      [NonSerialized]
-      public decimal x;
-      public int y;
-    }
-
+#if (!SILVERLIGHT)
     [Test]
     public void NonSerializedNonXmlRpcType()
     {
@@ -971,6 +964,7 @@ namespace ntest
       Assert.AreEqual(0, ret.x);
       Assert.AreEqual(18, ret.y);
     }
+#endif 
 
     [Test]
     public void XmlRpcStructOrder()
@@ -1009,7 +1003,7 @@ namespace ntest
       Assert.AreEqual(2, denumerator.Value);
     }
 
-    class RecursiveMember
+    public class RecursiveMember
     {
       public string Level;
       [XmlRpcMissingMapping(MappingAction.Ignore)]
@@ -1056,7 +1050,7 @@ namespace ntest
       RecursiveMember ret = (RecursiveMember)obj;
     }
 
-    class RecursiveArrayMember
+    public class RecursiveArrayMember
     {
       public string Level;
       public RecursiveArrayMember[] childExamples;
