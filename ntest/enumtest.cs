@@ -2,6 +2,7 @@
 using System.IO;
 using CookComputing.XmlRpc;
 using NUnit.Framework;
+using System.Reflection;
 
 namespace ntest
 {
@@ -71,6 +72,7 @@ namespace ntest
 
   [TestFixture]
   public class enumtest
+  public class enumtest
   {
     const long maxIntPlusOne = (long)Int32.MaxValue + 1;
     const ulong maxUintPlusOne = (ulong)UInt32.MaxValue + 1;
@@ -87,6 +89,7 @@ namespace ntest
       Assert.AreEqual(XmlRpcType.tInt64, XmlRpcTypeInfo.GetXmlRpcType(typeof(LongEnum)), "long");
       Assert.AreEqual(XmlRpcType.tInvalid, XmlRpcTypeInfo.GetXmlRpcType(typeof(ULongEnum)), "ulong");
     }
+
 
     [Test]
     public void SerializeRequest()
@@ -358,19 +361,6 @@ namespace ntest
 </methodCall>", reqstr);
     }
 
-    public class IntEnumClass
-    {
-      public IntEnum IntEnum { get; set; }
-      public IntEnum intEnum;
-      public IntEnum[] IntEnums { get; set; }
-      public IntEnum[] intEnums;
-    }
-
-    [XmlRpcEnumMapping(EnumMapping.String)]
-    public void MappingOnMethod(IntEnum param1, IntEnum[] param2, IntEnumClass param3)
-    {
-    }
-
     [Test]
     public void SerializeWithMappingOnMethod()
     {
@@ -389,7 +379,8 @@ namespace ntest
         } 
       };
       req.method = "MappingOnMethod";
-      req.mi = this.GetType().GetMethod("MappingOnMethod");
+      var proxy = XmlRpcProxyGen.Create<TestMethods1>();
+      req.mi = proxy.GetType().GetMethod("MappingOnMethod");
       var ser = new XmlRpcRequestSerializer();
       ser.SerializeRequest(stm, req);
       stm.Position = 0;
@@ -769,21 +760,118 @@ namespace ntest
 </methodCall>", reqstr);
 
     }
+
+    [Test]
+    public void SerializeWithMappingOnType()
+    {
+      Stream stm = new MemoryStream();
+      XmlRpcRequest req = new XmlRpcRequest();
+      req.args = new object[] { IntEnum.Four }; 
+      req.method = "Bar";
+      var proxy = XmlRpcProxyGen.Create<TestMethods2>();
+      req.mi = proxy.GetType().GetMethod("Bar");
+      var ser = new XmlRpcRequestSerializer();
+      ser.SerializeRequest(stm, req);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+      Assert.AreEqual(
+        @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>Bar</methodName>
+  <params>
+    <param>
+      <value>
+        <string>Four</string>
+      </value>
+    </param>
+  </params>
+</methodCall>", reqstr);
+    }
+
+
+    [return: XmlRpcEnumMapping(EnumMapping.String)]
+    public IntEnum MappingReturnOnMethod()
+    {
+      return IntEnum.One;
+    }
+
+
+    [Test]
+    public void SerializeResponseOnMethod()
+    {
+      var deserializer = new XmlRpcResponseSerializer();
+      var response = new XmlRpcResponse(IntEnum.One, 
+        GetType().GetMethod("MappingReturnOnMethod"));
+      var stm = new MemoryStream();
+      deserializer.SerializeResponse(stm, response);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+      Assert.AreEqual(
+@"<?xml version=""1.0""?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <string>One</string>
+      </value>
+    </param>
+  </params>
+</methodResponse>", reqstr);
+    }
+
+    [Test]
+    public void SerializeResponseOnType()
+    {
+      var deserializer = new XmlRpcResponseSerializer();
+      var proxy = XmlRpcProxyGen.Create<TestMethods2>();
+      MethodInfo mi = proxy.GetType().GetMethod("Bar");
+      var response = new XmlRpcResponse(IntEnum.Three, mi);
+      var stm = new MemoryStream();
+      deserializer.SerializeResponse(stm, response);
+      stm.Position = 0;
+      TextReader tr = new StreamReader(stm);
+      string reqstr = tr.ReadToEnd();
+      Assert.AreEqual(
+@"<?xml version=""1.0""?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <string>Three</string>
+      </value>
+    </param>
+  </params>
+</methodResponse>", reqstr);
+    }
+  }
+
+  public interface TestMethods1
+  {
+    [XmlRpcMethod]
+    IntEnum Bar(IntEnum intEnum);
+
+    [XmlRpcMethod]
+    [XmlRpcEnumMapping(EnumMapping.String)]
+    void MappingOnMethod(IntEnum param1, IntEnum[] param2, IntEnumClass param3);
+  }
+
+  [XmlRpcEnumMapping(EnumMapping.String)]
+  public interface TestMethods2
+  {
+    [XmlRpcMethod]
+    IntEnum Bar(IntEnum intEnum);
+
+    [XmlRpcMethod]
+    void MappingOnMethod(IntEnum param1, IntEnum[] param2, IntEnumClass param3);
+  }
+
+  public class IntEnumClass
+  {
+    public IntEnum IntEnum { get; set; }
+    public IntEnum intEnum;
+    public IntEnum[] IntEnums { get; set; }
+    public IntEnum[] intEnums;
   }
 }
-
-
-/*
-Attribute on:
-  
-- interface
-- method
-- parameter
-- array
-- struct
-- struct member
-
-
-
-
-*/
