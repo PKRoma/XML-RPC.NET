@@ -1,6 +1,6 @@
 /* 
 XML-RPC.NET library
-Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
+Copyright (c) 2001-2011, Charles Cook <charlescook@cookcomputing.com>
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation 
@@ -23,9 +23,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
+using System;
+using System.Reflection;
+
 namespace CookComputing.XmlRpc
 {
-  using System;
   public class XmlRpcResponse
   {	
     public XmlRpcResponse()
@@ -36,6 +38,14 @@ namespace CookComputing.XmlRpc
     {
       retVal = retValue;
     }
+
+    public XmlRpcResponse(object retValue, MethodInfo mi)
+    {
+      retVal = retValue;
+      MethodInfo = mi;
+    }
+
     public Object retVal;
+    public MethodInfo MethodInfo { get; set; }
   }    
 }

@@ -56,8 +56,9 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartElement("", "methodResponse", "");
       xtw.WriteStartElement("", "params", "");
       xtw.WriteStartElement("", "param", "");
-      // TODO: use global action setting
       var mappingActions = new MappingActions();
+      mappingActions = GetTypeMappings(response.MethodInfo, mappingActions);
+      mappingActions = GetReturnMappingActions(response, mappingActions);
       try
       {
         Serialize(xtw, ret, mappingActions);
@@ -72,6 +73,13 @@ namespace CookComputing.XmlRpc
       WriteFullEndElement(xtw);
       WriteFullEndElement(xtw);
       xtw.Flush();
+    }
+
+    MappingActions GetReturnMappingActions(XmlRpcResponse response,
+      MappingActions mappingActions)
+    {
+      var ri = response.MethodInfo != null ? response.MethodInfo.ReturnParameter : null;
+      return GetMappingActions(ri, mappingActions);
     }
   }
 }

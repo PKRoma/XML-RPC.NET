@@ -476,6 +476,20 @@ namespace CookComputing.XmlRpc
       return ret;
     }
 
+    protected MappingActions GetTypeMappings(MethodInfo mi, MappingActions mappingActions)
+    {
+      if (mi != null)
+      {
+        var declaringType = mi != null ? mi.DeclaringType : null;
+        foreach (Type itf in declaringType.GetInterfaces())
+        {
+          mappingActions = GetMappingActions(itf, mappingActions);
+        }
+        mappingActions = GetMappingActions(declaringType, mappingActions);
+      }
+      return mappingActions;
+    }
+
     protected MappingActions GetMappingActions(ICustomAttributeProvider cap, 
       MappingActions mappingActions)
     {

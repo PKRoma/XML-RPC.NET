@@ -138,8 +138,13 @@ namespace CookComputing.XmlRpc
         }
         XmlRpcMethodAttribute mattr = (XmlRpcMethodAttribute)
           Attribute.GetCustomAttribute(mi, typeof(XmlRpcMethodAttribute));
+
+        XmlRpcEnumMappingAttribute enattr = (XmlRpcEnumMappingAttribute)
+          Attribute.GetCustomAttribute(mi, typeof(XmlRpcEnumMappingAttribute));
+
         BuildMethod(tb, mi.Name, mthdData.xmlRpcName, paramNames, argTypes,
-          mthdData.paramsMethod, mi.ReturnType, mattr.StructParams);
+          mthdData.paramsMethod, mi.ReturnType, mattr.StructParams,
+          enattr == null ? EnumMapping.Number : EnumMapping.String);
       }
     }
 
@@ -151,7 +156,8 @@ namespace CookComputing.XmlRpc
       Type[] argTypes,
       bool paramsMethod,
       Type returnType,
-      bool structParams)
+      bool structParams,
+      EnumMapping enumMapping)
     {
       MethodBuilder mthdBldr = tb.DefineMethod(
         methodName,
@@ -168,6 +174,18 @@ namespace CookComputing.XmlRpc
         new CustomAttributeBuilder(ci, new object[] { rpcMethodName },
           pis, structParam);
       mthdBldr.SetCustomAttribute(cab);
+
+      // add EnumMapingAttribute to method if not default
+      if (enumMapping != EnumMapping.Number)
+      {
+        Type[] oneEnumMapping = new Type[1] { typeof(EnumMapping) };
+        Type enMapAttr = typeof(XmlRpcEnumMappingAttribute);
+        ConstructorInfo enMapCi = enMapAttr.GetConstructor(oneEnumMapping);
+        CustomAttributeBuilder enMapCab =
+          new CustomAttributeBuilder(enMapCi, new object[] { enumMapping });
+        mthdBldr.SetCustomAttribute(enMapCab);
+      }
+
       for (int i = 0; i < paramNames.Length; i++)
       {
         ParameterBuilder paramBldr = mthdBldr.DefineParameter(i + 1, 

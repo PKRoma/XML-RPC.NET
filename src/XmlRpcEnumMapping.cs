@@ -35,7 +35,8 @@ namespace CookComputing.XmlRpc
 
   [AttributeUsage(AttributeTargets.Field | AttributeTargets.Struct
      | AttributeTargets.Property | AttributeTargets.Class | AttributeTargets.Parameter
-     | AttributeTargets.Method)]
+     | AttributeTargets.Method | AttributeTargets.ReturnValue
+     | AttributeTargets.Interface)]
   public class XmlRpcEnumMappingAttribute : Attribute
   {
     public XmlRpcEnumMappingAttribute()

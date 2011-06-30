@@ -49,7 +49,9 @@ namespace CookComputing.XmlRpc
       xtw.WriteStartDocument();
       xtw.WriteStartElement("", "methodCall", "");
       {
-        var mappingActions = GetMappingActions(request.mi, new MappingActions());
+        var mappingActions = new MappingActions();
+        mappingActions = GetTypeMappings(request.mi, mappingActions);
+        mappingActions = GetMappingActions(request.mi, mappingActions);
         WriteFullElementString(xtw, "methodName", request.method);
         if (request.args.Length > 0 || UseEmptyParamsTag)
         {
