@@ -54,6 +54,13 @@ namespace CookComputing.XmlRpc
 
     private Guid _id = Util.NewGuid();
 
+    static XmlRpcClientProtocol()
+    {
+#if (SILVERLIGHT)
+      WebRequest.RegisterPrefix("http://", System.Net.Browser.WebRequestCreator.ClientHttp);
+      WebRequest.RegisterPrefix("https://", System.Net.Browser.WebRequestCreator.ClientHttp);
+#endif
+    }
 
 #if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     public XmlRpcClientProtocol(System.ComponentModel.IContainer container)
@@ -415,6 +422,9 @@ namespace CookComputing.XmlRpc
 #endif
 #if (!SILVERLIGHT)
       webReq.Credentials = Credentials;
+#else
+      webReq.Credentials = Credentials;
+      webReq.UseDefaultCredentials = false;
 #endif
 #if (!COMPACT_FRAMEWORK && !FX1_0 &&!SILVERLIGHT)
       if (EnableCompression)

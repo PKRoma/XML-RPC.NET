@@ -89,6 +89,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NilTest.cs" />
+    <Compile Include="NilTestServer.cs" />
     <Compile Include="optionalserializetest.cs">
       <SubType>Code</SubType>
     </Compile>

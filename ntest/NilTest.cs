@@ -310,58 +310,6 @@ namespace ntest
       Assert.AreEqual(12345, (int)request.args[1], "argument is 12345");
     }
 
-
-
-
-    [Test]
-    public void DeserializeResponseNilMethod()
-    {
-      string xml = @"<?xml version=""1.0"" ?> 
-<methodResponse>
-  <params>
-    <param>
-      <value><nil /></value>
-    </param>
-  </params>
-</methodCall>";
-      StringReader sr = new StringReader(xml);
-      var deserializer = new XmlRpcResponseDeserializer();
-      XmlRpcResponse response = deserializer.DeserializeResponse(sr, this.GetType());
-
-      Assert.IsNull(response.retVal, "return value is null");
-    }
-
-    [Test]
-    public void DeserializeResponseStructWithNil()
-    {
-      string xml = @"<?xml version=""1.0"" ?> 
-<methodResponse>
-  <params>
-    <param>
-      <value>
-        <struct>
-          <member>
-            <name>lowerBound</name>
-            <value><nil/></value>
-          </member>
-          <member>
-            <name>upperBound</name>
-            <value><nil/></value>
-          </member>
-        </struct>
-      </value>
-    </param>
-  </params>
-</methodResponse>";
-      StringReader sr = new StringReader(xml);
-      var deserializer = new XmlRpcResponseDeserializer();
-      XmlRpcResponse response = deserializer.DeserializeResponse(sr, typeof(Bounds));
-      Assert.IsInstanceOf<Bounds>(response.retVal);
-      Bounds bounds = response.retVal as Bounds;
-      Assert.IsNull(bounds.lowerBound);
-      Assert.IsNull(bounds.upperBound);
-    }
-
     [Test]
     public void DeserializeNilObject()
     {

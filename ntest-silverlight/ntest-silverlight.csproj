@@ -109,6 +109,9 @@
     <Compile Include="..\ntest\enumtest.cs">
       <Link>enumtest.cs</Link>
     </Compile>
+    <Compile Include="..\ntest\NilTest.cs">
+      <Link>NilTest.cs</Link>
+    </Compile>
     <Compile Include="..\ntest\optionaldeserializetest.cs">
       <Link>optionaldeserializetest.cs</Link>
     </Compile>
