@@ -83,17 +83,17 @@ namespace CookComputing.XmlRpc
     }
 #endif
 
-#if (!COMPACT_FRAMEWORK)
+//#if (!COMPACT_FRAMEWORK)
     public static Guid NewGuid()
     {
       return Guid.NewGuid();
     }
-#else
-    public static Guid NewGuid()
-    {
-      return OpenNETCF.GuidEx.NewGuid();
-    }
-#endif
+//#else
+//   public static Guid NewGuid()
+//    {
+//      return OpenNETCF.GuidEx.NewGuid();
+//    }
+//#endif
   }
 
 }

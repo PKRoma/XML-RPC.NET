@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;WINDOWS_PHONE;COMPACT_FRAMEWORK</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -34,7 +34,7 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;COMPACT_FRAMEWORK</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -56,6 +56,9 @@
     </Compile>
     <Compile Include="..\src\IXmlRpcProxy.cs">
       <Link>IXmlRpcProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\src\MappingActions.cs">
+      <Link>MappingActions.cs</Link>
     </Compile>
     <Compile Include="..\src\MappingStack.cs">
       <Link>MappingStack.cs</Link>
@@ -81,6 +84,9 @@
     <Compile Include="..\src\XmlRpcEndAttribute.cs">
       <Link>XmlRpcEndAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\src\XmlRpcEnumMapping.cs">
+      <Link>XmlRpcEnumMapping.cs</Link>
+    </Compile>
     <Compile Include="..\src\XmlRpcException.cs">
       <Link>XmlRpcException.cs</Link>
     </Compile>
@@ -89,6 +95,9 @@
     </Compile>
     <Compile Include="..\src\XmlRpcFormatSettings.cs">
       <Link>XmlRpcFormatSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\src\XmlRpcLogger.cs">
+      <Link>XmlRpcLogger.cs</Link>
     </Compile>
     <Compile Include="..\src\XmlRpcMemberAttribute.cs">
       <Link>XmlRpcMemberAttribute.cs</Link>

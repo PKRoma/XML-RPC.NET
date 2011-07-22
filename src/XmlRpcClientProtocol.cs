@@ -991,17 +991,17 @@ namespace CookComputing.XmlRpc
     }
   }
 
-#if (COMPACT_FRAMEWORK)
-  // dummy attribute because System.ComponentModel.Browsable is not
-  // support in the compact framework
-  [AttributeUsage(AttributeTargets.Property)]
-  public class BrowsableAttribute : Attribute
-  {
-    public BrowsableAttribute(bool dummy)
-    {
-    }
-  }
-#endif
+//#if (COMPACT_FRAMEWORK && )
+//  // dummy attribute because System.ComponentModel.Browsable is not
+//  // support in the compact framework
+//  [AttributeUsage(AttributeTargets.Property)]
+//  public class BrowsableAttribute : Attribute
+//  {
+//    public BrowsableAttribute(bool dummy)
+//    {
+//    }
+//  }
+//#endif
 
   public delegate void XmlRpcRequestEventHandler(object sender,
     XmlRpcRequestEventArgs args);

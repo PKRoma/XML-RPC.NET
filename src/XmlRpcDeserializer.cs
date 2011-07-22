@@ -629,13 +629,14 @@ namespace CookComputing.XmlRpc
 #if (!COMPACT_FRAMEWORK)
         elemType = valType.GetElementType();
 #else
-            string[] checkMultiDim = Regex.Split(ValueType.FullName, 
-              "\\[\\]$");
-            // determine assembly of array element type
-            Assembly asmbly = ValueType.Assembly;
-            string[] asmblyName = asmbly.FullName.Split(',');
-            string elemTypeName = checkMultiDim[0] + ", " + asmblyName[0]; 
-            elemType = Type.GetType(elemTypeName);
+          throw new NotImplementedException("TODO");
+            //string[] checkMultiDim = Regex.Split(ValueType.FullName, 
+            //  "\\[\\]$");
+            //// determine assembly of array element type
+            //Assembly asmbly = ValueType.Assembly;
+            //string[] asmblyName = asmbly.FullName.Split(',');
+            //string elemTypeName = checkMultiDim[0] + ", " + asmblyName[0]; 
+            //elemType = Type.GetType(elemTypeName);
 #endif
       }
       else
