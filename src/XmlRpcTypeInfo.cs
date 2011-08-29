@@ -208,6 +208,8 @@ namespace CookComputing.XmlRpc
           else if (mi.MemberType == MemberTypes.Property)
           {
             PropertyInfo pi = (PropertyInfo)mi;
+            if (pi.GetIndexParameters().Length > 0)
+              return XmlRpcType.tInvalid;
             if (typeStack.Contains(pi.PropertyType))
               continue;
             try

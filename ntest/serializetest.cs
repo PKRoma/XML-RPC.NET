@@ -1,16 +1,15 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Xml;
-using System.Reflection;
 using System.Threading;
-using  NUnit.Framework;
+using System.Xml;
 using CookComputing.XmlRpc;
-using System.Runtime.InteropServices;
-namespace ntest
+using NUnit.Framework;
 
+namespace ntest
 // TODO: test any culture dependencies
 {
   [TestFixture]
@@ -945,6 +944,23 @@ namespace ntest
       Assert.IsTrue(xmlRpcStruct["ms"] is string);
       Assert.AreEqual((string)xmlRpcStruct["ms"], "another test string");
     }
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcUnsupportedTypeException))]
+    public void XmlRpcStructIListValue()
+    {
+      IList<string> list = new List<string>();
+      list.Add("one");
+      list.Add("two");
+      XmlRpcStruct xmlRpcStruct = new XmlRpcStruct();
+      xmlRpcStruct["list"] = list;
+
+      XmlReader xdoc = Utils.Serialize("SerializeTest.XmlRpcStructIListValue",
+        xmlRpcStruct, Encoding.UTF8,
+        new MappingActions { NullMappingAction = NullMappingAction.Ignore });
+    }
+
+
 
     //---------------------- HashTable----------------------------------------// 
     [Test]
