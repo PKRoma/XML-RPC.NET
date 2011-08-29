@@ -154,19 +154,59 @@ the parent type.
 This is a snapshot of work in progress. 
 </p>
 
-<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.3.0.0.241-snapshot.zip">xml-rpc.net.3.0.0.241-snapshot.zip</a>
+<a href="http://xmlrpcnet.googlecode.com/files/xml-rpc.net.3.0.0.266-snapshot.zip">xml-rpc.net.3.0.0.266-snapshot.zip</a>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <a href="./faq/xmlrpcnetfaq-3-0-0.html">documentation</a>
 
-<p>
-(Build 241 fixes problem with mapping &lt;nil /&gt; onto type Object)
-</p>
+<h3>Build 266</h3>
 
-<p>
-(Build 238 initial snapshot of 3.0.0)
-</p>
+<ul>
 
-<p>New features, changes, and fixed issues:</p>
+<li>
+Support for easier logging of request and response XML. 
+</li>
+
+<li>
+Support for mapping .NET enums to/from XML-RPC string values using XmlRpcEnumMapping attribute.
+</li>
+
+<li>
+Fixed problem with logging and decompression of response stream.
+</li>
+
+<li>
+Fixed problem with return type in XmlRpcClientProtocol.EndInvoke.
+</li>
+
+<li>
+Added unit testing for Silverlight build.
+</li>
+
+<li>
+Switch to Silverlight 4 only in order to support credentials using ClientHttp stack.
+</li>
+
+<li>
+Now throws XmlRpcUnsupportedTypeException when a type has an indexer property.
+</li>
+
+</ul>
+
+
+
+<h3>Build 241</h3>
+
+<ul>
+
+<li>
+Fixes problem with mapping &lt;nil /&gt; onto type Object.
+</li>
+
+</ul>
+
+
+
+<h3>Build 238</h3>
 
 <ul>
 
@@ -900,7 +940,7 @@ Fix threading issue in AsyncBettyApplication sample.
 
 <div id="footer">
 <p>
-Charles Cook, 2001-2011 All Rights Reserved. 17th April 2011
+Charles Cook, 2001-2011 All Rights Reserved. 29th August 2011
 </p>
 </div>
 
