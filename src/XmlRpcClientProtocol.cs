@@ -756,6 +756,11 @@ namespace CookComputing.XmlRpc
       return EndInvoke(asr, null);
     }
 
+    public T EndInvoke<T>(IAsyncResult asr)
+    {
+      return (T)EndInvoke(asr, typeof(T));
+    }
+
     public object EndInvoke(IAsyncResult asr, Type returnType)
     {
       object reto = null;

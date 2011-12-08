@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Http;
@@ -52,6 +53,13 @@ public struct StateStructRequest
   public int state1;
   public int state2;
   public int state3;
+}
+
+public struct StateStructResponse
+{
+  public string stateName1;
+  public string stateName2;
+  public string stateName3;
 }
 
 [XmlRpcUrl("http://localhost:5678/statename.rem")]
@@ -112,6 +120,22 @@ public class StateNameServer : SystemMethodsBase
       + m_stateNames[request.state2 - 1] + " "
       + m_stateNames[request.state3 - 1];
     return ret;
+  }
+
+  [XmlRpcMethod("examples.getStateNameStruct")]
+  public StateStructResponse GetStateNameStruct(StateStructRequest request)
+  {
+    StateStructResponse response = new StateStructResponse();
+    if (request.state1 < 1 || request.state1 > m_stateNames.Length)
+      throw new XmlRpcFaultException(1, "State number 1 invalid");
+    if (request.state2 < 1 || request.state2 > m_stateNames.Length)
+      throw new XmlRpcFaultException(1, "State number 1 invalid");
+    if (request.state3 < 1 || request.state3 > m_stateNames.Length)
+      throw new XmlRpcFaultException(1, "State number 1 invalid");
+    response.stateName1 = m_stateNames[request.state1 - 1];
+    response.stateName2 = m_stateNames[request.state2 - 1];
+    response.stateName3 = m_stateNames[request.state3 - 1];
+    return response;
   }
 
   string[] m_stateNames

@@ -90,6 +90,19 @@ class StateName : XmlRpcClientProtocol
   {
     return (string)EndInvoke(asr);
   }
+
+  [XmlRpcMethod("examples.getStateNameStruct")]
+  public IAsyncResult BeginGetStateNameStruct(StateStructRequest request, 
+    AsyncCallback callback, object asyncState)
+  {
+    return BeginInvoke(MethodBase.GetCurrentMethod(),
+      new object[] { request }, null, null);
+  }
+
+  public StateStructResponse EndGetStateNameStruct(IAsyncResult asr)
+  {
+    return EndInvoke<StateStructResponse>(asr);
+  }
 }
 
 namespace ntest
@@ -128,10 +141,11 @@ namespace ntest
     {
       StateName proxy = new StateName();
       string[] ret = proxy.SystemListMethods();
-      Assert.AreEqual(3, ret.Length);
+      Assert.AreEqual(4, ret.Length);
       Assert.AreEqual(ret[0], "examples.getStateName");
       Assert.AreEqual(ret[1], "examples.getStateNameFromString");
-      Assert.AreEqual(ret[2], "examples.getStateStruct");
+      Assert.AreEqual(ret[2], "examples.getStateNameStruct");
+      Assert.AreEqual(ret[3], "examples.getStateStruct");
     }
 
     class CBInfo
@@ -192,6 +206,23 @@ namespace ntest
       evt.WaitOne();
       Assert.AreEqual(null, info._excep, "Async call threw exception");
       Assert.AreEqual("Alabama", info._ret);
+    }
+
+    [Test]
+    public void AsynchronousCallBackReturningStruct()
+    {
+      StateName proxy = new StateName();
+      IAsyncResult asr = proxy.BeginGetStateNameStruct(new StateStructRequest
+        {
+          state1 = 1,
+          state2 = 2,
+          state3 = 3,
+        }, null, null);
+      asr.AsyncWaitHandle.WaitOne();
+      StateStructResponse response = proxy.EndGetStateNameStruct(asr);
+      Assert.AreEqual("Alabama", response.stateName1);
+      Assert.AreEqual("Alaska", response.stateName2);
+      Assert.AreEqual("Arizona", response.stateName3);
     }
 
     // TODO: add sync fault exception
