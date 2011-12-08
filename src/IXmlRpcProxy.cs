@@ -46,9 +46,7 @@ namespace CookComputing.XmlRpc
     string ConnectionGroupName { get; set; }
 #endif
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     CookieContainer CookieContainer { get; }
-#endif
 
     [Browsable(false)]
     ICredentials Credentials { get; set; }
@@ -84,13 +82,11 @@ namespace CookComputing.XmlRpc
     IWebProxy Proxy { get; set; }
 #endif
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     [Browsable(false)]
     CookieCollection ResponseCookies { get; }
 
     [Browsable(false)]
     WebHeaderCollection ResponseHeaders { get; }
-#endif
 
     int Timeout { get; set; }
 

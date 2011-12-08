@@ -76,19 +76,15 @@ namespace CookComputing.XmlRpc
       get { return isCompleted; } 
     }
 
-#if (!COMPACT_FRAMEWORK)
     public CookieCollection ResponseCookies
     {
       get { return _responseCookies; }
     }
-#endif
 
-#if (!COMPACT_FRAMEWORK)
     public WebHeaderCollection ResponseHeaders
     {
       get { return _responseHeaders; }
     }
-#endif
 
     // public members
     public void Abort()
@@ -227,9 +223,7 @@ namespace CookComputing.XmlRpc
     Stream responseBufferedStream;
     byte[] buffer;
     XmlRpcRequest xmlRpcRequest;
-#if (!COMPACT_FRAMEWORK)
     internal CookieCollection _responseCookies;
     internal WebHeaderCollection _responseHeaders;
-#endif
   }
 }

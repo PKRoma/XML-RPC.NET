@@ -44,10 +44,8 @@ namespace CookComputing.XmlRpc
     WebSettings webSettings = new WebSettings();
     XmlRpcFormatSettings XmlRpcFormatSettings = new XmlRpcFormatSettings();
 
-#if (!COMPACT_FRAMEWORK)
     private CookieCollection _responseCookies;
     private WebHeaderCollection _responseHeaders;
-#endif
     private XmlRpcNonStandard _nonStandard;
     private string _url = null;
     private string _xmlRpcMethod = null;
@@ -113,10 +111,8 @@ namespace CookComputing.XmlRpc
       throw new NotSupportedException();
 #else
 
-#if (!COMPACT_FRAMEWORK)
       _responseHeaders = null;
       _responseCookies = null;
-#endif
       WebRequest webReq = null;
       object reto = null;
       try
@@ -158,10 +154,8 @@ namespace CookComputing.XmlRpc
             reqStream.Close();
         }
         HttpWebResponse webResp = GetWebResponse(webReq) as HttpWebResponse;
-#if (!COMPACT_FRAMEWORK)
         _responseCookies = webResp.Cookies;
         _responseHeaders = webResp.Headers;
-#endif
         Stream respStm = null;
         Stream deserStream;
         logging = (ResponseEvent != null);
@@ -264,12 +258,10 @@ namespace CookComputing.XmlRpc
     }
 #endif
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     public CookieContainer CookieContainer
     {
       get { return webSettings.CookieContainer; }
     }
-#endif
 
     public Guid Id
     {
@@ -318,19 +310,15 @@ namespace CookComputing.XmlRpc
     }
 #endif
 
-#if (!COMPACT_FRAMEWORK)
     public CookieCollection ResponseCookies
     {
       get { return _responseCookies; }
     }
-#endif
 
-#if (!COMPACT_FRAMEWORK)
     public WebHeaderCollection ResponseHeaders
     {
       get { return _responseHeaders; }
     }
-#endif
 
     public int Timeout
     {
@@ -410,9 +398,7 @@ namespace CookComputing.XmlRpc
       // Compact Framework sets this to false by default
       (webReq as HttpWebRequest).AllowWriteStreamBuffering = true;
 #endif
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
       httpReq.CookieContainer = CookieContainer;
-#endif
 #if (!COMPACT_FRAMEWORK && !FX1_0 && !SILVERLIGHT)
       httpReq.ServicePoint.Expect100Continue = Expect100Continue;
       httpReq.ServicePoint.UseNagleAlgorithm = UseNagleAlgorithm;
@@ -785,10 +771,8 @@ namespace CookComputing.XmlRpc
         if (clientResult.XmlRpcRequest != null && returnType != null)
           clientResult.XmlRpcRequest.ReturnType = returnType;
         HttpWebResponse webResp = (HttpWebResponse)clientResult.WaitForResponse();
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
         clientResult._responseCookies = webResp.Cookies;
         clientResult._responseHeaders = webResp.Headers;
-#endif
         responseStream = clientResult.ResponseBufferedStream;
         if (ResponseEvent != null)
         {

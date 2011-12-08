@@ -68,13 +68,11 @@ namespace CookComputing.XmlRpc
     private bool _expect100Continue = false;
 #endif
 
-#if (!COMPACT_FRAMEWORK && !SILVERLIGHT)
     public CookieContainer CookieContainer
     {
       get { return _cookies; }
     }
     private CookieContainer _cookies = new CookieContainer();
-#endif
 
     public bool KeepAlive
     {
