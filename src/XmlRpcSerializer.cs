@@ -289,12 +289,20 @@ namespace CookComputing.XmlRpc
 
     private void SerializeString(XmlWriter xtw, Object o)
     {
-      if (UseStringTag)
+      try
       {
-        WriteFullElementString(xtw, "string", (string)o);
+        if (UseStringTag)
+        {
+          WriteFullElementString(xtw, "string", (string)o);
+        }
+        else
+          xtw.WriteString((string)o);
       }
-      else
-        xtw.WriteString((string)o);
+      catch (ArgumentException ex)
+      {
+        string msg = string.Format("Unable to serialize string to XML: {0}", ex.Message);
+        throw new XmlRpcException(msg, ex);   
+      }
     }
 
     private Object SerializeInt64(XmlWriter xtw, Object o, MappingActions mappingActions)

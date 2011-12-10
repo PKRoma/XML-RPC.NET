@@ -54,6 +54,16 @@ namespace ntest
       Assert.AreEqual("this is a string", obj);
     }
 
+
+    [Test]
+    [ExpectedException(typeof(XmlRpcException))]
+    public void InvalidCharsString()
+    {
+      string str = new string('\a', 1);
+      XmlReader rdr = Utils.Serialize("SerializeTest.testString", str,
+        Encoding.UTF8, new MappingActions { NullMappingAction = NullMappingAction.Ignore });
+    }
+
     //---------------------- boolean ---------------------------------------// 
     [Test]
     public void Boolean()

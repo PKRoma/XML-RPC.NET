@@ -206,6 +206,31 @@ namespace ntest
       Assert.AreEqual("", (string)obj);
     }
 
+
+    [Test]
+    [ExpectedException(typeof(XmlException))]
+    public void IllegalChars_String()
+    {
+      Type parsedType, parsedArrayType;
+      string str = new string('\a', 1);
+      string xml = @"<?xml version=""1.0"" ?><value><string>" + str + "</string></value>";
+      object obj = Utils.Parse(xml, typeof(string), MappingAction.Error, 
+        out parsedType, out parsedArrayType);
+      Assert.AreEqual("astring", (string)obj);
+    }
+
+    [Test]
+    [ExpectedException(typeof(XmlException))]
+    public void IllegalChars_ValueString()
+    {
+      Type parsedType, parsedArrayType;
+      string str = new string('\a', 1);
+      string xml = @"<?xml version=""1.0"" ?><value>" + str + "</value>";
+      object obj = Utils.Parse(xml, typeof(string), MappingAction.Error,
+        out parsedType, out parsedArrayType);
+      Assert.AreEqual("astring", (string)obj);
+    }
+
     //---------------------- boolean ---------------------------------------// 
     [Test]
     public void Boolean_NullType()
