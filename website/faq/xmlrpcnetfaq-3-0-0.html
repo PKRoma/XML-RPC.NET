@@ -49,7 +49,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h1>XML-RPC.NET FAQ</h1>
 
-<p>Version 3.0.0 (work in progress) 12th March 2010. &copy; Charles Cook, 2002-2011.</p>
+<p>Version 3.0.0 (work in progress) 12th March 2012. &copy; Charles Cook, 2002-2011.</p>
 <p>Please send feedback, corrections, etc, to xmlrpcfaq@gmail.com.</p>
 <h2>Contents</h2>
 <p>1. Introduction</p>
@@ -3050,7 +3050,7 @@ can be coded as:
 
 <h3><a id="6.9"></a>6.9 How do I manually implement asynchronous requests?</h3>
 <p>
-For cases where a manually implemented proxy is required it is possible to make 
+For cases where a manually implemented proxy is required, such as with Windows Phone, it is possible to make 
 asynchronous calls via the BeginInvoke and EndInvoke methods of XmlRpcClientProtocol. 
 </p>
 
@@ -3076,7 +3076,7 @@ class SumAndDiffProxy : XmlRpcClientProtocol
 
   public Result EndSumAndDifference(IAsyncResult asr) 
   { 
-    return (Result)EndInvoke(asr); 
+    return EndInvoke&lt;Result&gt;(asr); 
   } 
 } </pre>
 
