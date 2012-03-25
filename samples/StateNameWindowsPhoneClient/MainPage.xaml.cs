@@ -77,7 +77,7 @@ namespace StateNameWindowsPhoneClient
     [XmlRpcEnd]
     public string EndGetName(IAsyncResult iasr)
     {
-      string ret = (string)this.EndInvoke(iasr);
+      string ret = this.EndInvoke<string>(iasr);
       return ret;
     }
   }
